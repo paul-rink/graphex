@@ -28,3 +28,7 @@ hs_err_pid*
 *.iml
 *.eml
 /out/
+
+# Maven
+log/
+target/
