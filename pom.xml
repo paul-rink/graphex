@@ -29,7 +29,7 @@
             mvn install:install-file -Dfile=JavaFXSmartGraph.jar -DgroupId=smartgraph -DartifactId=smartgraph -Dversion=1.0 -Dpackaging=jar
         -->
         <dependency>
-            <groupId>smartgraph</groupId>
+            <groupId>com.smartgraph</groupId>
             <artifactId>smartgraph</artifactId>
             <version>1.0</version>
         </dependency>

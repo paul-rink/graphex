@@ -1,4 +1,9 @@
 package graphex2021.view;
 
-public class GraphView {
+import com.brunomnsilva.smartgraph.graphview.SmartLabel;
+
+
+public class GraphView extends SmartLabel {
+
+
 }
