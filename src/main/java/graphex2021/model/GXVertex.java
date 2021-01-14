@@ -6,7 +6,6 @@ import com.brunomnsilva.smartgraph.graph.Vertex;
 /**
  * Vertex containing the element <code>V</code> to be used in the Graph.
  *
- * TODO Finish the attributes and methods
  *
  * @author Dominik
  * @version 1.0
@@ -42,12 +41,16 @@ public class GXVertex<V> implements Vertex<V> {
 
     /**
      * Creates new Vertex containing the element <code>V</code>
-     *
+     * TODO check how the ids should be created
      *
      * @param element stored in the vertex
      */
     public GXVertex(V element) {
-
+        this.element = element;
+        this.previous = null;
+        this.marked = false;
+        this.visible = false;
+        this.currentDistance = 0;
     }
 
     /**
@@ -89,6 +92,7 @@ public class GXVertex<V> implements Vertex<V> {
 
     /**
      * Sets the marked state of the vertex to the desired state
+     * TODO modify so that currentDistance and previous are correctly unmarked in that case
      *
      * @param marked lets you mark or unmark the vertex
      */
@@ -107,5 +111,51 @@ public class GXVertex<V> implements Vertex<V> {
         this.marked = true;
         this.currentDistance = prevVertexDistance + previousEdge.getWeight();
         this.previous = previousEdge;
+    }
+
+    /**
+     * TODO implement and check what is exactly needed as the label
+     *
+     * @return the label matching this vertex
+     */
+    public String getLabel() {
+        return null;
+    }
+
+    /**
+     * Returning the unique id for this vertex
+     *
+     * @return the vertex id
+     */
+    public int getId() {
+        return this.id;
+    }
+
+
+    /**
+     * Returns the edge that was selected to select this vertex
+     *
+     * @return the edge that was selected previous to the marking of this vertex
+     */
+    public GXEdge getPrevious() {
+        return previous;
+    }
+
+    /**
+     * Returns the current distance that this vertex is from the starting vertex
+     *
+     * @return the current distance from the starting vertex
+     */
+    public int getCurrentDistance() {
+        return currentDistance;
+    }
+
+    /**
+     * TODO don't think it is necessesary to have this rather this be changed when marked or unmarked
+     *
+     * @param currentDistane prob not needed
+     */
+    public void setCurrentDistance(int currentDistance) {
+        this.currentDistance = currentDistance;
     }
 }
