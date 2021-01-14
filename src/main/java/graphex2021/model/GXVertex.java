@@ -40,13 +40,21 @@ public class GXVertex<V> implements Vertex<V> {
     private int currentDistance;
 
     /**
+     * The position you want the vertex to be in
+     */
+    private GXPosition position;
+
+
+    /**
      * Creates new Vertex containing the element <code>V</code>
      * TODO check how the ids should be created
      *
      * @param element stored in the vertex
+     * @param pos the position you want the vertex to have
      */
-    public GXVertex(V element) {
+    public GXVertex(V element, GXPosition pos) {
         this.element = element;
+        this.position = pos;
         this.previous = null;
         this.marked = false;
         this.visible = false;
@@ -153,9 +161,19 @@ public class GXVertex<V> implements Vertex<V> {
     /**
      * TODO don't think it is necessesary to have this rather this be changed when marked or unmarked
      *
-     * @param currentDistane prob not needed
+     * @param currentDistance prob not needed
      */
     public void setCurrentDistance(int currentDistance) {
         this.currentDistance = currentDistance;
     }
+
+    /**
+     * Returns the position of the vert
+     *
+     * @return the GXPosition of the vertex
+     */
+    public GXPosition getPosition() {
+        return position;
+    }
+
 }
