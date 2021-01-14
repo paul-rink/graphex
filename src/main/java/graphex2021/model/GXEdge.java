@@ -28,6 +28,12 @@ public class GXEdge<E, V> implements Edge<E, V> {
 
 
     /**
+     * The weight of this edge
+     */
+    private int weight;
+
+
+    /**
      * Creates new Vertex
      * TODO finish constructor to contain missing attributes.
      * @param inboundVertex the first vertex of the edge
@@ -61,5 +67,14 @@ public class GXEdge<E, V> implements Edge<E, V> {
     public Vertex<V>[] vertices() {
 
         return new Vertex[]{inboundVertex, outboundVertex};
+    }
+
+    /**
+     * Returns the weight of this edge
+     *
+     * @return weight of this edge
+     */
+    public int getWeight() {
+        return this.weight;
     }
 }
