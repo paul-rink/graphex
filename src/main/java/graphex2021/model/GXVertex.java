@@ -94,7 +94,7 @@ public class GXVertex<V> implements Vertex<V> {
 
      * @return whether the vertex is marked
      */
-    public boolean marked() {
+    public boolean isMarked() {
         return this.marked;
     }
 
