@@ -88,13 +88,11 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
     }
 
     @Override
-    public boolean setEdgeVisible(GXVertex vertex) {
-        return false;
+    public void setEdgeVisible(GXVertex vertex) {
     }
 
     @Override
-    public boolean setVertexVisible(GXEdge edge) {
-        return false;
+    public void setVertexVisible(GXEdge edge) {
     }
 
     @Override
