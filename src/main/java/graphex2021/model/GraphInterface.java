@@ -2,6 +2,9 @@ package graphex2021.model;
 
 
 import com.brunomnsilva.smartgraph.graph.Graph;
+import com.brunomnsilva.smartgraph.graph.Vertex;
+
+import java.util.Collection;
 
 /**
  * Graph made up of a set of vertices and edges. Edges are undirected and connect two vertices with each other.
@@ -15,7 +18,7 @@ import com.brunomnsilva.smartgraph.graph.Graph;
  * @version 1.0
  */
 public interface GraphInterface<V, E> extends Graph<V, E> {
-
+    
     /**
      * Setting all the edges visible that are adjacent to the passed vertex
      * //TODO changed return type
@@ -86,7 +89,15 @@ public interface GraphInterface<V, E> extends Graph<V, E> {
      */
     void unmarkVertex(GXVertex vertex) throws ElementNotInGraphException;
 
-    void setVertexInvisible(GXVertex vertex, GXEdge edge);
+    /**
+     * Sets the passed edge invisible and checks whcih vertices and edges should now be invisible as well
+     *
+     *
+     * @param vertex that was made visible by the passed edge
+     * @param edge that will be set invisible from
+     * @throws ElementNotInGraphException if either vertex or edge are not in the vertex
+     */
+    void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException;
 
 
 }

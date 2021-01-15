@@ -2,7 +2,7 @@ package graphex2021.model;
 
 import com.brunomnsilva.smartgraph.graph.*;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  *
@@ -16,29 +16,81 @@ import java.util.Collection;
 public class GXGraph<V, E> implements GraphInterface<V, E> {
 
 
+    /**
+     * The starting and end vertices if needed by the algorithm used
+     */
+    private final GXVertex<V> startingVertex;
+    private final GXVertex<V> endingVertex;
+
+    /**
+     * Map containing all the vertices in the graph
+     */
+    private final Map<V, GXVertex<V>> vertices;
+    /**
+     * Map containing all the edges in the graph
+     */
+    private final Map<E, GXEdge<E, V>> edges;
+
+
+    /**
+     * Empty constructor just initialising the attributes
+     *
+     */
+    public GXGraph() {
+        this.vertices = new HashMap<V, GXVertex<V>>();
+        this.edges = new HashMap<E, GXEdge<E, V>>();
+        this.startingVertex = null;
+        this.endingVertex = null;
+
+    }
+
+
+
+
     @Override
     public int numVertices() {
-        return 0;
+        return vertices.size();
     }
 
     @Override
     public int numEdges() {
-        return 0;
+        return edges.size();
     }
 
+    /**
+     * Returns a list containing all the vertices that are part of the graph.
+     * TODO check for better way to be able to return  GXVertex and not have to typecast it later.
+     * TODO Problem Generics invariant.
+     * TODO more checking of how to handle Collection vs. Arraylist or something.
+     * Problem is that in case you would use Collection<GXVertex> you would also be able to add Vertex to list.
+     * List GXVertex is not a List Vertex since you could potentially insert a different type of Vertex into the list.
+     *
+     * @return ArrayList containing all the vertices of the Graph. For now can be typecast to GXVertex
+     */
     @Override
-    public Collection<Vertex<V>> vertices() {
-        return null;
+    public Collection<Vertex<V> > vertices() {
+        Collection<GXVertex<V>> verticeList = new ArrayList<>();
+        verticeList.addAll(vertices.values());
+        return verticeList;
     }
 
+    /**
+     * Returns a list containing all the edges that are part of the graph.
+     * TODO check for better way to be able to return  GXVertex and not have to typecast it later.
+     *
+     * @return ArrayList containing all the vertices of the Graph. For now can be typecast to GXEdge
+     */
     @Override
     public Collection<Edge<E, V>> edges() {
-        return null;
+        List<Edge<E, V>> edgeList = new ArrayList<>();
+        edgeList.addAll(edges.values());
+        return edgeList;
     }
+
 
     @Override
     public Collection<Edge<E, V>> incidentEdges(Vertex vertex) throws InvalidVertexException {
-        return null;
+        this.vertices().
     }
 
     @Override
@@ -129,4 +181,5 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
     public void setVertexInvisible(GXVertex vertex, GXEdge edge) {
 
     }
+
 }
