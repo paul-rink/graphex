@@ -47,14 +47,15 @@ public class GXVertex<V> implements Vertex<V> {
 
     /**
      * Creates new Vertex containing the element <code>V</code>
-     * TODO check how the ids should be created
      *
      * @param element stored in the vertex
+     * @param id unique id for vertex in a graph. Needs to be uniquely created before setting
      * @param pos the position you want the vertex to have
      */
-    public GXVertex(V element, GXPosition pos) {
+    public GXVertex(V element, int id, GXPosition pos) {
         this.element = element;
         this.position = pos;
+        this.id = id;
         this.previous = null;
         this.marked = false;
         this.visible = false;
