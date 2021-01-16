@@ -68,8 +68,8 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
      * @return ArrayList containing all the vertices of the Graph. For now can be typecast to GXVertex
      */
     @Override
-    public Collection<Vertex<V> > vertices() {
-        Collection<GXVertex<V>> verticeList = new ArrayList<>();
+    public Collection<Vertex<V>> vertices() {
+        Collection<Vertex<V>> verticeList = new ArrayList<>();
         verticeList.addAll(vertices.values());
         return verticeList;
     }
@@ -89,13 +89,22 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
 
 
     @Override
-    public Collection<Edge<E, V>> incidentEdges(Vertex vertex) throws InvalidVertexException {
-        this.vertices().
+    public Collection<Edge<E, V>> incidentEdges(Vertex<V> vertex) throws InvalidVertexException {
+        GXVertex<V> v = checkVertex(vertex);
+
+        List<Edge<E, V>> incident = new ArrayList<>();
+        for (GXEdge<E, V> edge : edges.values()) {
+            if (edge.contains(v)) {
+                incident.add(edge);
+            }
+        }
+        return incident;
     }
 
     @Override
     public Vertex opposite(Vertex vertex, Edge edge) throws InvalidVertexException, InvalidEdgeException {
-        return null;
+
+
     }
 
     @Override
@@ -179,6 +188,31 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
 
     @Override
     public void setVertexInvisible(GXVertex vertex, GXEdge edge) {
+
+    }
+
+    /**
+     * Checks if a vertex is in the graph and actually a GXvertex.
+     * TODO other way to do the exception handling
+     *
+     * @return the GXvertex
+     */
+    private GXVertex<V> checkVertex(Vertex<V> vertex) throws InvalidVertexException {
+        if (vertex == null) {
+            throw new InvalidVertexException("Vertex is null");
+        }
+
+        try {
+            GXVertex gxVertex =  (GXVertex) vertex;
+        } catch (ClassCastException e) {
+            throw new InvalidVertexException("Not a GXVertex");
+        }
+        //TODO
+        if (!vertices.containsKey(vertex.element())) {
+            throw  new InvalidVertexException("Vertex is not part of this graph");
+        }
+        return gxVertex;
+
 
     }
 
