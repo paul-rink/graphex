@@ -1,6 +1,7 @@
 package graphex2021.model;
 
 import com.brunomnsilva.smartgraph.graph.Edge;
+import com.brunomnsilva.smartgraph.graph.Vertex;
 
 
 /**
@@ -18,8 +19,8 @@ public class GXEdge<E, V> implements Edge<E, V> {
     /**
      * Vertices that are connected by this edge
      */
-    private GXVertex<V> inboundVertex;
-    private GXVertex<V> outboundVertex;
+    private GXVertex inboundVertex;
+    private GXVertex outboundVertex;
 
 
     /**
@@ -63,7 +64,7 @@ public class GXEdge<E, V> implements Edge<E, V> {
      * @param outboundVertex the second vertex of the edge
      * @param element the element contained in the edge
      */
-    public GXEdge(GXVertex<V> inboundVertex, GXVertex<V> outboundVertex, E element) {
+    public GXEdge(GXVertex inboundVertex, GXVertex outboundVertex, E element) {
         this.inboundVertex = inboundVertex;
         this.outboundVertex = outboundVertex;
         this.element = element;
@@ -86,11 +87,12 @@ public class GXEdge<E, V> implements Edge<E, V> {
 
     /**
      * Returns both the vertices in the array
+     * TODO for now needs to return Vertex<String> should
      *
      * @return array of length two containing both vertices
      */
     @Override
-    public GXVertex<V>[] vertices() {
+    public Vertex<String>[] vertices() {
 
         return new GXVertex[]{inboundVertex, outboundVertex};
     }
@@ -149,7 +151,7 @@ public class GXEdge<E, V> implements Edge<E, V> {
      * @param vertex checks this vertex
      * @return whether the given GXVertex is on this edge
      */
-    public boolean contains(GXVertex<V> vertex) {
+    public boolean contains(GXVertex vertex) {
         return this.outboundVertex.getId() == vertex.getId() || this.inboundVertex.getId() == vertex.getId();
     }
 

@@ -6,17 +6,16 @@ import com.brunomnsilva.smartgraph.graph.Vertex;
 /**
  * Vertex containing the element <code>V</code> to be used in the Graph.
  *
- *
+ * TODO check for unwanted changes resulting from the change away from V to String
  * @author Dominik
  * @version 1.0
- * @param <V> Type of the element that is stored in the vertex
  */
-public class GXVertex<V> implements Vertex<V> {
+public class GXVertex implements Vertex<String> {
 
     /**
      * The element stored in the vertex.
      */
-    private V element;
+    private String element;
 
     /**
      * Unique identifier for the vertex

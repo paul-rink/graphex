@@ -19,13 +19,13 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
     /**
      * The starting and end vertices if needed by the algorithm used
      */
-    private final GXVertex<V> startingVertex;
-    private final GXVertex<V> endingVertex;
+    private final GXVertex startingVertex;
+    private final GXVertex endingVertex;
 
     /**
      * Map containing all the vertices in the graph
      */
-    private final Map<V, GXVertex<V>> vertices;
+    private final Map<Integer, GXVertex> vertices;
     /**
      * Map containing all the edges in the graph
      */
@@ -34,10 +34,10 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
 
     /**
      * Empty constructor just initialising the attributes
-     *
+     * TODO for now ID as key for map ==> Integer
      */
     public GXGraph() {
-        this.vertices = new HashMap<V, GXVertex<V>>();
+        this.vertices = new HashMap<Integer, GXVertex>();
         this.edges = new HashMap<E, GXEdge<E, V>>();
         this.startingVertex = null;
         this.endingVertex = null;
@@ -89,8 +89,8 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
 
 
     @Override
-    public Collection<Edge<E, V>> incidentEdges(Vertex<V> vertex) throws InvalidVertexException {
-        GXVertex<V> v = checkVertex(vertex);
+    public Collection<Edge<E, V>> incidentEdges(Vertex vertex) throws InvalidVertexException {
+        GXVertex v = checkVertex(vertex);
 
         List<Edge<E, V>> incident = new ArrayList<>();
         for (GXEdge<E, V> edge : edges.values()) {
@@ -103,7 +103,7 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
 
     @Override
     public Vertex opposite(Vertex<V> vertex, Edge<E, V> edge) throws InvalidVertexException, InvalidEdgeException {
-        GXVertex<V> v = checkVertex(vertex);
+        GXVertex v = checkVertex(vertex);
         GXEdge<E,V> e = checkEdge(edge);
 
         if (!e.contains(v)) {
@@ -119,9 +119,9 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
     }
 
     @Override
-    public boolean areAdjacent(Vertex<V> vertex, Vertex<V> vertex1) throws InvalidVertexException {
-        GXVertex<V> gxVertex = checkVertex(vertex);
-        GXVertex<V> gxVertex1 = checkVertex(vertex1);
+    public boolean areAdjacent(Vertex vertex, Vertex vertex1) throws InvalidVertexException {
+        GXVertex gxVertex = checkVertex(vertex);
+        GXVertex gxVertex1 = checkVertex(vertex1);
 
         for (GXEdge<E, V> edge : edges.values()) {
             if (edge.contains(gxVertex) && edge.contains(gxVertex1))  {
@@ -216,14 +216,14 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
      *
      * @return the GXvertex
      */
-    private GXVertex<V> checkVertex(Vertex<V> vertex) throws InvalidVertexException {
+    private GXVertex checkVertex(Vertex vertex) throws InvalidVertexException {
         if (vertex == null) {
             throw new InvalidVertexException("Vertex is null");
         }
 
-        GXVertex<V> gxVertex;
+        GXVertex gxVertex;
         try {
-            gxVertex =  (GXVertex<V>) vertex;
+            gxVertex =  (GXVertex) vertex;
         } catch (ClassCastException e) {
             throw new InvalidVertexException("Not a GXVertex");
         }
