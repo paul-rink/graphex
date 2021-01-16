@@ -119,7 +119,15 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
     }
 
     @Override
-    public boolean areAdjacent(Vertex vertex, Vertex vertex1) throws InvalidVertexException {
+    public boolean areAdjacent(Vertex<V> vertex, Vertex<V> vertex1) throws InvalidVertexException {
+        GXVertex<V> gxVertex = checkVertex(vertex);
+        GXVertex<V> gxVertex1 = checkVertex(vertex1);
+
+        for (GXEdge<E, V> edge : edges.values()) {
+            if (edge.contains(gxVertex) && edge.contains(gxVertex1))  {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -213,9 +221,9 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
             throw new InvalidVertexException("Vertex is null");
         }
 
-        GXVertex gxVertex;
+        GXVertex<V> gxVertex;
         try {
-            gxVertex =  (GXVertex) vertex;
+            gxVertex =  (GXVertex<V>) vertex;
         } catch (ClassCastException e) {
             throw new InvalidVertexException("Not a GXVertex");
         }
@@ -231,9 +239,9 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
         if (edge == null) {
             throw new InvalidEdgeException("Edge is null");
         }
-        GXEdge gxEdge;
+        GXEdge<E, V> gxEdge;
         try {
-            gxEdge = (GXEdge) edge;
+            gxEdge = (GXEdge<E, V>) edge;
         } catch (ClassCastException e) {
             throw new InvalidEdgeException("Not a GxEdge");
         }
@@ -243,6 +251,16 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
         }
 
         return gxEdge;
+    }
+
+    //TODO check if ID is chosen as Key in map
+    private boolean edgeInGraph(E element) {
+        return edges.containsKey(element);
+    }
+
+    //TODO check if ID is chosen as Key in map
+    private boolean vertexInGraph(V element) {
+        return vertices.containsKey(element);
     }
 
 }
