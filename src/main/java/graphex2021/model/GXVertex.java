@@ -176,4 +176,14 @@ public class GXVertex implements Vertex<String> {
         return position;
     }
 
+    /**
+     * Checks if to vertices are the same. Two vertices are equal, if they have the same {@code id}.
+     * @param o ist the vertex you want to check.
+     * @return {@code true} if id of the 2nd vertex is equal to id of this vertex, {@code false} otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        return o.getClass().isInstance(this) && this.id == ((GXVertex) o).getId();
+    }
+
 }
