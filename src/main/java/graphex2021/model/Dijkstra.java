@@ -167,29 +167,4 @@ public class Dijkstra implements Algorithm {
         }
     }
 
-    /**
-     * TODO probably not necessary -> then remove
-     * This class is used for the Dijkstra algorithm to store for eache {@link GXVertex} its previous and distance.
-     * Therefore it models a tuple consisting of a {@link GXVertex} and an integer value, like (prev, dist). This tuple
-     * then can be used for e.g. a {@link HashMap} to access the prev or current distance of a specific {@link GXVertex}
-     * fast.
-     */
-    private class DijkstraAtom {
-        private GXVertex prev;
-        private int dist;
-
-        DijkstraAtom(GXVertex prev, int dist) {
-            this.prev = prev;
-            this.dist = dist;
-        }
-
-        public GXVertex getPrev() {
-            return prev;
-        }
-
-        public int getDist() {
-            return dist;
-        }
-    }
-
 }
