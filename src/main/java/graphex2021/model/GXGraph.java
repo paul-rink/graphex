@@ -260,6 +260,25 @@ public class GXGraph implements GraphInterface<String, String> {
         return gxEdge;
     }
 
+    /**
+     * Returns for two given vertices the corresponding edge in the graph. The order of the given vertices does not
+     * matter
+     *
+     * @param v 1st {@link GXVertex}of the edge you are looking for
+     * @param u 2nd {@link GXVertex} of the edge you are looking for
+     * @return the {@link GXEdge} containing {@code v} and {@code u}
+     * @throws ElementNotInGraphException if the graph does not contain a {@link GXEdge} with those vertices.
+     */
+    public GXEdge getEdge(GXVertex v, GXVertex u) throws ElementNotInGraphException {
+        for (GXEdge edge: edges.values()) {        //search for edge that contains both v and u
+            if ((edge.vertices()[0].equals(v) || edge.vertices()[1].equals(v))
+                    && (edge.vertices()[0].equals(u) || edge.vertices()[1].equals(u))) {
+                return edge;
+            }
+        }
+        throw new ElementNotInGraphException("There's no such edge!");
+    }
+
     //TODO check if ID is chosen as Key in map
     private boolean edgeInGraph(String element) {
         return edges.containsKey(element);
