@@ -13,7 +13,7 @@ import com.brunomnsilva.smartgraph.graph.Vertex;
  * @param <E> type of the element contained in the edge
  * @param <V> type of the elements contained in the vertices
  */
-public class GXEdge<E, V> implements Edge<E, V> {
+public class GXEdge implements Edge<String, String> {
 
 
     /**
@@ -26,7 +26,7 @@ public class GXEdge<E, V> implements Edge<E, V> {
     /**
      * The element conatined in the edge
      */
-    private E element;
+    private String element;
 
     /**
      * Unique identifier for this edge
@@ -64,7 +64,7 @@ public class GXEdge<E, V> implements Edge<E, V> {
      * @param outboundVertex the second vertex of the edge
      * @param element the element contained in the edge
      */
-    public GXEdge(GXVertex inboundVertex, GXVertex outboundVertex, E element) {
+    public GXEdge(GXVertex inboundVertex, GXVertex outboundVertex, String element) {
         this.inboundVertex = inboundVertex;
         this.outboundVertex = outboundVertex;
         this.element = element;
@@ -81,7 +81,7 @@ public class GXEdge<E, V> implements Edge<E, V> {
      * @return element stored in the edge
      */
     @Override
-    public E element() {
+    public String element() {
         return null;
     }
 
@@ -92,7 +92,7 @@ public class GXEdge<E, V> implements Edge<E, V> {
      * @return array of length two containing both vertices
      */
     @Override
-    public Vertex<String>[] vertices() {
+    public GXVertex[] vertices() {
 
         return new GXVertex[]{inboundVertex, outboundVertex};
     }

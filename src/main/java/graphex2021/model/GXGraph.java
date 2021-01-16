@@ -13,7 +13,7 @@ import java.util.*;
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
-public class GXGraph<V, E> implements GraphInterface<V, E> {
+public class GXGraph implements GraphInterface<String, String> {
 
 
     /**
@@ -24,12 +24,13 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
 
     /**
      * Map containing all the vertices in the graph
+     * TODO Check ID as key
      */
     private final Map<Integer, GXVertex> vertices;
     /**
      * Map containing all the edges in the graph
      */
-    private final Map<E, GXEdge<E, V>> edges;
+    private final Map<String, GXEdge> edges;
 
 
     /**
@@ -38,7 +39,7 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
      */
     public GXGraph() {
         this.vertices = new HashMap<Integer, GXVertex>();
-        this.edges = new HashMap<E, GXEdge<E, V>>();
+        this.edges = new HashMap<String, GXEdge>();
         this.startingVertex = null;
         this.endingVertex = null;
 
@@ -68,8 +69,8 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
      * @return ArrayList containing all the vertices of the Graph. For now can be typecast to GXVertex
      */
     @Override
-    public Collection<Vertex<V>> vertices() {
-        Collection<Vertex<V>> verticeList = new ArrayList<>();
+    public Collection<Vertex<String>> vertices() {
+        Collection<Vertex<String>> verticeList = new ArrayList<>();
         verticeList.addAll(vertices.values());
         return verticeList;
     }
@@ -81,19 +82,19 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
      * @return ArrayList containing all the vertices of the Graph. For now can be typecast to GXEdge
      */
     @Override
-    public Collection<Edge<E, V>> edges() {
-        List<Edge<E, V>> edgeList = new ArrayList<>();
+    public Collection<Edge<String, String>> edges() {
+        List<Edge<String, String>> edgeList = new ArrayList<>();
         edgeList.addAll(edges.values());
         return edgeList;
     }
 
 
     @Override
-    public Collection<Edge<E, V>> incidentEdges(Vertex vertex) throws InvalidVertexException {
+    public Collection<Edge<String, String>> incidentEdges(Vertex vertex) throws InvalidVertexException {
         GXVertex v = checkVertex(vertex);
 
-        List<Edge<E, V>> incident = new ArrayList<>();
-        for (GXEdge<E, V> edge : edges.values()) {
+        List<Edge<String, String>> incident = new ArrayList<>();
+        for (GXEdge edge : edges.values()) {
             if (edge.contains(v)) {
                 incident.add(edge);
             }
@@ -102,9 +103,9 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
     }
 
     @Override
-    public Vertex opposite(Vertex<V> vertex, Edge<E, V> edge) throws InvalidVertexException, InvalidEdgeException {
+    public Vertex opposite(Vertex<String> vertex, Edge<String, String> edge) throws InvalidVertexException, InvalidEdgeException {
         GXVertex v = checkVertex(vertex);
-        GXEdge<E,V> e = checkEdge(edge);
+        GXEdge e = checkEdge(edge);
 
         if (!e.contains(v)) {
             // Vertex is not part of the passed edge
@@ -123,7 +124,7 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
         GXVertex gxVertex = checkVertex(vertex);
         GXVertex gxVertex1 = checkVertex(vertex1);
 
-        for (GXEdge<E, V> edge : edges.values()) {
+        for (GXEdge edge : edges.values()) {
             if (edge.contains(gxVertex) && edge.contains(gxVertex1))  {
                 return true;
             }
@@ -132,38 +133,38 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
     }
 
     @Override
-    public Vertex insertVertex(Object o) throws InvalidVertexException {
+    public Vertex insertVertex(String o) throws InvalidVertexException {
         return null;
     }
 
     @Override
-    public Edge insertEdge(Vertex vertex, Vertex vertex1, Object o)
+    public Edge insertEdge(Vertex vertex, Vertex vertex1, String o)
             throws InvalidVertexException, InvalidEdgeException {
         return null;
     }
 
     @Override
-    public Edge insertEdge(Object o, Object v1, Object o2) throws InvalidVertexException, InvalidEdgeException {
+    public Edge insertEdge(String o, String v1, String o2) throws InvalidVertexException, InvalidEdgeException {
         return null;
     }
 
     @Override
-    public Object removeVertex(Vertex vertex) throws InvalidVertexException {
+    public String removeVertex(Vertex vertex) throws InvalidVertexException {
         return null;
     }
 
     @Override
-    public Object removeEdge(Edge edge) throws InvalidEdgeException {
+    public String removeEdge(Edge edge) throws InvalidEdgeException {
         return null;
     }
 
     @Override
-    public Object replace(Vertex vertex, Object o) throws InvalidVertexException {
+    public String replace(Vertex vertex, String o) throws InvalidVertexException {
         return null;
     }
 
     @Override
-    public Object replace(Edge edge, Object o) throws InvalidEdgeException {
+    public String replace(Edge edge, String o) throws InvalidEdgeException {
         return null;
     }
 
@@ -235,13 +236,13 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
 
     }
 
-    private GXEdge<E, V> checkEdge(Edge<E, V> edge) throws InvalidEdgeException {
+    private GXEdge checkEdge(Edge<String, String> edge) throws InvalidEdgeException {
         if (edge == null) {
             throw new InvalidEdgeException("Edge is null");
         }
-        GXEdge<E, V> gxEdge;
+        GXEdge gxEdge;
         try {
-            gxEdge = (GXEdge<E, V>) edge;
+            gxEdge = (GXEdge) edge;
         } catch (ClassCastException e) {
             throw new InvalidEdgeException("Not a GxEdge");
         }
@@ -254,12 +255,12 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
     }
 
     //TODO check if ID is chosen as Key in map
-    private boolean edgeInGraph(E element) {
+    private boolean edgeInGraph(String element) {
         return edges.containsKey(element);
     }
 
     //TODO check if ID is chosen as Key in map
-    private boolean vertexInGraph(V element) {
+    private boolean vertexInGraph(String element) {
         return vertices.containsKey(element);
     }
 

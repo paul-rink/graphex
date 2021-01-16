@@ -51,7 +51,7 @@ public class GXVertex implements Vertex<String> {
      * @param id unique id for vertex in a graph. Needs to be uniquely created before setting
      * @param pos the position you want the vertex to have
      */
-    public GXVertex(V element, int id, GXPosition pos) {
+    public GXVertex(String element, int id, GXPosition pos) {
         this.element = element;
         this.position = pos;
         this.id = id;
@@ -67,7 +67,7 @@ public class GXVertex implements Vertex<String> {
      * @return the element stored in the vertex
      */
     @Override
-    public V element() {
+    public String element() {
         return element;
     }
 
