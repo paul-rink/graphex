@@ -102,9 +102,20 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
     }
 
     @Override
-    public Vertex opposite(Vertex vertex, Edge edge) throws InvalidVertexException, InvalidEdgeException {
+    public Vertex opposite(Vertex<V> vertex, Edge<E, V> edge) throws InvalidVertexException, InvalidEdgeException {
+        GXVertex<V> v = checkVertex(vertex);
+        GXEdge<E,V> e = checkEdge(edge);
 
+        if (!e.contains(v)) {
+            // Vertex is not part of the passed edge
+            return null;
+        }
 
+        if (edge.vertices()[0] == v) {
+            return edge.vertices()[1];
+        } else {
+            return edge.vertices()[0];
+        }
     }
 
     @Override
@@ -202,18 +213,36 @@ public class GXGraph<V, E> implements GraphInterface<V, E> {
             throw new InvalidVertexException("Vertex is null");
         }
 
+        GXVertex gxVertex;
         try {
-            GXVertex gxVertex =  (GXVertex) vertex;
+            gxVertex =  (GXVertex) vertex;
         } catch (ClassCastException e) {
             throw new InvalidVertexException("Not a GXVertex");
         }
-        //TODO
+        //TODO ID or element aas key
         if (!vertices.containsKey(vertex.element())) {
             throw  new InvalidVertexException("Vertex is not part of this graph");
         }
         return gxVertex;
 
+    }
 
+    private GXEdge<E, V> checkEdge(Edge<E, V> edge) throws InvalidEdgeException {
+        if (edge == null) {
+            throw new InvalidEdgeException("Edge is null");
+        }
+        GXEdge gxEdge;
+        try {
+            gxEdge = (GXEdge) edge;
+        } catch (ClassCastException e) {
+            throw new InvalidEdgeException("Not a GxEdge");
+        }
+
+        if (!edges.containsKey(edge.element())) {
+            throw new InvalidEdgeException("Edge does not belong to this graph");
+        }
+
+        return gxEdge;
     }
 
 }
