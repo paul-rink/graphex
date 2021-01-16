@@ -79,6 +79,14 @@ public interface GraphInterface<V, E> extends Graph<V, E> {
      */
     GXVertex getEndingVertex();
 
+    /**
+     * Returns all adjacent vertices of a given {@link GXVertex}, i.e. the neighbors of {@code v}.
+     *
+     * @param v is the {@link GXVertex} you want to know all adjacent vertices of.
+     * @return a collection of all adjacent vertices.
+     */
+    Collection<GXVertex> getNeighbors(GXVertex v);
+
 
     /**
      * Unmarks the vertex passed to this function.

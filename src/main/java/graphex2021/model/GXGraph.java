@@ -202,6 +202,12 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
+    //TODO implement me
+    public Collection<GXVertex> getNeighbors(GXVertex v) {
+        return null;
+    }
+
+    @Override
     public void unmarkVertex(GXVertex vertex) {
 
     }
