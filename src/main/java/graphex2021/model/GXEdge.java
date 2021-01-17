@@ -1,17 +1,16 @@
 package graphex2021.model;
 
 import com.brunomnsilva.smartgraph.graph.Edge;
-import com.brunomnsilva.smartgraph.graph.Vertex;
 
 
 /**
- * Edge containing the element of type e and vertices of type V
+ * This class models edges for {@link GXGraph}. An edge is represented by two vertices {@link GXVertex} and identified
+ * by a unique {@code id}. {@link GXEdge}s are undirected and can have a {@code weight}. Every edge also has an
+ * {@code element} implemented from {@link Edge} that might be used to represent the label of the edge. An edge can
+ * be assigned for {@code marked}, {@code blocked} and {@code visible}.
  *
- *
- * @author Dominik
- * @version 0.1
- * @param <E> type of the element contained in the edge
- * @param <V> type of the elements contained in the vertices
+ *@author D. Flohs, K. Marquardt, P. Rink
+ *@version 1.0 14.01.2021
  */
 public class GXEdge implements Edge<String, String> {
 
@@ -24,7 +23,7 @@ public class GXEdge implements Edge<String, String> {
 
 
     /**
-     * The element conatined in the edge
+     * The element contained in the edge
      */
     private String element;
 

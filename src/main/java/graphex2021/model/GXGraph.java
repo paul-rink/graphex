@@ -5,11 +5,10 @@ import com.brunomnsilva.smartgraph.graph.*;
 import java.util.*;
 
 /**
+ *This class models the logic of the graph a user is interacting with and a {@link Algorithm} executes at. Graphs
+ * consist of {@link GXVertex} and {@link GXEdge}. One {@link GXVertex} should be set as a {@code startingVertex} and
+ * one as a {@code endingVertex} which is required for sime {@link Algorithm}.
  *
- *
- *
- * @param <E> Elements stored in the graphs edges
- * @param <V> Elements stored in the graphs vertices
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
