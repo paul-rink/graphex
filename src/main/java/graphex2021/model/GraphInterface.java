@@ -2,7 +2,6 @@ package graphex2021.model;
 
 
 import com.brunomnsilva.smartgraph.graph.Graph;
-import com.brunomnsilva.smartgraph.graph.Vertex;
 
 import java.util.Collection;
 
@@ -14,8 +13,9 @@ import java.util.Collection;
  *
  * @param <V> the element stored in the vertices
  * @param <E> the element stored in the edges
- * @author Dominik
- * @version 1.0
+ *
+ * @author D. Flohs, K. Marquardt, P. Rink
+ * @version 1.0 14.01.2021
  */
 public interface GraphInterface<V, E> extends Graph<V, E> {
     

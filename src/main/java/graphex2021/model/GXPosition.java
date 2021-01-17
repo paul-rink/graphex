@@ -4,8 +4,8 @@ package graphex2021.model;
  * Stores the position that a vertex can be in.
  * 2 dimensional position stored with x and y values
  *
- * @author Dominik
- * @version 0.1
+ * @author D. Flohs, K. Marquardt, P. Rink
+ * @version 1.0 14.01.2021
  */
 public class GXPosition {
 

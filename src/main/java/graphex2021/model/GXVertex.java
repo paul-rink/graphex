@@ -7,8 +7,9 @@ import com.brunomnsilva.smartgraph.graph.Vertex;
  * Vertex containing the element <code>V</code> to be used in the Graph.
  *
  * TODO check for unwanted changes resulting from the change away from V to String
- * @author Dominik
- * @version 1.0
+ *
+ * @author D. Flohs, K. Marquardt, P. Rink
+ * @version 1.0 14.01.2021
  */
 public class GXVertex implements Vertex<String> {
 
