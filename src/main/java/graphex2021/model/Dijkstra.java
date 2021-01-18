@@ -152,8 +152,8 @@ public class Dijkstra implements Algorithm {
             GXEdge edge = g.getEdge(selectedVertex, u);
             //the resulting distance if the new path would go over v to u
             int alternativeDist = dist[selectedVertex.getId()] + edge.getWeight();
-            //if new distance is less than old distance, update distance to u
-            if (alternativeDist < dist[u.getId()]) {
+            //if u is not visited yet (dist infinity/-1) or new distance is less than old distance, update distance
+            if (dist[u.getId()] == -1 || alternativeDist < dist[u.getId()]) {
                 dist[u.getId()] = alternativeDist;
 
                 //because the distance of u changed, insert it again to queue to update its priority
