@@ -1,174 +1,163 @@
 {
-    "$type" : "vertex"
-    "$name" : "A"
-},
-{
-    "$type" : "vertex"
-    "$name" : "B"
-},
-{
-    "$type" : "vertex"
-    "$name" : "C"
-},
-{
-    "$type" : "vertex"
-    "$name" : "D"
-},
-{
-    "$type" : "vertex"
-    "$name" : "E"
-},
-{
-    "$type" : "vertex"
-    "$name" : "F"
-},
-{
-    "$type" : "vertex"
-    "$name" : "G"
-},
-{
-    "$type" : "vertex"
-    "$name" : "H"
-},
-{
-    "$type" : "vertex"
-    "$name" : "I"
-},
-{
-    "$type" : "vertex"
-    "$name" : "J"
-},
-{
-    "$type" : "vertex"
-    "$name" : "K"
-},
-{
-    "$type" : "vertex"
-    "$name" : "L"
-},
-{
-    "$type" : "vertex"
-    "$name" : "S"
-},
-{
-    "$type" : "vertex"
-    "$name" : "Z"
-},
-
-{
-    "$type" : "edge"
-    "$vertex1" : "S"
-    "$vertex2" : "A"
-    "$weight" :"2"
-},
-{
-    "$type" : "edge"
-    "$vertex1" : "S"
-    "$vertex2" : "B"
-    "$weight" :  "4"
-},{
-    "$type" : "edge"
-    "$vertex1" : "S"
-    "$vertex2" : "C"
-    "$weight" :  "8"
-},{
-    "$type" : "edge"
-    "$vertex1" : "A"
-    "$vertex2" : "B"
-    "$weight" :  "3"
-},{
-    "$type" : "edge"
-    "$vertex1" : "A"
-    "$vertex2" : "D"
-    "$weight" :  "3"
-},{
-    "$type" : "edge"
-    "$vertex1" : "B"
-    "$vertex2" : "H"
-    "$weight" :  "2"
-},{
-    "$type" : "edge"
-    "$vertex1" : "C"
-    "$vertex2" : "D"
-    "$weight" :  "2"
-},{
-    "$type" : "edge"
-    "$vertex1" : "C"
-    "$vertex2" : "E"
-    "$weight" :  "2"
-},{
-    "$type" : "edge"
-    "$vertex1" : "D"
-    "$vertex2" : "F"
-    "$weight" :  "5"
-},{
-    "$type" : "edge"
-    "$vertex1" : "E"
-    "$vertex2" : "F"
-    "$weight" :  "3"
-},{
-    "$type" : "edge"
-    "$vertex1" : "E"
-    "$vertex2" : "I"
-    "$weight" :  "7"
-},{
-    "$type" : "edge"
-    "$vertex1" : "F"
-    "$vertex2" : "G"
-    "$weight" :  "1"
-},{
-    "$type" : "edge"
-    "$vertex1" : "F"
-    "$vertex2" : "I"
-    "$weight" :  "5"
-},{
-    "$type" : "edge"
-    "$vertex1" : "G"
-    "$vertex2" : "J"
-    "$weight" :  "8"
-},{
-    "$type" : "edge"
-    "$vertex1" : "G"
-    "$vertex2" : "H"
-    "$weight" :  "6"
-},{
-    "$type" : "edge"
-    "$vertex1" : "H"
-    "$vertex2" : "K"
-    "$weight" :  "10"
-},{
-    "$type" : "edge"
-    "$vertex1" : "H"
-    "$vertex2" : "L"
-    "$weight" :  "12"
-},{
-    "$type" : "edge"
-    "$vertex1" : "I"
-    "$vertex2" : "J"
-    "$weight" :  "2"
-},{
-    "$type" : "edge"
-    "$vertex1" : "J"
-    "$vertex2" : "K"
-    "$weight" :  "3"
-},{
-    "$type" : "edge"
-    "$vertex1" : "J"
-    "$vertex2" : "Z"
-    "$weight" :  "4"
-},{
-    "$type" : "edge"
-    "$vertex1" : "K"
-    "$vertex2" : "L"
-    "$weight" :  "3"
-},{
-    "$type" : "edge"
-    "$vertex1" : "K"
-    "$vertex2" : "Z"
-    "$weight" :  "7"
-},{
-    "$type" : "edge"
-    "$vertex1" : "L"
-    "$vertex2" : "Z"
-    "$weight" :  "4"
+    "type" : "GXGraph"
+    "vertices" : [
+        {
+            "name" : "A"
+        },
+        {
+            "name" : "B"
+        },
+        {
+            "$name" : "C"
+        },
+        {
+            "$name" : "D"
+        },
+        {
+            "$name" : "E"
+        },
+        {
+            "$name" : "F"
+        },
+        {
+            "$name" : "G"
+        },
+        {
+            "$name" : "H"
+        },
+        {
+            "$name" : "I"
+        },
+        {
+            "$name" : "J"
+        },
+        {
+            "$name" : "K"
+        },
+        {
+            "$name" : "L"
+        },
+        {
+            "$name" : "S"
+        },
+        {
+            "$name" : "Z"
+        }
+    ],
+    "edges" : [
+        {
+            "$vertex1" : "S"
+            "$vertex2" : "A"
+            "$weight" :"2"
+        },
+        {
+            "$vertex1" : "S"
+            "$vertex2" : "B"
+            "$weight" :  "4"
+        },
+        {    
+            "$vertex1" : "S"
+            "$vertex2" : "C"
+            "$weight" :  "8"
+        },
+        {
+            "$vertex1" : "A"
+            "$vertex2" : "B"
+            "$weight" :  "3"
+        },
+        {
+            "$vertex1" : "A"
+            "$vertex2" : "D"
+            "$weight" :  "3"
+        },
+        {
+            "$vertex1" : "B"
+            "$vertex2" : "H"
+            "$weight" :  "2"
+        },
+        {
+            "$vertex1" : "C"
+            "$vertex2" : "D"
+            "$weight" :  "2"
+        },
+        {
+            "$vertex1" : "C"
+            "$vertex2" : "E"
+            "$weight" :  "2"
+        },
+        {
+            "$vertex1" : "D"
+            "$vertex2" : "F"
+            "$weight" :  "5"
+        },
+        {
+            "$vertex1" : "E"
+            "$vertex2" : "F"
+            "$weight" :  "3"
+        },
+        {
+            "$vertex1" : "E"
+            "$vertex2" : "I"
+            "$weight" :  "7"
+        },
+        {
+            "$vertex1" : "F"
+            "$vertex2" : "G"
+            "$weight" :  "1"
+        },
+        {
+            "$vertex1" : "F"
+            "$vertex2" : "I"
+            "$weight" :  "5"
+        },
+        {
+            "$vertex1" : "G"
+            "$vertex2" : "J"
+            "$weight" :  "8"
+        },
+        {
+            "$vertex1" : "G"
+            "$vertex2" : "H"
+            "$weight" :  "6"
+        },
+        {
+            "$vertex1" : "H"
+            "$vertex2" : "K"
+            "$weight" :  "10"
+        },
+        {
+            "$vertex1" : "H"
+            "$vertex2" : "L"
+            "$weight" :  "12"
+        },
+        {
+            "$vertex1" : "I"
+            "$vertex2" : "J"
+            "$weight" :  "2"
+        },
+        {
+            "$vertex1" : "J"
+            "$vertex2" : "K"
+            "$weight" :  "3"
+        },
+        {
+            "$vertex1" : "J"
+            "$vertex2" : "Z"
+            "$weight" :  "4"
+        },{
+            "$vertex1" : "K"
+            "$vertex2" : "L"
+            "$weight" :  "3"
+        },{
+            "$vertex1" : "K"
+            "$vertex2" : "Z"
+            "$weight" :  "7"
+        },{
+            "$vertex1" : "L"
+            "$vertex2" : "Z"
+            "$weight" :  "4"
+        }
+    ]
+    "startVertex" : "S"
+    "endVertex" : "Z"
 }
