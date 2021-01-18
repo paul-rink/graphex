@@ -1,0 +1,6 @@
+vertices: A, B, C, D, E, F, G, H, I, J, K, L, S, Z
+
+edges: (S,A,2); (S,B,4); (S,C,8); (A,B,3); (A,D,3); (B,H,2); (C,D,2); (C,E,2); (D,F,5); (E,F,3); (E,I,7); (F,G,1); (F,I,5); (G,J,8); (G,H,6); (H,K,10); (H,L,12); (I,J,2); (J,K,3); (J,Z,4); (K,L,3); (K,Z,7); (L,Z,4)
+
+startVertex = S
+endVertex = Z
