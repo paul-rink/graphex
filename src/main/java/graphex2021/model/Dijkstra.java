@@ -4,41 +4,30 @@ import java.util.*;
 
 /**
  * This class simulates the Dijksta-Algorithm.
- * TODO generic in Dijkstra (and other classes..)? Better defining in GXGraph?
- * TODO Singleton? - Maybe because of possibility for multi-window support not..
  * TODO what should happen with help info, if shortest path is found, but Dijkstra would continue?
  *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
-@SuppressWarnings("checkstyle:WhitespaceAround")
 public class Dijkstra implements Algorithm {
-    private GXGraph g;
-    /**
-     * Size of the {@code graph}, i.e. the number of {@link GXVertex} in the graph.
-     */
-    private int size;
-    private Collection<GXVertex> vertices;
-    private GXVertex start;
+    private final GXGraph g;
+    private final Collection<GXVertex> vertices;
+    private final GXVertex start;
     /**
      * Array that holds distances for all {@link GXVertex}s respectively as distance to given
      * {@code start}-vertex. {@code -1} is for {@code infinity}. Only positive values for distances.
      */
-    private int[] dist;
+    private final int[] dist;
     /**
      * Array of {@link GXVertex} where every index of the array refers to the id of a {@link GXVertex} and the element
      * represents the predecessor of the vertex with this id.
      */
-    private GXVertex[] prev;
-    /**
-     * This comparator is used for comparing two vertices by their current distance to the start vertex.
-     */
-    private Comparator<GXVertex> vertexDistanceComparator;
+    private final GXVertex[] prev;
     /**
      * This queue will hold all unmarked vertices, prioritized by their distance to the start vertex.
      */
-    private PriorityQueue<GXVertex> unmarked;
-    private List<Step> steps;
+    private final PriorityQueue<GXVertex> unmarked;
+    private final List<Step> steps;
 
     /**
      * Creates a new Dijkstra instance for a given {@link GXGraph}.
@@ -46,13 +35,17 @@ public class Dijkstra implements Algorithm {
      */
     public Dijkstra(GXGraph g) {
         this.g = g;
-        this.vertices = (Collection) g.vertices();
-        this.size = vertices.size();
+        this.vertices = g.vertices();
         this.start = g.getStartingVertex();
+
+        int size = vertices.size();
         this.dist = new int[size];
         this.prev = new GXVertex[size];
-        this.vertexDistanceComparator = Comparator.comparingInt(v -> dist[v.getId()]);
+
+         //This comparator is used for comparing two vertices by their current distance to the start vertex.
+        Comparator<GXVertex> vertexDistanceComparator = Comparator.comparingInt(v -> dist[v.getId()]);
         this.unmarked = new PriorityQueue<>(vertexDistanceComparator);
+
         this.steps = new LinkedList<>();
         createSteps();
     }
@@ -96,7 +89,6 @@ public class Dijkstra implements Algorithm {
     /**
      * Generates a list of {@link Step}s where each entry is one step of Dijkstra algorithm, consisting of a
      * {@link GXVertex} and {@link GXEdge} chosen by Dijkstra in the step.
-     * @return list of {@link Step}s according to execution order of Dijkstra.
      */
     private void createSteps() {
         init();
@@ -117,7 +109,6 @@ public class Dijkstra implements Algorithm {
     }
 
     /**
-     * TODO maybe method in Graph with getEdge(v1,v2)
      * Searches for a given {@link GXVertex} that was the next chosen vertex by the algorithm for the {@link GXEdge}
      * that belongs to it. This said, this edge is the next part of the shortest path calculated by the algorithm.
      * The edge is identified by the given vertex and a second vertex that is already marked.
