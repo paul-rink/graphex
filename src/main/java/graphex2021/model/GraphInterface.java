@@ -1,7 +1,7 @@
 package graphex2021.model;
 
 
-import com.brunomnsilva.smartgraph.graph.Graph;
+import com.brunomnsilva.smartgraph.graph.*;
 
 import java.util.Collection;
 
@@ -17,8 +17,52 @@ import java.util.Collection;
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
-public interface GraphInterface<V, E> extends Graph<V, E> {
-    
+public interface GraphInterface<V, E> {
+
+
+    public int numVertices();
+
+
+    public int numEdges();
+
+
+    public Collection<GXVertex> vertices();
+
+
+    public Collection<GXEdge> edges();
+
+
+    public Collection<GXEdge> incidentEdges(GXVertex v) throws InvalidVertexException;
+
+
+    public GXVertex opposite(GXVertex v, GXEdge e) throws InvalidVertexException, InvalidEdgeException;
+
+
+    public boolean areAdjacent(GXVertex u, GXVertex v) throws InvalidVertexException;
+
+
+    public GXVertex insertVertex(GXVertex vertex);
+
+
+    public GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement);
+
+
+    public GXEdge insertEdge(String vElement1, String vElement2, String edgeElement) throws InvalidVertexException,
+            InvalidEdgeException;
+
+
+    public Object removeVertex(GXVertex v) throws InvalidVertexException;
+
+
+    public Object removeEdge(GXEdge e) throws InvalidEdgeException;
+
+
+    public Object replace(GXVertex v, String newElement) throws InvalidVertexException;
+
+
+    public Object replace(GXEdge e, String newElement) throws InvalidEdgeException;
+
+
     /**
      * Setting all the edges visible that are adjacent to the passed vertex
      * //TODO changed return type

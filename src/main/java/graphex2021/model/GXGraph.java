@@ -68,11 +68,13 @@ public class GXGraph implements GraphInterface<String, String> {
      * @return ArrayList containing all the vertices of the Graph. For now can be typecast to GXVertex
      */
     @Override
-    public Collection<Vertex<String>> vertices() {
-        Collection<Vertex<String>> verticeList = new ArrayList<>();
+    public Collection<GXVertex> vertices() {
+        Collection<GXVertex> verticeList = new ArrayList<>();
         verticeList.addAll(vertices.values());
         return verticeList;
     }
+
+
 
     /**
      * Returns a list containing all the edges that are part of the graph.
@@ -81,18 +83,18 @@ public class GXGraph implements GraphInterface<String, String> {
      * @return ArrayList containing all the vertices of the Graph. For now can be typecast to GXEdge
      */
     @Override
-    public Collection<Edge<String, String>> edges() {
-        List<Edge<String, String>> edgeList = new ArrayList<>();
+    public Collection<GXEdge> edges() {
+        List<GXEdge> edgeList = new ArrayList<>();
         edgeList.addAll(edges.values());
         return edgeList;
     }
 
 
     @Override
-    public Collection<Edge<String, String>> incidentEdges(Vertex vertex) throws InvalidVertexException {
+    public Collection<GXEdge> incidentEdges(GXVertex vertex) throws InvalidVertexException {
         GXVertex v = checkVertex(vertex);
 
-        List<Edge<String, String>> incident = new ArrayList<>();
+        List<GXEdge> incident = new ArrayList<>();
         for (GXEdge edge : edges.values()) {
             if (edge.contains(v)) {
                 incident.add(edge);
@@ -102,7 +104,7 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public Vertex opposite(Vertex<String> vertex, Edge<String, String> edge) throws InvalidVertexException, InvalidEdgeException {
+    public GXVertex opposite(GXVertex vertex, GXEdge edge) throws InvalidVertexException, InvalidEdgeException {
         GXVertex v = checkVertex(vertex);
         GXEdge e = checkEdge(edge);
 
@@ -119,7 +121,7 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public boolean areAdjacent(Vertex vertex, Vertex vertex1) throws InvalidVertexException {
+    public boolean areAdjacent(GXVertex vertex, GXVertex vertex1) throws InvalidVertexException {
         GXVertex gxVertex = checkVertex(vertex);
         GXVertex gxVertex1 = checkVertex(vertex1);
 
@@ -132,40 +134,44 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public Vertex insertVertex(String o) throws InvalidVertexException {
+    public GXVertex insertVertex(GXVertex vertex) throws InvalidVertexException {
         return null;
     }
 
+
     @Override
-    public Edge insertEdge(Vertex vertex, Vertex vertex1, String o)
+    public GXEdge insertEdge(GXVertex vertex, GXVertex vertex1, String element)
             throws InvalidVertexException, InvalidEdgeException {
         return null;
     }
 
+    //TODO check how to implement this here and if needed
     @Override
-    public Edge insertEdge(String o, String v1, String o2) throws InvalidVertexException, InvalidEdgeException {
+    public GXEdge insertEdge(String o, String v1, String o2) throws InvalidVertexException, InvalidEdgeException {
         return null;
     }
 
     @Override
-    public String removeVertex(Vertex vertex) throws InvalidVertexException {
+    public String removeVertex(GXVertex vertex) throws InvalidVertexException {
         return null;
     }
 
     @Override
-    public String removeEdge(Edge edge) throws InvalidEdgeException {
+    public String removeEdge(GXEdge edge) throws InvalidEdgeException {
         return null;
     }
 
     @Override
-    public String replace(Vertex vertex, String o) throws InvalidVertexException {
+    public String replace(GXVertex vertex, String element) throws InvalidVertexException {
         return null;
     }
 
+    // TODO maybe not needed and mabye change wait instead
     @Override
-    public String replace(Edge edge, String o) throws InvalidEdgeException {
+    public String replace(GXEdge edge, String element) throws InvalidEdgeException {
         return null;
     }
+
 
     @Override
     public void setEdgeVisible(GXVertex vertex) {
@@ -203,7 +209,11 @@ public class GXGraph implements GraphInterface<String, String> {
     @Override
     //TODO implement me
     public Collection<GXVertex> getNeighbors(GXVertex v) {
-        return null;
+        List<GXVertex> adjacent = new ArrayList<>();
+        for (GXEdge edge : incidentEdges(v)) {
+            adjacent.add((GXVertex) opposite(v, edge));
+        }
+        return adjacent;
     }
 
     @Override
