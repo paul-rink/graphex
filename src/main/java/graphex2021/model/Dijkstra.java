@@ -43,7 +43,16 @@ public class Dijkstra implements Algorithm {
         this.prev = new GXVertex[size];
 
          //This comparator is used for comparing two vertices by their current distance to the start vertex.
-        Comparator<GXVertex> vertexDistanceComparator = Comparator.comparingInt(v -> dist[v.getId()]);
+        Comparator<GXVertex> vertexDistanceComparator = (v, u) -> {
+            //case u and v are unvisited and therefore distance infinity (-1)
+            if ((dist[v.getId()] == -1) && (dist[u.getId()] == -1)) return 0;
+            //case v is unvisited and therefore distance infinity (-1), u is better than v
+            else if (dist[v.getId()] == -1) return 1;
+            //case u is unvisited and therefore distance infinity (-1), v is better than u
+            else if (dist[u.getId()] == -1) return -1;
+            //both are visited, then calc difference of dist, v -> less, then v -> choose first
+            else return dist[v.getId()] - dist[u.getId()];
+        };
         this.unmarked = new PriorityQueue<>(vertexDistanceComparator);
 
         this.steps = new LinkedList<>();
