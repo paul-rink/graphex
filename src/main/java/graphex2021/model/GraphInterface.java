@@ -149,7 +149,6 @@ public interface GraphInterface<V, E> {
 
     /**
      * Setting all the edges visible that are adjacent to the passed vertex
-     * //TODO changed return type
      *
      * @param vertex vertex which adjacent edges should be made visible
      * @throws ElementNotInGraphException if the vertex was not in the graph
@@ -158,12 +157,11 @@ public interface GraphInterface<V, E> {
 
     /**
      * Making the vertex at the end of an edge visible if before only one vertex was visible.
-     * //TODO check changed return type
      *
      * @param edge containing the vertex to be made visible. Needs to contain one visible vertex
      * @throws ElementNotInGraphException if the edge is not in the graph
      */
-    void setVertexVisible(GXEdge edge)throws ElementNotInGraphException;
+    void setVertexVisible(GXEdge edge, GXVertex opposite)throws ElementNotInGraphException;
 
     /**
      * //TODO propably best done in the vertex when marking or unmarking so propably not needed

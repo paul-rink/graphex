@@ -189,17 +189,23 @@ public class GXGraph implements GraphInterface<String, String> {
 
 
     @Override
-    public String replace(GXEdge edge, String element) throws InvalidEdgeException {
+    public String replace(GXEdge edge, String element) throws ElementNotInGraphException {
         return null;
     }
 
-
+    //TODO other way to handle error
     @Override
-    public void setEdgeVisible(GXVertex vertex) {
+    public void setEdgeVisible(GXVertex vertex) throws ElementNotInGraphException {
+        for (GXEdge edge : incidentEdges(vertex)) {
+            edge.setVisible(true);
+            setVertexVisible(edge, vertex);
+        }
     }
 
     @Override
-    public void setVertexVisible(GXEdge edge) {
+    public void setVertexVisible(GXEdge edge, GXVertex opposite) throws ElementNotInGraphException {
+        //TODO added vertex as param here, so that its easier to find the oposite.
+        opposite(opposite, edge).setVisible(true);
     }
 
     @Override
@@ -321,5 +327,6 @@ public class GXGraph implements GraphInterface<String, String> {
     private boolean vertexInGraph(Integer id) {
         return vertices.containsKey(id);
     }
+
 
 }
