@@ -7,7 +7,9 @@ import java.util.*;
 /**
  *This class models the logic of the graph a user is interacting with and a {@link Algorithm} executes at. Graphs
  * consist of {@link GXVertex} and {@link GXEdge}. One {@link GXVertex} should be set as a {@code startingVertex} and
- * one as a {@code endingVertex} which is required for sime {@link Algorithm}.
+ * one as a {@code endingVertex} which is required for some {@link Algorithm}.
+ *
+ *
  *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
@@ -91,7 +93,7 @@ public class GXGraph implements GraphInterface<String, String> {
 
 
     @Override
-    public Collection<GXEdge> incidentEdges(GXVertex vertex) throws InvalidVertexException {
+    public Collection<GXEdge> incidentEdges(GXVertex vertex) throws ElementNotInGraphException {
         GXVertex v = checkVertex(vertex);
 
         List<GXEdge> incident = new ArrayList<>();
@@ -104,7 +106,7 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public GXVertex opposite(GXVertex vertex, GXEdge edge) throws InvalidVertexException, InvalidEdgeException {
+    public GXVertex opposite(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException {
         GXVertex v = checkVertex(vertex);
         GXEdge e = checkEdge(edge);
 
@@ -121,7 +123,7 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public boolean areAdjacent(GXVertex vertex, GXVertex vertex1) throws InvalidVertexException {
+    public boolean areAdjacent(GXVertex vertex, GXVertex vertex1) throws ElementNotInGraphException {
         GXVertex gxVertex = checkVertex(vertex);
         GXVertex gxVertex1 = checkVertex(vertex1);
 
@@ -134,35 +136,30 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public GXVertex insertVertex(GXVertex vertex) throws InvalidVertexException {
+    public GXVertex insertVertex(GXVertex vertex) {
         return null;
     }
 
 
     @Override
     public GXEdge insertEdge(GXVertex vertex, GXVertex vertex1, String element)
-            throws InvalidVertexException, InvalidEdgeException {
+            throws ElementNotInGraphException {
         return null;
     }
 
-    //TODO check how to implement this here and if needed
-    @Override
-    public GXEdge insertEdge(String o, String v1, String o2) throws InvalidVertexException, InvalidEdgeException {
-        return null;
-    }
 
     @Override
-    public String removeVertex(GXVertex vertex) throws InvalidVertexException {
+    public String removeVertex(GXVertex vertex) throws ElementNotInGraphException {
         return null;
     }
 
     @Override
-    public String removeEdge(GXEdge edge) throws InvalidEdgeException {
+    public String removeEdge(GXEdge edge) throws ElementNotInGraphException {
         return null;
     }
 
     @Override
-    public String replace(GXVertex vertex, String element) throws InvalidVertexException {
+    public String replace(GXVertex vertex, String element) throws ElementNotInGraphException {
         return null;
     }
 
@@ -210,8 +207,12 @@ public class GXGraph implements GraphInterface<String, String> {
     //TODO implement me
     public Collection<GXVertex> getNeighbors(GXVertex v) {
         List<GXVertex> adjacent = new ArrayList<>();
-        for (GXEdge edge : incidentEdges(v)) {
-            adjacent.add((GXVertex) opposite(v, edge));
+        try {
+            for (GXEdge edge : incidentEdges(v)) {
+                adjacent.add((GXVertex) opposite(v, edge));
+            }
+        } catch (ElementNotInGraphException es) {
+            // TODO handle exception better way
         }
         return adjacent;
     }
@@ -232,7 +233,7 @@ public class GXGraph implements GraphInterface<String, String> {
      *
      * @return the GXvertex
      */
-    private GXVertex checkVertex(Vertex vertex) throws InvalidVertexException {
+    private GXVertex checkVertex(GXVertex vertex) throws InvalidVertexException {
         if (vertex == null) {
             throw new InvalidVertexException("Vertex is null");
         }

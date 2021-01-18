@@ -9,7 +9,6 @@ import java.util.Collection;
  * Graph made up of a set of vertices and edges. Edges are undirected and connect two vertices with each other.
  *
  *
- * TODO why boolean return values? Generally check Javadocs
  *
  * @param <V> the element stored in the vertices
  * @param <E> the element stored in the edges
@@ -19,48 +18,122 @@ import java.util.Collection;
  */
 public interface GraphInterface<V, E> {
 
+    /**
+     * Returns the number of vertices in the graph
+     *
+     * @return the total number of vertices in the graph
+     */
+    int numVertices();
 
-    public int numVertices();
+    /**
+     * returns the numvber of edges in the graph
+     *
+     * @return the total number of edges in the graph
+     */
+    int numEdges();
+
+    /**
+     * Returns all the vertices of the graph in a collection.
+     *
+     * @return collection containing all the {@link GXVertex} in the Graph
+     */
+    Collection<GXVertex> vertices();
+
+    /**
+     * Returns all the edges of the graph in a collection
+     *
+     * @return collection containing all the {@link GXEdge} in the Graph
+     */
+    Collection<GXEdge> edges();
+
+    /**
+     * Returns all the edges, that are incident to the passed vertex. Edges are incident if they are connected
+     * to the passed Vertex. Isolated vertices will return an empty Collection.
+     *
+     * @param v {@link GXVertex} that you want the incident edges of.
+     * @return Collection of the {@link GXEdge} that are incident to v.
+     * @throws ElementNotInGraphException if the vertex is not part of the graph.
+     */
+    Collection<GXEdge> incidentEdges(GXVertex v) throws ElementNotInGraphException;
+
+    /**
+     * Will get the opposite {@GXVertex} given a vertex v and a {@GXEdge} e.
+     *
+     * @param v {@link GXVertex} on one end of e
+     * @param e {@link GXEdge} connected to v
+     * @return opposite vertex of v connected by e
+     * @throws ElementNotInGraphException if either v, or e are not in the graph
+     */
+    GXVertex opposite(GXVertex v, GXEdge e) throws ElementNotInGraphException;
 
 
-    public int numEdges();
+    /**
+     * Checks whetheer two {GXVertex} are coonecte by an edge
+     *
+     * @param u first {@link GXVertex}
+     * @param v second {@link GXEdge}
+     * @return true if connected, false if not
+     * @throws ElementNotInGraphException either vertex is not in the graph.
+     */
+    boolean areAdjacent(GXVertex u, GXVertex v) throws ElementNotInGraphException;
+
+    /**
+     * Adds the passed {@link GXVertex} to the graph
+     *
+     * @param vertex {@link GXVertex} to be inserted
+     * @return the inserted {GXVertex}
+     */
+    GXVertex insertVertex(GXVertex vertex);
+
+    /**
+     * Adds an {@link GXEdge} to the graph  between two {@link GXVertex}.
+     * The new edge will have the passed element.
+     *
+     * @param u first vertex
+     * @param v second vertex
+     * @param edgeElement element of the newly created edge
+     * @return the edge that was inserted
+     */
+    GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException;
+
+    /**
+     * Removes a {@link GXVertex} v from the graph. All the incident edges will be removed as well.
+     *
+     * @param v vertex to be removed.
+     * @return the element contained in the removed Vertex.
+     * @throws ElementNotInGraphException if the vertex is not in the graph
+     */
+    String removeVertex(GXVertex v) throws ElementNotInGraphException;
+
+    /**
+     * Removes an {@link GXEdge} connecting to vertices from the graph
+     *
+     * @param e the edge to be removed
+     * @return Element stored in the edge
+     * @throws ElementNotInGraphException if the edge is not in the graph
+     */
+    String removeEdge(GXEdge e) throws ElementNotInGraphException;
+
+    /**
+     * TODO Check if actually needed
+     *
+     * @param v
+     * @param newElement
+     * @return
+     * @throws InvalidVertexException
+     */
+    Object replace(GXVertex v, String newElement) throws ElementNotInGraphException;
 
 
-    public Collection<GXVertex> vertices();
-
-
-    public Collection<GXEdge> edges();
-
-
-    public Collection<GXEdge> incidentEdges(GXVertex v) throws InvalidVertexException;
-
-
-    public GXVertex opposite(GXVertex v, GXEdge e) throws InvalidVertexException, InvalidEdgeException;
-
-
-    public boolean areAdjacent(GXVertex u, GXVertex v) throws InvalidVertexException;
-
-
-    public GXVertex insertVertex(GXVertex vertex);
-
-
-    public GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement);
-
-
-    public GXEdge insertEdge(String vElement1, String vElement2, String edgeElement) throws InvalidVertexException,
-            InvalidEdgeException;
-
-
-    public Object removeVertex(GXVertex v) throws InvalidVertexException;
-
-
-    public Object removeEdge(GXEdge e) throws InvalidEdgeException;
-
-
-    public Object replace(GXVertex v, String newElement) throws InvalidVertexException;
-
-
-    public Object replace(GXEdge e, String newElement) throws InvalidEdgeException;
+    /**
+     * TODO Check if actually needed
+     *
+     * @param e
+     * @param newElement
+     * @return
+     * @throws ElementNotInGraphException
+     */
+    Object replace(GXEdge e, String newElement) throws ElementNotInGraphException;
 
 
     /**

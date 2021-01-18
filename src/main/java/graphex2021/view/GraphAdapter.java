@@ -7,7 +7,7 @@ import java.util.Collection;
 
 
 /**
- * Adapter class for {@link GXGraph} to {@link Graph} to be usable in the {@link GraphView}
+ * Adapter class for {@link GXGraph} to {@link Graph} to be usable in the {@link GraphView}.
  *
  * @author Dominik
  * @version  1.0. 18.01.2021
