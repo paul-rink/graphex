@@ -57,7 +57,7 @@ public interface GraphInterface<V, E> {
     Collection<GXEdge> incidentEdges(GXVertex v) throws ElementNotInGraphException;
 
     /**
-     * Will get the opposite {@GXVertex} given a vertex v and a {@GXEdge} e.
+     * Will get the opposite {@link GXVertex} given a vertex v and a {@link GXEdge} e.
      *
      * @param v {@link GXVertex} on one end of e
      * @param e {@link GXEdge} connected to v
@@ -95,6 +95,17 @@ public interface GraphInterface<V, E> {
      * @return the edge that was inserted
      */
     GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException;
+
+    /**
+     * TODO maybe not needed
+     *
+     * @param edge
+     * @return
+     * @throws ElementNotInGraphException
+     */
+    GXEdge insertEdge(GXEdge edge) throws ElementNotInGraphException;
+
+
 
     /**
      * Removes a {@link GXVertex} v from the graph. All the incident edges will be removed as well.

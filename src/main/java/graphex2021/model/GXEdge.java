@@ -173,4 +173,13 @@ public class GXEdge implements Edge<String, String> {
     public void setVisible(boolean visible) {
         this.visible = visible;
     }
+
+    /**
+     * Returns the id given to this edge
+     *
+     * @return the ID given to this edge
+     */
+    public int getId() {
+        return this.id;
+    }
 }

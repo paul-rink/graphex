@@ -20,18 +20,17 @@ public class GXGraph implements GraphInterface<String, String> {
     /**
      * The starting and end vertices if needed by the algorithm used
      */
-    private final GXVertex startingVertex;
-    private final GXVertex endingVertex;
+    private GXVertex startingVertex;
+    private GXVertex endingVertex;
 
     /**
-     * Map containing all the vertices in the graph
-     * TODO Check ID as key
+     * Map containing all the vertices in the graph. Vertex Id as
      */
     private final Map<Integer, GXVertex> vertices;
     /**
      * Map containing all the edges in the graph
      */
-    private final Map<String, GXEdge> edges;
+    private final Map<Integer, GXEdge> edges;
 
 
     /**
@@ -40,7 +39,7 @@ public class GXGraph implements GraphInterface<String, String> {
      */
     public GXGraph() {
         this.vertices = new HashMap<Integer, GXVertex>();
-        this.edges = new HashMap<String, GXEdge>();
+        this.edges = new HashMap<Integer, GXEdge>();
         this.startingVertex = null;
         this.endingVertex = null;
 
@@ -137,15 +136,33 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public GXVertex insertVertex(GXVertex vertex) {
-        return null;
+        if (vertexInGraph(vertex.getId())) {
+           //TODO how to handle exception here?
+        }
+        vertices.put(vertex.getId() , vertex);
+        return vertex;
     }
-
 
     @Override
-    public GXEdge insertEdge(GXVertex vertex, GXVertex vertex1, String element)
-            throws ElementNotInGraphException {
+    public GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException {
         return null;
     }
+
+    //TODO maybe different way to insert an edge
+    @Override
+    public GXEdge insertEdge(GXEdge edge) throws ElementNotInGraphException {
+        for (GXVertex vertex : edge.vertices()) {
+            // throws element notInGraph if the vertices of the edge are not correct
+            checkVertex(vertex);
+        }
+        if (edgeInGraph(edge.getId())) {
+            //TODO how to handle exception here?
+        }
+        edges.put(edge.getId(),edge);
+        return edge;
+    }
+
+
 
 
     @Override
@@ -163,7 +180,7 @@ public class GXGraph implements GraphInterface<String, String> {
         return null;
     }
 
-    // TODO maybe not needed and mabye change wait instead
+
     @Override
     public String replace(GXEdge edge, String element) throws InvalidEdgeException {
         return null;
@@ -204,7 +221,6 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    //TODO implement me
     public Collection<GXVertex> getNeighbors(GXVertex v) {
         List<GXVertex> adjacent = new ArrayList<>();
         try {
@@ -290,13 +306,13 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     //TODO check if ID is chosen as Key in map
-    private boolean edgeInGraph(String element) {
-        return edges.containsKey(element);
+    private boolean edgeInGraph(Integer id) {
+        return edges.containsKey(id);
     }
 
     //TODO check if ID is chosen as Key in map
-    private boolean vertexInGraph(String element) {
-        return vertices.containsKey(element);
+    private boolean vertexInGraph(Integer id) {
+        return vertices.containsKey(id);
     }
 
 }
