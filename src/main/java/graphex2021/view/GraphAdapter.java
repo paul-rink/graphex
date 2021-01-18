@@ -1,8 +1,12 @@
 package graphex2021.view;
 
 import com.brunomnsilva.smartgraph.graph.*;
+import graphex2021.model.ElementNotInGraphException;
+import graphex2021.model.GXEdge;
 import graphex2021.model.GXGraph;
+import graphex2021.model.GXVertex;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -28,29 +32,52 @@ public class GraphAdapter implements Graph {
 
     @Override
     public Collection<Vertex> vertices() {
-        return null;
+        Collection<Vertex> vertices = new ArrayList<>(graph.vertices());
+        return vertices;
     }
 
     @Override
     public Collection<Edge> edges() {
-        return null;
+        Collection<Edge> edges = new ArrayList<>(graph.edges());
+        return edges;
     }
 
     @Override
     public Collection<Edge> incidentEdges(Vertex v) throws InvalidVertexException {
-        return null;
+        Collection<Edge> incidentEdges = null;
+        try {
+            //TODO better way to call methods on Graph?
+            incidentEdges = new ArrayList<>(graph.incidentEdges((GXVertex) v));
+        } catch (ElementNotInGraphException eni) {
+            throw new InvalidVertexException();
+        }
+        return incidentEdges;
     }
 
     @Override
     public Vertex opposite(Vertex v, Edge e) throws InvalidVertexException, InvalidEdgeException {
-        return null;
+        try {
+            return graph.opposite((GXVertex) v, (GXEdge) e);
+        } catch (ElementNotInGraphException eni) {
+            //TODO very ugly
+            if (eni.getMessage().contains("Vertex")) {
+                throw new InvalidVertexException();
+            } else {
+                throw new InvalidEdgeException();
+            }
+        }
     }
 
     @Override
     public boolean areAdjacent(Vertex u, Vertex v) throws InvalidVertexException {
-        return false;
+        try {
+            return graph.areAdjacent((GXVertex) u, (GXVertex) v);
+        } catch (ElementNotInGraphException eni) {
+            throw new InvalidVertexException();
+        }
     }
 
+    //TODO Kinda not needed from here on
     @Override
     public Vertex insertVertex(Object vElement) throws InvalidVertexException {
         return null;

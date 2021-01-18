@@ -263,7 +263,7 @@ public class GXGraph implements GraphInterface<String, String> {
 
         GXVertex gxVertex;
         try {
-            gxVertex =  (GXVertex) vertex;
+            gxVertex = vertex;
         } catch (ClassCastException e) {
             throw new InvalidVertexException("Not a GXVertex");
         }
