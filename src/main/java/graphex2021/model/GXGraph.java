@@ -158,7 +158,7 @@ public class GXGraph implements GraphInterface<String, String> {
         if (edgeInGraph(edge.getId())) {
             //TODO how to handle exception here?
         }
-        edges.put(edge.getId(),edge);
+        edges.put(edge.getId(), edge);
         return edge;
     }
 
@@ -167,12 +167,19 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public String removeVertex(GXVertex vertex) throws ElementNotInGraphException {
-        return null;
+        checkVertex(vertex);
+        for (GXEdge edge : incidentEdges(vertex)) {
+            removeEdge(edge);
+        }
+        vertices.remove(vertex.getId());
+        return vertex.element();
     }
 
     @Override
     public String removeEdge(GXEdge edge) throws ElementNotInGraphException {
-        return null;
+        checkEdge(edge);
+        edges.remove(edge.getId());
+        return edge.element();
     }
 
     @Override
@@ -268,7 +275,7 @@ public class GXGraph implements GraphInterface<String, String> {
 
     }
 
-    private GXEdge checkEdge(Edge<String, String> edge) throws InvalidEdgeException {
+    private GXEdge checkEdge(GXEdge edge) throws InvalidEdgeException {
         if (edge == null) {
             throw new InvalidEdgeException("Edge is null");
         }
@@ -279,7 +286,7 @@ public class GXGraph implements GraphInterface<String, String> {
             throw new InvalidEdgeException("Not a GxEdge");
         }
 
-        if (!edges.containsKey(edge.element())) {
+        if (!edges.containsKey(((GXEdge) edge).getId())) {
             throw new InvalidEdgeException("Edge does not belong to this graph");
         }
 
