@@ -8,154 +8,154 @@
             "name" : "B"
         },
         {
-            "$name" : "C"
+            "name" : "C"
         },
         {
-            "$name" : "D"
+            "name" : "D"
         },
         {
-            "$name" : "E"
+            "name" : "E"
         },
         {
-            "$name" : "F"
+            "name" : "F"
         },
         {
-            "$name" : "G"
+            "name" : "G"
         },
         {
-            "$name" : "H"
+            "name" : "H"
         },
         {
-            "$name" : "I"
+            "name" : "I"
         },
         {
-            "$name" : "J"
+            "name" : "J"
         },
         {
-            "$name" : "K"
+            "name" : "K"
         },
         {
-            "$name" : "L"
+            "name" : "L"
         },
         {
-            "$name" : "S"
+            "name" : "S"
         },
         {
-            "$name" : "Z"
+            "name" : "Z"
         }
     ],
     "edges" : [
         {
-            "$vertex1" : "S"
-            "$vertex2" : "A"
-            "$weight" :"2"
+            "vertex1" : "S"
+            "vertex2" : "A"
+            "weight" :"2"
         },
         {
-            "$vertex1" : "S"
-            "$vertex2" : "B"
-            "$weight" :  "4"
+            "vertex1" : "S"
+            "vertex2" : "B"
+            "weight" :  "4"
         },
         {    
-            "$vertex1" : "S"
-            "$vertex2" : "C"
-            "$weight" :  "8"
+            "vertex1" : "S"
+            "vertex2" : "C"
+            "weight" :  "8"
         },
         {
-            "$vertex1" : "A"
-            "$vertex2" : "B"
-            "$weight" :  "3"
+            "vertex1" : "A"
+            "vertex2" : "B"
+            "weight" :  "3"
         },
         {
-            "$vertex1" : "A"
-            "$vertex2" : "D"
-            "$weight" :  "3"
+            "vertex1" : "A"
+            "vertex2" : "D"
+            "weight" :  "3"
         },
         {
-            "$vertex1" : "B"
-            "$vertex2" : "H"
-            "$weight" :  "2"
+            "vertex1" : "B"
+            "vertex2" : "H"
+            "weight" :  "2"
         },
         {
-            "$vertex1" : "C"
-            "$vertex2" : "D"
-            "$weight" :  "2"
+            "vertex1" : "C"
+            "vertex2" : "D"
+            "weight" :  "2"
         },
         {
-            "$vertex1" : "C"
-            "$vertex2" : "E"
-            "$weight" :  "2"
+            "vertex1" : "C"
+            "vertex2" : "E"
+            "weight" :  "2"
         },
         {
-            "$vertex1" : "D"
-            "$vertex2" : "F"
-            "$weight" :  "5"
+            "vertex1" : "D"
+            "vertex2" : "F"
+            "weight" :  "5"
         },
         {
-            "$vertex1" : "E"
-            "$vertex2" : "F"
-            "$weight" :  "3"
+            "vertex1" : "E"
+            "vertex2" : "F"
+            "weight" :  "3"
         },
         {
-            "$vertex1" : "E"
-            "$vertex2" : "I"
-            "$weight" :  "7"
+            "vertex1" : "E"
+            "vertex2" : "I"
+            "weight" :  "7"
         },
         {
-            "$vertex1" : "F"
-            "$vertex2" : "G"
-            "$weight" :  "1"
+            "vertex1" : "F"
+            "vertex2" : "G"
+            "weight" :  "1"
         },
         {
-            "$vertex1" : "F"
-            "$vertex2" : "I"
-            "$weight" :  "5"
+            "vertex1" : "F"
+            "vertex2" : "I"
+            "weight" :  "5"
         },
         {
-            "$vertex1" : "G"
-            "$vertex2" : "J"
-            "$weight" :  "8"
+            "vertex1" : "G"
+            "vertex2" : "J"
+            "weight" :  "8"
         },
         {
-            "$vertex1" : "G"
-            "$vertex2" : "H"
-            "$weight" :  "6"
+            "vertex1" : "G"
+            "vertex2" : "H"
+            "weight" :  "6"
         },
         {
-            "$vertex1" : "H"
-            "$vertex2" : "K"
-            "$weight" :  "10"
+            "vertex1" : "H"
+            "vertex2" : "K"
+            "weight" :  "10"
         },
         {
-            "$vertex1" : "H"
-            "$vertex2" : "L"
-            "$weight" :  "12"
+            "vertex1" : "H"
+            "vertex2" : "L"
+            "weight" :  "12"
         },
         {
-            "$vertex1" : "I"
-            "$vertex2" : "J"
-            "$weight" :  "2"
+            "vertex1" : "I"
+            "vertex2" : "J"
+            "weight" :  "2"
         },
         {
-            "$vertex1" : "J"
-            "$vertex2" : "K"
-            "$weight" :  "3"
+            "vertex1" : "J"
+            "vertex2" : "K"
+            "weight" :  "3"
         },
         {
-            "$vertex1" : "J"
-            "$vertex2" : "Z"
-            "$weight" :  "4"
+            "vertex1" : "J"
+            "vertex2" : "Z"
+            "weight" :  "4"
         },{
-            "$vertex1" : "K"
-            "$vertex2" : "L"
-            "$weight" :  "3"
+            "vertex1" : "K"
+            "vertex2" : "L"
+            "weight" :  "3"
         },{
-            "$vertex1" : "K"
-            "$vertex2" : "Z"
-            "$weight" :  "7"
+            "vertex1" : "K"
+            "vertex2" : "Z"
+            "weight" :  "7"
         },{
-            "$vertex1" : "L"
-            "$vertex2" : "Z"
-            "$weight" :  "4"
+            "vertex1" : "L"
+            "vertex2" : "Z"
+            "weight" :  "4"
         }
     ]
     "startVertex" : "S"
