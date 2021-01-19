@@ -73,6 +73,26 @@ public class GXEdge implements Edge<String, String> {
 
     }
 
+    /**
+     * Creates new Vertex with a weight
+     * TODO finish constructor to contain missing attributes. Check how to generate the IDs
+     * @param inboundVertex the first vertex of the edge
+     * @param outboundVertex the second vertex of the edge
+     * @param element the element contained in the edge
+     * @param id the unique id given to the edge
+     * @param weight the weight of the edge
+     */
+    public GXEdge(GXVertex inboundVertex, GXVertex outboundVertex, String element, int weight, int id) {
+        this.inboundVertex = inboundVertex;
+        this.outboundVertex = outboundVertex;
+        this.element = element;
+        this.visible = false;
+        this.blocked = false;
+        this.marked = false;
+        this.weight = weight;
+        this.id = id;
+
+    }
 
     /**
      * Returns the element stored in the edge
