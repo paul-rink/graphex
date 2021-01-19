@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.json.*;
 
 
@@ -17,16 +20,36 @@ import org.json.*;
 public class GraphParser {
 
     private static final GraphParser singleInstance = new GraphParser();
+    private int freeVertexId;
+    private  int freeEdgeId;
 
+    /**
+     * private constructor for the singleton
+     */
     private GraphParser () {
+        freeEdgeId = 0;
+        freeVertexId = 0;
     }
 
+    /**
+     * method to get the single instance of the GraphParser
+     * @return the instance
+     */
     public GraphParser getGraphParser() {
         return singleInstance;
     }
 
+    /**
+     * method to parse a input file and read all vertices from it
+     * parsing vertices indicates a new graph is being read and the ids will be reset
+     * @param input the file the graph should be read from
+     * @return a collection of GXVertex specified in the file
+     */
+    public Collection<GXVertex> parseVertices(File input) {
+        freeVertexId = 0;
+        freeEdgeId = 0;
 
-    public Collection<GXVertex<V>> parseVertices(File input) {
+        Collection<GXVertex> vertexList = new <GXVertex>LinkedList();
         String inputFile = "";
         try {
             inputFile = Files.readString(input.toPath());
@@ -36,13 +59,19 @@ public class GraphParser {
         JSONObject graphObject = new JSONObject(inputFile);
         JSONArray verticesArray = graphObject.getJSONArray("vertices");
         for(int i = 0; i < verticesArray.length(); i++) {
-            String VertexName = verticesArray.getString(i);
-
+            JSONObject jsonVertex = verticesArray.getJSONObject(i);
+            String vertexName = jsonVertex.getString("name");
+            int posx = jsonVertex.getInt("posx");
+            int posy = jsonVertex.getInt("posy");
+            GXPosition vertexPosition = new GXPosition(posx, posy);
+            int id = getNextVertexId();
+            GXVertex vertex = new GXVertex(vertexName, id, vertexPosition);
+            vertexList.add(vertex);
         }
-        return null;
+        return vertexList;
     }
 
-    public Collection<GXEdge<E,V>> parseEdges(File input) {
+    public Collection<GXEdge> parseEdges(File input) {
         return null;
     }
 
@@ -52,5 +81,13 @@ public class GraphParser {
 
     public GXVertex parseEnding(File input) {
         return null;
+    }
+
+    private int getNextVertexId() {
+        return freeVertexId++;
+    }
+
+    private int getNextEdgeId() {
+        return  freeEdgeId++;
     }
 }
