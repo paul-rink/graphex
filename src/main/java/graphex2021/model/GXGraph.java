@@ -204,7 +204,7 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public void setVertexVisible(GXEdge edge, GXVertex opposite) throws ElementNotInGraphException {
-        //TODO added vertex as param here, so that its easier to find the oposite.
+        //TODO added vertex as param here, so that its easier to find the opposite.
         opposite(opposite, edge).setVisible(true);
     }
 
@@ -225,12 +225,12 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public GXVertex getStartingVertex() {
-        return null;
+        return endingVertex;
     }
 
     @Override
     public GXVertex getEndingVertex() {
-        return null;
+        return startingVertex;
     }
 
     @Override
@@ -309,13 +309,12 @@ public class GXGraph implements GraphInterface<String, String> {
      * @throws ElementNotInGraphException if the graph does not contain a {@link GXEdge} with those vertices.
      */
     public GXEdge getEdge(GXVertex v, GXVertex u) throws ElementNotInGraphException {
-        for (GXEdge edge: edges.values()) {        //search for edge that contains both v and u
-            if ((edge.vertices()[0].equals(v) || edge.vertices()[1].equals(v))
-                    && (edge.vertices()[0].equals(u) || edge.vertices()[1].equals(u))) {
+        for (GXEdge edge : incidentEdges(v)) {
+            if (edge.contains(u)) {
                 return edge;
             }
         }
-        throw new ElementNotInGraphException("There's no such edge!");
+        throw new ElementNotInGraphException("there is no Edge inbetween these vertices");
     }
 
     //TODO check if ID is chosen as Key in map
