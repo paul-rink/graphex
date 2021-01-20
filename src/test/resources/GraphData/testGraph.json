@@ -1,0 +1,14 @@
+{
+    "type" : "GXGraph"
+    "vertices" : [
+        {
+            "name" : "A"
+            "posx" : "6"
+            "posy" : "7"
+        },
+    ],
+    "edges" : [
+    ]
+    "startVertex" : "A"
+    "endVertex" : "A"
+}
