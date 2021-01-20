@@ -6,7 +6,7 @@ import java.util.List;
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
-public class DisplayModel {
+public class DisplayModel extends Subject {
     private List<Step> userSteps;
     private List<Step> algoSteps;
     private Algorithm algo;
@@ -31,11 +31,12 @@ public class DisplayModel {
         //make all edges from nextVertex visible just as the corresponding vertices
         graph.makeIncidentsVisible(nextVertex);
         //TODO implement observers
+        this.notifyObservers();
     }
 
     public void markVertex(GXVertex vertex) { }
 
-    public GXGraph getState() { return null; }
+    public GXGraph getState() { return this.graph; }
 
     public void undo() { }
 
