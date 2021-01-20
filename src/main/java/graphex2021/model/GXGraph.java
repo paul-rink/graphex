@@ -256,6 +256,11 @@ public class GXGraph implements GraphInterface<String, String> {
 
     }
 
+    @Override
+    public void makeIncidentsVisible(GXVertex vertex) {
+
+    }
+
     /**
      * Checks if a vertex is in the graph and actually a GXvertex.
      * TODO other way to do the exception handling

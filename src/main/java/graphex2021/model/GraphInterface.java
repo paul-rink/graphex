@@ -233,5 +233,12 @@ public interface GraphInterface<V, E> {
      */
     void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException;
 
+    /**
+     * Sets all edges including its vertices visible that contain the given {@code vertex}.
+     *
+     * @param vertex is the vertex for that the neighborhood is set visible.
+     */
+    void makeIncidentsVisible(GXVertex vertex);
+
 
 }
