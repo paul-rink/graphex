@@ -18,7 +18,20 @@ public class DisplayModel {
         return null;
     }
 
-    public void markEdge(GXEdge edge) { }
+    public void markEdge(GXEdge edge) {
+        //check if edge is blocked because of circle -> create alert
+        if (edge.isBlocked()) return; //TODO implement Alert
+        //get unmarked vertex of edge and mark both in graph
+        GXVertex nextVertex = edge.getNextVertex();
+        graph.mark(edge, nextVertex);
+        //make a new step with nextVertex and edge
+        userSteps.add(new Step(nextVertex, edge));
+        //block edges that are part of a circle
+        graph.blockCircles(nextVertex);
+        //make all edges from nextVertex visible just as the corresponding vertices
+        graph.makeIncidentsVisible(nextVertex);
+        //TODO implement observers
+    }
 
     public void markVertex(GXVertex vertex) { }
 
