@@ -225,12 +225,12 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public GXVertex getStartingVertex() {
-        return endingVertex;
+        return startingVertex;
     }
 
     @Override
     public GXVertex getEndingVertex() {
-        return startingVertex;
+        return endingVertex;
     }
 
     @Override

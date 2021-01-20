@@ -1,0 +1,6 @@
+vertices: A
+
+edges:
+
+startVertex = A
+endVertex = A
