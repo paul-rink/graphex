@@ -214,8 +214,8 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public void mark(GXEdge edge, GXVertex vertex) {
-
+    public void mark(GXEdge edge, GXVertex vertex) throws ElementNotInGraphException {
+        //TODO obsolete via mark in DP?
     }
 
     @Override
@@ -252,7 +252,6 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public void unmarkVertex(GXVertex vertex) {
-
     }
 
 
@@ -278,6 +277,7 @@ public class GXGraph implements GraphInterface<String, String> {
         }
     }
 
+    //TODO obsolete via makeIncidentsVisible() in DP?
     @Override
     public void makeIncidentsVisible(GXVertex vertex) throws ElementNotInGraphException {
         //checking all the adjacent edges. None should already be visible

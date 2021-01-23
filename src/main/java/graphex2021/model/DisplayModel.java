@@ -1,5 +1,6 @@
 package graphex2021.model;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -24,13 +25,16 @@ public class DisplayModel extends Subject {
         if (edge.isBlocked()) return; //TODO implement Alert
         //get unmarked vertex of edge and mark both in graph
         GXVertex nextVertex = edge.getNextVertex();
-        graph.mark(edge, nextVertex);
+        edge.mark(true);
+        //get distance to already marked vertex of marked edge
+        int curDist = graph.opposite(nextVertex, edge).getCurrentDistance();
+        nextVertex.mark(curDist, edge);
         //make a new step with nextVertex and edge
         userSteps.add(new Step(nextVertex, edge));
-        //block edges that are part of a circle TODO just returns the edges still need to be marked
+        //block edges that are part of a circle
         graph.blockCircles(nextVertex);
         //make all edges from nextVertex visible just as the corresponding vertices
-        graph.makeIncidentsVisible(nextVertex);
+        makeIncidentsVisible(nextVertex);
         //TODO implement observers
         this.notifyObservers();
     }
@@ -56,4 +60,27 @@ public class DisplayModel extends Subject {
     private Step getLastUserStep() { return null; }
 
     private void removeLastUserStep() { }
+
+    /**
+     * Sets all edges including its vertices visible that contain the given {@code vertex} and add those new visible
+     * edges and vertices to the {@code visibleGraph}.
+     *
+     * @param vertex is the vertex for that the neighborhood is set visible.
+     */
+    private void makeIncidentsVisible(GXVertex vertex) throws ElementNotInGraphException {
+        //checking all the adjacent edges
+        for (GXEdge edge : graph.incidentEdges(vertex)) {
+            if (!edge.isVisible()) {
+                edge.setVisible(true);
+                visibleGraph.insertEdge(edge);
+            }
+            //All  the vertices at the end of these edges need to be visible
+            GXVertex opposite = graph.opposite(vertex, edge);
+            if (!opposite.isVisible()) {
+                opposite.setVisible(true);
+                visibleGraph.insertVertex(opposite);
+            }
+        }
+    }
+
 }
