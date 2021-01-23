@@ -194,6 +194,15 @@ public class GXEdge implements Edge<String, String> {
     }
 
     /**
+     * Returns whether the edge is set visible.
+     *
+     * @return {@code true} if the edge is visible, {@code false} else.
+     */
+    public boolean isVisible() {
+        return visible;
+    }
+
+    /**
      * Returns the id given to this edge
      *
      * @return the ID given to this edge
