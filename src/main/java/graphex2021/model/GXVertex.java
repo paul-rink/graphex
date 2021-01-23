@@ -111,7 +111,8 @@ public class GXVertex implements Vertex<String> {
 
     /**
      * Allows you to mark a vertex if an edge that contains this vertex is selected
-     * will also set the previousEdge and the Distance of the vertex
+     * will also set the previousEdge and the Distance of the vertex by adding the weight of the previous edge to the
+     * currentDistance of previous vertex.
      *
      * @param prevVertexDistance the distance that the prevVertex was from the startingvertex
      * @param previousEdge the edge that was marked to get to this vertex
