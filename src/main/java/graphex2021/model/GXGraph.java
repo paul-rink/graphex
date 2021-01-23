@@ -277,20 +277,6 @@ public class GXGraph implements GraphInterface<String, String> {
         }
     }
 
-    //TODO obsolete via makeIncidentsVisible() in DP?
-    @Override
-    public void makeIncidentsVisible(GXVertex vertex) throws ElementNotInGraphException {
-        //checking all the adjacent edges. None should already be visible
-        for (GXEdge edge : incidentEdges(vertex)) {
-            edge.setVisible(true);
-            //All  the vertices at the end of these edges need to be visible
-            GXVertex opposite = opposite(vertex, edge);
-            if (!opposite.isVisible()) {
-                opposite.setVisible(true);
-            }
-        }
-    }
-
     /**
      * Checks if a vertex is in the graph and actually a GXvertex.
      * TODO other way to do the exception handling
