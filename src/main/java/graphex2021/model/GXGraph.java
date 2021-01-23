@@ -219,11 +219,10 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public Collection<GXEdge> blockCircles(GXVertex vertex) throws ElementNotInGraphException {
-        Collection<GXEdge> block = new ArrayList<>();
+    public void blockCircles(GXVertex vertex) throws ElementNotInGraphException {
         for (GXEdge edge : incidentEdges(vertex)) {
             if (opposite(vertex, edge).isMarked()) {
-                block.add(edge);
+                edge.setBlocked(true);
             }
         }
     }
@@ -260,6 +259,7 @@ public class GXGraph implements GraphInterface<String, String> {
     @Override
     public void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException {
         //TODO test this. Really unsure if correct. Unblock edges here?
+        //Also
         checkEdge(edge);
         checkVertex(vertex);
         //Checking all the incident edges
