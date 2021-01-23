@@ -224,11 +224,11 @@ public interface GraphInterface<V, E> {
     void unmarkVertex(GXVertex vertex) throws ElementNotInGraphException;
 
     /**
-     * Sets the passed edge invisible and checks whcih vertices and edges should now be invisible as well
+     * Sets the passed edge invisible and checks which vertices and edges should now be invisible as well
      *
      *
      * @param vertex that was made visible by the passed edge
-     * @param edge that will be set invisible from
+     * @param edge that will be set invisible f
      * @throws ElementNotInGraphException if either vertex or edge are not in the vertex
      */
     void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException;
@@ -237,6 +237,7 @@ public interface GraphInterface<V, E> {
      * Sets all edges including its vertices visible that contain the given {@code vertex}.
      *
      * @param vertex is the vertex for that the neighborhood is set visible.
+     * @throws ElementNotInGraphException if the vertex passed is not in the graph
      */
     void makeIncidentsVisible(GXVertex vertex) throws ElementNotInGraphException;
 
