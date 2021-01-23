@@ -19,7 +19,7 @@ public class DisplayModel extends Subject {
         return null;
     }
 
-    public void markEdge(GXEdge edge) {
+    public void markEdge(GXEdge edge) throws ElementNotInGraphException {
         //check if edge is blocked because of circle -> create alert
         if (edge.isBlocked()) return; //TODO implement Alert
         //get unmarked vertex of edge and mark both in graph
@@ -49,7 +49,9 @@ public class DisplayModel extends Subject {
 
     private GXVertex getFinalVertex() { return null; }
 
-    private void updateVisibleGraph() { }
+    private void updateVisibleGraph() {
+
+    }
 
     private Step getLastUserStep() { return null; }
 
