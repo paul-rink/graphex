@@ -32,7 +32,7 @@ public class GraphParser {
      * method to get the single instance of the GraphParser
      * @return the instance
      */
-    public GraphParser getGraphParser() {
+    public static GraphParser getGraphParser() {
         return singleInstance;
     }
 
@@ -88,7 +88,7 @@ public class GraphParser {
                 edgeList.add(edge);
             }
         }
-        return null;
+        return edgeList;
     }
 
     /**
@@ -100,8 +100,7 @@ public class GraphParser {
     public GXVertex parseStarting(File input, Collection<GXVertex> vertices){
         JSONObject graphObject = getJsonObject(input);
         String startName =  graphObject.getString("startVertex");
-        GXVertex startVertex = findMatchingVertex(startName, vertices);
-        return  startVertex;
+        return findMatchingVertex(startName, vertices);
     }
 
     /**
@@ -113,8 +112,7 @@ public class GraphParser {
     public GXVertex parseEnding(File input, Collection<GXVertex> vertices) {
         JSONObject graphObject = getJsonObject(input);
         String endName =  graphObject.getString("endVertex");
-        GXVertex endVertex = findMatchingVertex(endName, vertices);
-        return  endVertex;
+        return findMatchingVertex(endName, vertices);
     }
 
     /**
@@ -153,7 +151,7 @@ public class GraphParser {
      */
     private GXVertex findMatchingVertex(String vertexName, Collection<GXVertex> vertices){
         //TODO if element is the name and its not unique this will have problems (should we allow vertices with the same name?)
-        Iterator it = vertices.iterator();
+        Iterator<GXVertex> it = vertices.iterator();
         GXVertex matchingVertex = null;
         while(it.hasNext()) {
             GXVertex vertex = (GXVertex) it.next();
