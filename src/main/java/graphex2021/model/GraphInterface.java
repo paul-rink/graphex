@@ -181,14 +181,13 @@ public interface GraphInterface<V, E> {
     void mark(GXEdge edge, GXVertex vertex) throws ElementNotInGraphException;
 
     /**
-     * Gets edge adjacent to passed vertex that potentially needs to be blocked to avoid a circle being formed.
+     * Blocks edges adjacent to passed vertex that potentially will form a circle.
      * TODO Check if potentially more than one GXEdge could need to be blocked to avoid circles
      *
      * @param vertex the newly marked vertex, that might make it necessary to block edges.
-     * @return the edges that need to be blocked. If no edges need to be blocked will return null.
      * @throws ElementNotInGraphException if the passed vertex is not in the graph
      */
-    Collection<GXEdge> blockCircles(GXVertex vertex) throws ElementNotInGraphException;
+    void blockCircles(GXVertex vertex) throws ElementNotInGraphException;
 
 
     /**
