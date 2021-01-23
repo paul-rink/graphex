@@ -112,7 +112,6 @@ public class GXEdge implements Edge<String, String> {
      */
     @Override
     public GXVertex[] vertices() {
-
         return new GXVertex[]{inboundVertex, outboundVertex};
     }
 

@@ -219,8 +219,13 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public GXEdge blockCircles(GXVertex vertex) {
-        return null;
+    public Collection<GXEdge> blockCircles(GXVertex vertex) throws ElementNotInGraphException {
+        Collection<GXEdge> block = new ArrayList<>();
+        for (GXEdge edge : incidentEdges(vertex)) {
+            if (opposite(vertex, edge).isMarked()) {
+                block.add(edge);
+            }
+        }
     }
 
     @Override
@@ -257,8 +262,16 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public void makeIncidentsVisible(GXVertex vertex) {
-
+    public void makeIncidentsVisible(GXVertex vertex) throws ElementNotInGraphException {
+        //checking all the adjacent edges. None should already be visible
+        for (GXEdge edge : incidentEdges(vertex)) {
+            edge.setVisible(true);
+            //All  the vertices at the end of these edges need to be visible
+            GXVertex opposite = opposite(vertex, edge);
+            if (!opposite.isVisible()) {
+                opposite.setVisible(true);
+            }
+        }
     }
 
     /**

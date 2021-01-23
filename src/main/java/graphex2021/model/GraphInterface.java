@@ -184,11 +184,11 @@ public interface GraphInterface<V, E> {
      * Gets edge adjacent to passed vertex that potentially needs to be blocked to avoid a circle being formed.
      * TODO Check if potentially more than one GXEdge could need to be blocked to avoid circles
      *
-     * @param vertex
-     * @return the edge that needs to be blocked
+     * @param vertex the newly marked vertex, that might make it necessary to block edges.
+     * @return the edges that need to be blocked. If no edges need to be blocked will return null.
      * @throws ElementNotInGraphException if the passed vertex is not in the graph
      */
-    GXEdge blockCircles(GXVertex vertex) throws ElementNotInGraphException;
+    Collection<GXEdge> blockCircles(GXVertex vertex) throws ElementNotInGraphException;
 
 
     /**
@@ -238,7 +238,7 @@ public interface GraphInterface<V, E> {
      *
      * @param vertex is the vertex for that the neighborhood is set visible.
      */
-    void makeIncidentsVisible(GXVertex vertex);
+    void makeIncidentsVisible(GXVertex vertex) throws ElementNotInGraphException;
 
 
 }

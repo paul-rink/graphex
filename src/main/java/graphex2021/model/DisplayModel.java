@@ -11,6 +11,7 @@ public class DisplayModel extends Subject {
     private List<Step> algoSteps;
     private Algorithm algo;
     private GXGraph graph;
+    private GXGraph visibleGraph;
 
     DisplayModel() { }
 
@@ -26,7 +27,7 @@ public class DisplayModel extends Subject {
         graph.mark(edge, nextVertex);
         //make a new step with nextVertex and edge
         userSteps.add(new Step(nextVertex, edge));
-        //block edges that are part of a circle
+        //block edges that are part of a circle TODO just returns the edges still need to be marked
         graph.blockCircles(nextVertex);
         //make all edges from nextVertex visible just as the corresponding vertices
         graph.makeIncidentsVisible(nextVertex);
