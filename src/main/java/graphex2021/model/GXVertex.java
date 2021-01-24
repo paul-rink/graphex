@@ -185,7 +185,9 @@ public class GXVertex implements Vertex<String> {
      */
     @Override
     public boolean equals(Object o) {
-        return o.getClass().isInstance(this) && this.id == ((GXVertex) o).getId();
+        boolean isGXVertex = o.getClass().isInstance(this);
+        boolean hasSameID = this.id == ((GXVertex) o).getId();
+        return isGXVertex && hasSameID;
     }
 
 }
