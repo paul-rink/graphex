@@ -250,8 +250,23 @@ public class GXGraph implements GraphInterface<String, String> {
         return adjacent;
     }
 
+    /**
+     * method to set an vertex to a non marked state
+     * @param vertex that should be unmarked
+     */
     @Override
     public void unmarkVertex(GXVertex vertex) {
+        //TODO should checkVertex() be called?
+        vertex.mark(false);
+    }
+
+    /**
+     * method to set an edge to a non marked state
+     * @param edge that should be unmarked
+     */
+    public void unmarkEdge(GXEdge edge) {
+        //TODO should checkEdge() be called?
+        edge.mark(false);
     }
 
 
