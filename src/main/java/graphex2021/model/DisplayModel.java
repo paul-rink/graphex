@@ -68,9 +68,21 @@ public class DisplayModel extends Subject {
 
     private void makeVisible(GXVertex vertex) { }
 
-    private GXVertex getStartVertex() { return null; }
+    /**
+     * method that returns the StartingVertex of the underlying graph
+     * @return the StartingVertex of the graph
+     */
+    private GXVertex getStartVertex() {
+        return this.graph.getStartingVertex();
+    }
 
-    private GXVertex getFinalVertex() { return null; }
+    /**
+     * method that returns the FinalVertex of the underlying graph
+     * @return the FinalVertex of the graph
+     */
+    private GXVertex getFinalVertex() {
+        return this.graph.getEndingVertex();
+    }
 
     private void updateVisibleGraph() {
 
