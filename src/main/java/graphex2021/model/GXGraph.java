@@ -320,7 +320,7 @@ public class GXGraph implements GraphInterface<String, String> {
             throw new InvalidVertexException("Not a GXVertex");
         }
         //TODO ID or element aas key
-        if (!vertices.containsKey(vertex.element())) {
+        if (!vertices.containsKey(vertex.getId())) {
             throw  new InvalidVertexException("Vertex is not part of this graph");
         }
         return gxVertex;
