@@ -43,7 +43,26 @@ public class DisplayModel extends Subject {
 
     public GXGraph getState() { return this.graph; }
 
-    public void undo() { }
+    /**
+     * method that gets called when a user requests to undo the last step he did
+     * the method unmarks the last selected edge/vertex and updates the visibility of all edges and vertices
+     * accordingly
+     */
+    public void undo() {
+        Step lastStep = userSteps.get(userSteps.size()-1);
+        GXEdge lastEdge = lastStep.getSelectedEdge();
+        GXVertex lastVertex = lastStep.getSelectedVertex();
+        userSteps.remove(lastStep);
+
+        this.graph.unmarkVertex(lastVertex);
+        this.graph.unmarkEdge(lastEdge);
+        try {
+            this.graph.setVertexInvisible(lastVertex, lastEdge);
+        } catch (ElementNotInGraphException e) {
+            //TODO shouldnt happen as only elements in the step are added that are also in the graph
+        }
+        this.notifyObservers();
+    }
 
     private void makeVisible(GXEdge edge) { }
 
