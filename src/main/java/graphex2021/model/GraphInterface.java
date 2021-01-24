@@ -232,5 +232,17 @@ public interface GraphInterface<V, E> {
      */
     void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException;
 
+    /**
+     * Sets v as starting vertex of the graph. Is needed by some algos.
+     * @param v is the vertex that should be the starting vertex.
+     */
+    void setStartingVertex(GXVertex v);
+
+    /**
+     * Sets v as ending vertex of the graph. Is needed by some algos.
+     * @param v is the vertex that should be the ending vertex.
+     */
+    void setEndingVertex(GXVertex v);
+
 
 }

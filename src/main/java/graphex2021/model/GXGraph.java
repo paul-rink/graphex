@@ -292,6 +292,16 @@ public class GXGraph implements GraphInterface<String, String> {
         }
     }
 
+    @Override
+    public void setStartingVertex(GXVertex v) {
+        this.startingVertex = v;
+    }
+
+    @Override
+    public void setEndingVertex(GXVertex v) {
+        this.endingVertex = v;
+    }
+
     /**
      * Checks if a vertex is in the graph and actually a GXvertex.
      * TODO other way to do the exception handling
