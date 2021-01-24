@@ -49,10 +49,10 @@ public class DisplayModel extends Subject {
      * accordingly
      */
     public void undo() {
-        Step lastStep = userSteps.get(userSteps.size()-1);
+        Step lastStep = getLastUserStep();
         GXEdge lastEdge = lastStep.getSelectedEdge();
         GXVertex lastVertex = lastStep.getSelectedVertex();
-        userSteps.remove(lastStep);
+        removeLastUserStep();
 
         this.graph.unmarkVertex(lastVertex);
         this.graph.unmarkEdge(lastEdge);
@@ -76,9 +76,22 @@ public class DisplayModel extends Subject {
 
     }
 
-    private Step getLastUserStep() { return null; }
+    /**
+     * method to get the last step the user selected
+     * @return the last step in the list of user steps
+     */
+    private Step getLastUserStep() {
+        //TODO check if highest index is actually the last done user step
+        return userSteps.get(userSteps.size()-1);
+    }
 
-    private void removeLastUserStep() { }
+    /**
+     * method that removes the last step in the list of the userSteps
+     */
+    private void removeLastUserStep() {
+        //TODO check if highest index is actually the last done user step
+        userSteps.remove(userSteps.size()-1);
+    }
 
     /**
      * Sets all edges including its vertices visible that contain the given {@code vertex} and add those new visible
