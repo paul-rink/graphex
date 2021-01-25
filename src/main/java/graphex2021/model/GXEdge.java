@@ -210,4 +210,12 @@ public class GXEdge implements Edge<String, String> {
     public int getId() {
         return this.id;
     }
+
+    /**
+     * Sets the weight of the edge.
+     * @param w is the new weight of the edge.
+     */
+    public void setWeight(int w) {
+        this.weight = w;
+    }
 }
