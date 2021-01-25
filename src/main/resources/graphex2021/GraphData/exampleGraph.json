@@ -1,191 +1,191 @@
 {
-    "type" : "GXGraph"
+    "type" : "GXGraph",
     "vertices" : [
         {
-            "name" : "A"
-            "posx" : "6"
-            "posy" : "7"
+            "name" : "A",
+            "posx" : "6",
+            "posy" : "7",
         },
         {
-            "name" : "B"
-            "posx" : "6"
-            "posy" : "5"
+            "name" : "B",
+            "posx" : "6",
+            "posy" : "5",
         },
         {
-            "name" : "C"
-            "posx" : "4"
-            "posy" : "8"
+            "name" : "C",
+            "posx" : "4",
+            "posy" : "8",
         },
         {
-            "name" : "D"
-            "posx" : "4"
-            "posy" : "6"
+            "name" : "D",
+            "posx" : "4",
+            "posy" : "6",
         },
         {
-            "name" : "E"
-            "posx" : "3"
-            "posy" : "7"
+            "name" : "E",
+            "posx" : "3",
+            "posy" : "7",
         },
         {
-            "name" : "F"
-            "posx" : "3"
-            "posy" : "6"
+            "name" : "F",
+            "posx" : "3",
+            "posy" : "6",
         },
         {
-            "name" : "G"
-            "posx" : "3"
-            "posy" : "4"
+            "name" : "G",
+            "posx" : "3",
+            "posy" : "4",
         },
         {
-            "name" : "H"
-            "posx" : "3"
-            "posy" : "3"
+            "name" : "H",
+            "posx" : "3",
+            "posy" : "3",
         },
         {
-            "name" : "I"
-            "posx" : "1"
-            "posy" : "6"
+            "name" : "I",
+            "posx" : "1",
+            "posy" : "6",
         },
         {
-            "name" : "J"
-            "posx" : "1"
-            "posy" : "4"
+            "name" : "J",
+            "posx" : "1",
+            "posy" : "4",
         },
         {
-            "name" : "K"
-            "posx" : "1"
-            "posy" : "3"
+            "name" : "K",
+            "posx" : "1",
+            "posy" : "3",
         },
         {
-            "name" : "L"
-            "posx" : "1"
-            "posy" : "1"
+            "name" : "L",
+            "posx" : "1",
+            "posy" : "1",
         },
         {
-            "name" : "S"
-            "posx" : "6"
-            "posy" : "7"
+            "name" : "S",
+            "posx" : "6",
+            "posy" : "7",
         },
         {
-            "name" : "Z"
-            "posx" : "0"
-            "posy" : "0"
+            "name" : "Z",
+            "posx" : "0",
+            "posy" : "0",
         }
     ],
     "edges" : [
         {
-            "vertex1" : "S"
-            "vertex2" : "A"
-            "weight" :"2"
+            "vertex1" : "S",
+            "vertex2" : "A",
+            "weight" :"2",
         },
         {
-            "vertex1" : "S"
-            "vertex2" : "B"
-            "weight" :  "4"
+            "vertex1" : "S",
+            "vertex2" : "B",
+            "weight" :  "4",
         },
         {    
-            "vertex1" : "S"
-            "vertex2" : "C"
-            "weight" :  "8"
+            "vertex1" : "S",
+            "vertex2" : "C",
+            "weight" :  "8",
         },
         {
-            "vertex1" : "A"
-            "vertex2" : "B"
-            "weight" :  "3"
+            "vertex1" : "A",
+            "vertex2" : "B",
+            "weight" :  "3",
         },
         {
-            "vertex1" : "A"
-            "vertex2" : "D"
-            "weight" :  "3"
+            "vertex1" : "A",
+            "vertex2" : "D",
+            "weight" :  "3",
         },
         {
-            "vertex1" : "B"
-            "vertex2" : "H"
-            "weight" :  "2"
+            "vertex1" : "B",
+            "vertex2" : "H",
+            "weight" :  "2",
         },
         {
-            "vertex1" : "C"
-            "vertex2" : "D"
-            "weight" :  "2"
+            "vertex1" : "C",
+            "vertex2" : "D",
+            "weight" :  "2",
         },
         {
-            "vertex1" : "C"
-            "vertex2" : "E"
-            "weight" :  "2"
+            "vertex1" : "C",
+            "vertex2" : "E",
+            "weight" :  "2",
         },
         {
-            "vertex1" : "D"
-            "vertex2" : "F"
-            "weight" :  "5"
+            "vertex1" : "D",
+            "vertex2" : "F",
+            "weight" :  "5",
         },
         {
-            "vertex1" : "E"
-            "vertex2" : "F"
-            "weight" :  "3"
+            "vertex1" : "E",
+            "vertex2" : "F",
+            "weight" :  "3",
         },
         {
-            "vertex1" : "E"
-            "vertex2" : "I"
-            "weight" :  "7"
+            "vertex1" : "E",
+            "vertex2" : "I",
+            "weight" :  "7",
         },
         {
-            "vertex1" : "F"
-            "vertex2" : "G"
-            "weight" :  "1"
+            "vertex1" : "F",
+            "vertex2" : "G",
+            "weight" :  "1",
         },
         {
-            "vertex1" : "F"
-            "vertex2" : "I"
-            "weight" :  "5"
+            "vertex1" : "F",
+            "vertex2" : "I",
+            "weight" :  "5",
         },
         {
-            "vertex1" : "G"
-            "vertex2" : "J"
-            "weight" :  "8"
+            "vertex1" : "G",,
+            "vertex2" : "J",
+            "weight" :  "8",
         },
         {
-            "vertex1" : "G"
-            "vertex2" : "H"
-            "weight" :  "6"
+            "vertex1" : "G",
+            "vertex2" : "H",
+            "weight" :  "6",
         },
         {
-            "vertex1" : "H"
-            "vertex2" : "K"
-            "weight" :  "10"
+            "vertex1" : "H",
+            "vertex2" : "K",
+            "weight" :  "10",
         },
         {
-            "vertex1" : "H"
-            "vertex2" : "L"
-            "weight" :  "12"
+            "vertex1" : "H",
+            "vertex2" : "L",
+            "weight" :  "12",
         },
         {
-            "vertex1" : "I"
-            "vertex2" : "J"
-            "weight" :  "2"
+            "vertex1" : "I",
+            "vertex2" : "J",
+            "weight" :  "2",
         },
         {
-            "vertex1" : "J"
-            "vertex2" : "K"
-            "weight" :  "3"
+            "vertex1" : "J",
+            "vertex2" : "K",
+            "weight" :  "3",
         },
         {
-            "vertex1" : "J"
-            "vertex2" : "Z"
-            "weight" :  "4"
+            "vertex1" : "J",
+            "vertex2" : "Z",
+            "weight" :  "4",
         },{
-            "vertex1" : "K"
-            "vertex2" : "L"
-            "weight" :  "3"
+            "vertex1" : "K",
+            "vertex2" : "L",
+            "weight" :  "3",
         },{
-            "vertex1" : "K"
-            "vertex2" : "Z"
-            "weight" :  "7"
+            "vertex1" : "K",
+            "vertex2" : "Z",
+            "weight" :  "7",
         },{
-            "vertex1" : "L"
-            "vertex2" : "Z"
-            "weight" :  "4"
+            "vertex1" : "L",
+            "vertex2" : "Z",
+            "weight" :  "4",
         }
-    ]
-    "startVertex" : "S"
+    ],
+    "startVertex" : "S",
     "endVertex" : "Z"
 }
