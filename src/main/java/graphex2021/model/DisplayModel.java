@@ -89,6 +89,25 @@ public class DisplayModel extends Subject {
         this.notifyObservers();
     }
 
+    /**
+     * Resets the state of the current graph to the state of from the beginning, before any userSteps were made.
+     */
+    public void reset() {
+        //Making all edges unmarked and invisible
+        for (GXEdge edge : graph.edges()) {
+            edge.unmark();
+            edge.setVisible(false);
+        }
+        //Making all vertices unmarked and invisible
+        for (GXVertex vertex : graph.vertices()) {
+            vertex.unmark();
+            vertex.setVisible(false);
+        }
+        //Creating new visibileGraph that will then have the starting and end vertex be visible.
+        this.visibleGraph = new GXGraph();
+        initialVisibleGraph();
+    }
+
     private void makeVisible(GXEdge edge) { }
 
     private void makeVisible(GXVertex vertex) { }
