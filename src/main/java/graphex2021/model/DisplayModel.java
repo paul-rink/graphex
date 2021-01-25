@@ -78,19 +78,14 @@ public class DisplayModel extends Subject {
      * accordingly
      */
     public void undo() throws ElementNotInGraphException {
-        //TODO remove from visible Graph
         Step lastStep = getLastUserStep();
         GXEdge lastEdge = lastStep.getSelectedEdge();
         GXVertex lastVertex = lastStep.getSelectedVertex();
         removeLastUserStep();
-
-        //TODO make invisible in DP, unblock edges
-        //Just set all incident edges to not be blocked.
-
+        makeIncidentsInvisible(lastVertex, lastEdge);
         lastVertex.unmark();
         lastEdge.unmark();
-        makeIncidentsInvisible(lastVertex, lastEdge);
-
+        graph.unblock(lastVertex);
         this.notifyObservers();
     }
 
@@ -155,8 +150,24 @@ public class DisplayModel extends Subject {
         }
     }
 
-    private void makeIncidentsInvisible(GXVertex vertex, GXEdge edge) {
-        //TODO steal from graph.
+    private void makeIncidentsInvisible(GXVertex vertex, GXEdge originalEdge) throws ElementNotInGraphException{
+        //check all adjacent edges if vertex on the other side is marked it remains visible
+        //otherwise the edge and the vertex at the other end should be invisible and removed
+        //from the visible graph
+        for(GXEdge edge : graph.incidentEdges(vertex)) {
+            try {
+                GXVertex otherVertex = edge.getNextVertex();
+                otherVertex.setVisible(false);
+                visibleGraph.removeVertex(otherVertex);
+                edge.setVisible(false);
+                visibleGraph.removeEdge(edge);
+            } catch (IllegalArgumentException e) {
+                //this means that the other side is marked and this edge needs to stay visible
+            }
+        }
+
+
+
     }
 
     private void initialVisibleGraph() {
