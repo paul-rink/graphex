@@ -6,5 +6,5 @@ package graphex2021.model;
  * @version 1.0 14.01.2021
  */
 public interface Observer {
-    public void doUpdate();
+    public void doUpdate(Subject s);
 }

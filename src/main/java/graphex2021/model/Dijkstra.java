@@ -56,7 +56,11 @@ public class Dijkstra implements Algorithm {
         //set distances to infinity and fill unmarked list
         init();
         //calculate steps by dijkstra
-        createSteps();
+        try {
+            createSteps();
+        } catch (ElementNotInGraphException eni) {
+            //TODO check the way this is done
+        }
         return steps;
     }
 
@@ -111,7 +115,7 @@ public class Dijkstra implements Algorithm {
      * Generates a list of {@link Step}s where each entry is one step of Dijkstra algorithm, consisting of a
      * {@link GXVertex} and {@link GXEdge} chosen by Dijkstra in the step.
      */
-    private void createSteps() {
+    private void createSteps() throws ElementNotInGraphException {
         while (!unmarked.isEmpty()) {
             GXVertex v = unmarked.remove();     //this is the next chosen vertex
 

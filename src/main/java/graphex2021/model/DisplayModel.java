@@ -1,6 +1,7 @@
 package graphex2021.model;
 
 
+import java.io.File;
 import java.util.LinkedList;
 
 /**
@@ -17,7 +18,28 @@ public class DisplayModel extends Subject {
     private GXGraph graph;
     private GXGraph visibleGraph;
 
-    DisplayModel() { }
+    public DisplayModel() {
+        //TODO maybe better way for file Separator
+        File example = new File(
+                "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
+                        + File.separator + "GraphData" + File.separator + "exampleGraph.json");
+
+        try {
+            this.graph = new GXGraph(example);
+        } catch (ElementNotInGraphException eni) {
+            //TODO better way to handle this. Wrong exception here
+        }
+        this.visibleGraph = new GXGraph();
+        initialVisibleGraph();
+
+        this.algo = new Dijkstra();
+        algoSteps = algo.getSequence(graph);
+
+        this.userSteps = new LinkedList<>();
+
+        notifyObservers();
+
+    }
 
     public GXEdge nexStep() {
         return null;
@@ -42,9 +64,13 @@ public class DisplayModel extends Subject {
         this.notifyObservers();
     }
 
-    public void markVertex(GXVertex vertex) { }
+    public void markVertex(GXVertex vertex) {
 
-    public GXGraph getState() { return this.graph; }
+    }
+
+    public GXGraph getState() {
+        return this.graph;
+    }
 
     /**
      * method that gets called when a user requests to undo the last step he did
@@ -142,6 +168,31 @@ public class DisplayModel extends Subject {
 
 
 
+    }
+
+    private void initialVisibleGraph() {
+        final GXVertex start = graph.getStartingVertex();
+        start.mark(0, null);
+        start.setVisible(true);
+        visibleGraph.insertVertex(start);
+        try {
+            for (GXEdge edge : graph.incidentEdges(start)) {
+                GXVertex toIns = edge.getNextVertex();
+                //Setting the initial edge visible and the vertex at the other end
+                toIns.setVisible(true);
+                edge.setVisible(true);
+                //inserting the vertex and edge into the visible graph
+                visibleGraph.insertVertex(toIns);
+                visibleGraph.insertEdge(edge);
+            }
+        } catch (ElementNotInGraphException eni) {
+            //TODO find better way it is kind of a different error
+        }
+
+
+        final GXVertex end =  graph.getEndingVertex();
+        end.setVisible(true);
+        visibleGraph.insertVertex(end);
     }
 
 }

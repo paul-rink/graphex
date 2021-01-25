@@ -68,11 +68,11 @@ public class GraphParserTest {
         Iterator<GXVertex> it = verticesList.iterator();
         Iterator<GXVertex> ite = expectation.iterator();
         Boolean allSame = true;
-        assertEquals(expectation.size(),verticesList.size());
-        while(it.hasNext() && ite.hasNext()) {
+        assertEquals(expectation.size(), verticesList.size());
+        while (it.hasNext() && ite.hasNext()) {
             GXVertex expectedVertex = ite.next();
             GXVertex readVertex = it.next();
-            if(!sameVertices(expectedVertex,readVertex)){
+            if (!sameVertices(expectedVertex, readVertex)) {
                 allSame = false;
             }
         }
