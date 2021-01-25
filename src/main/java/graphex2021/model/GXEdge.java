@@ -52,27 +52,6 @@ public class GXEdge implements Edge<String, String> {
      */
     private boolean visible;
 
-
-
-
-
-    /**
-     * Creates new Vertex
-     * TODO finish constructor to contain missing attributes. Check how to generate the IDs
-     * @param inboundVertex the first vertex of the edge
-     * @param outboundVertex the second vertex of the edge
-     * @param element the element contained in the edge
-     */
-    public GXEdge(GXVertex inboundVertex, GXVertex outboundVertex, String element) {
-        this.inboundVertex = inboundVertex;
-        this.outboundVertex = outboundVertex;
-        this.element = element;
-        this.visible = false;
-        this.blocked = false;
-        this.marked = false;
-
-    }
-
     /**
      * Creates new Vertex with a weight
      * TODO finish constructor to contain missing attributes. Check how to generate the IDs
@@ -105,8 +84,7 @@ public class GXEdge implements Edge<String, String> {
     }
 
     /**
-     * Returns both the vertices in the array
-     * TODO for now needs to return Vertex<String> should
+     * Returns both the vertices in the array.
      *
      * @return array of length two containing both vertices
      */
@@ -145,7 +123,6 @@ public class GXEdge implements Edge<String, String> {
 
     /**
      * Gets the unmarked GXVertex from this edge, which will be the next to mark if edge is picked
-     * TODO check the right error handling if both edges are marked. Should not be the case. Add blocked check
      *
      * @return the unmarked vertex that is part of this edge
      */

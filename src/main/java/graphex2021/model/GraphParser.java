@@ -69,7 +69,7 @@ public class GraphParser {
      * @return a Collection of edges for the graph
      */
     public Collection<GXEdge> parseEdges(File input, Collection<GXVertex> vertices) {
-        Collection<GXEdge> edgeList = new <GXEdge> ArrayList();
+        Collection<GXEdge> edgeList = new ArrayList<>();
 
         JSONObject graphObject = getJsonObject(input);
         JSONArray edgeArray = graphObject.getJSONArray("edges");
@@ -82,7 +82,7 @@ public class GraphParser {
             //find first vertex
             GXVertex firstVertex = findMatchingVertex(vertexOneName, vertices);
             GXVertex secondVertex = findMatchingVertex(vertexTwoName, vertices);
-            if(firstVertex!= null && secondVertex != null) {
+            if (firstVertex != null && secondVertex != null) {
                 int edgeId = getNextEdgeId();
                 GXEdge edge = new GXEdge(firstVertex, secondVertex, Integer.toString(edgeWeight), edgeWeight, edgeId);
                 edgeList.add(edge);
@@ -97,7 +97,7 @@ public class GraphParser {
      * @param vertices the list of vertices in the graph
      * @return
      */
-    public GXVertex parseStarting(File input, Collection<GXVertex> vertices){
+    public GXVertex parseStarting(File input, Collection<GXVertex> vertices) {
         JSONObject graphObject = getJsonObject(input);
         String startName =  graphObject.getString("startVertex");
         return findMatchingVertex(startName, vertices);
@@ -121,7 +121,7 @@ public class GraphParser {
      * @return a JSONObject which is defined in the file
      */
     private JSONObject getJsonObject(File input) {
-        //TODO make a JSON matcher to test if the file is actually a graph
+        //TODO make a JSON matcher to test if the file is actually a graph and names are unique.
         String inputFile = readFromFile(input);
         return new JSONObject(inputFile);
     }
@@ -133,11 +133,11 @@ public class GraphParser {
      * @return a String with the contents of the File
      */
     private String readFromFile(File input) {
-        String output ="";
+        String output = "";
         try {
             output = Files.readString(input.toPath());
         } catch (IOException e) {
-            //TODO shouldnt happen
+            //TODO shouldnt happen. think when Controller is ready
         }
         return output;
     }
@@ -149,11 +149,10 @@ public class GraphParser {
      * @param vertices collection of vertices
      * @return either a vertex with matching name or null
      */
-    private GXVertex findMatchingVertex(String vertexName, Collection<GXVertex> vertices){
-        //TODO if element is the name and its not unique this will have problems (should we allow vertices with the same name?)
+    private GXVertex findMatchingVertex(String vertexName, Collection<GXVertex> vertices) {
         Iterator<GXVertex> it = vertices.iterator();
         GXVertex matchingVertex = null;
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             GXVertex vertex = (GXVertex) it.next();
             if (vertex.element().equals(vertexName)) {
                 matchingVertex = vertex;

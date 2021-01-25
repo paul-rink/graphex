@@ -6,8 +6,6 @@ import com.brunomnsilva.smartgraph.graph.Vertex;
 /**
  * Vertex containing the element <code>V</code> to be used in the Graph.
  *
- * TODO check for unwanted changes resulting from the change away from V to String
- *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
@@ -159,15 +157,6 @@ public class GXVertex implements Vertex<String> {
      */
     public int getCurrentDistance() {
         return currentDistance;
-    }
-
-    /**
-     * TODO don't think it is necessesary to have this rather this be changed when marked or unmarked
-     *
-     * @param currentDistance prob not needed
-     */
-    public void setCurrentDistance(int currentDistance) {
-        this.currentDistance = currentDistance;
     }
 
     /**

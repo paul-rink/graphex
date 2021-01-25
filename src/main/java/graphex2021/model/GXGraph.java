@@ -85,11 +85,11 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public Collection<GXEdge> incidentEdges(GXVertex vertex) throws ElementNotInGraphException {
-        GXVertex v = checkVertex(vertex);
+        checkVertex(vertex);
 
         List<GXEdge> incident = new ArrayList<>();
         for (GXEdge edge : edges.values()) {
-            if (edge.contains(v)) {
+            if (edge.contains(vertex)) {
                 incident.add(edge);
             }
         }
@@ -98,15 +98,15 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public GXVertex opposite(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException {
-        GXVertex v = checkVertex(vertex);
-        GXEdge e = checkEdge(edge);
+        checkVertex(vertex);
+        checkEdge(edge);
 
-        if (!e.contains(v)) {
+        if (!edge.contains(vertex)) {
             // Vertex is not part of the passed edge
             return null;
         }
 
-        if (edge.vertices()[0] == v) {
+        if (edge.vertices()[0] == vertex) {
             return edge.vertices()[1];
         } else {
             return edge.vertices()[0];
@@ -115,11 +115,10 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public boolean areAdjacent(GXVertex vertex, GXVertex vertex1) throws ElementNotInGraphException {
-        GXVertex gxVertex = checkVertex(vertex);
-        GXVertex gxVertex1 = checkVertex(vertex1);
-
+        checkVertex(vertex);
+        checkVertex(vertex1);
         for (GXEdge edge : edges.values()) {
-            if (edge.contains(gxVertex) && edge.contains(gxVertex1))  {
+            if (edge.contains(vertex) && edge.contains(vertex1))  {
                 return true;
             }
         }
@@ -136,12 +135,12 @@ public class GXGraph implements GraphInterface<String, String> {
         return vertex;
     }
 
+    //TODO maybe different way to insert an edge
     @Override
     public GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException {
         return null;
     }
 
-    //TODO maybe different way to insert an edge
     @Override
     public GXEdge insertEdge(GXEdge edge) throws ElementNotInGraphException {
         for (GXVertex vertex : edge.vertices()) {
@@ -149,7 +148,7 @@ public class GXGraph implements GraphInterface<String, String> {
             checkVertex(vertex);
         }
         if (edgeInGraph(edge.getId())) {
-            //TODO how to handle exception here?
+            return edges.get(edge.getId());
         }
         edges.put(edge.getId(), edge);
         return edge;
@@ -175,27 +174,6 @@ public class GXGraph implements GraphInterface<String, String> {
         return edge.element();
     }
 
-    //TODO other way to handle error
-    @Override
-    public void setEdgeVisible(GXVertex vertex) throws ElementNotInGraphException {
-        for (GXEdge edge : incidentEdges(vertex)) {
-            edge.setVisible(true);
-            setVertexVisible(edge, vertex);
-        }
-    }
-
-    @Override
-    public void setVertexVisible(GXEdge edge, GXVertex opposite) throws ElementNotInGraphException {
-        //TODO added vertex as param here, so that its easier to find the opposite.
-        opposite(opposite, edge).setVisible(true);
-    }
-
-
-    @Override
-    public void mark(GXEdge edge, GXVertex vertex) throws ElementNotInGraphException {
-        //TODO obsolete via mark in DP?
-    }
-
     @Override
     public void blockCircles(GXVertex vertex) throws ElementNotInGraphException {
         for (GXEdge edge : incidentEdges(vertex)) {
@@ -216,43 +194,18 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public Collection<GXVertex> getNeighbors(GXVertex v) {
+    public Collection<GXVertex> getNeighbors(GXVertex v) throws ElementNotInGraphException {
         List<GXVertex> adjacent = new ArrayList<>();
-        try {
-            for (GXEdge edge : incidentEdges(v)) {
-                adjacent.add((GXVertex) opposite(v, edge));
-            }
-        } catch (ElementNotInGraphException es) {
-            // TODO handle exception better way
+        for (GXEdge edge : incidentEdges(v)) {
+            adjacent.add((GXVertex) opposite(v, edge));
         }
         return adjacent;
     }
 
-    /**
-     * method to set an vertex to a non marked state
-     * @param vertex that should be unmarked
-     */
-    @Override
-    public void unmarkVertex(GXVertex vertex) throws ElementNotInGraphException {
-        //TODO should checkVertex() be called? Distance maybe new calculation?
-        checkVertex(vertex);
-        vertex.unmark();
-    }
-
-    /**
-     * method to set an edge to a non marked state
-     * @param edge that should be unmarked
-     */
-    public void unmarkEdge(GXEdge edge) throws ElementNotInGraphException {
-        //TODO should checkEdge() be called?
-        checkEdge(edge);
-        edge.unmark();
-    }
-
-
     @Override
     public void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException {
         //TODO test this. Really unsure if correct. Unblock edges here? Also check start and finish still stay visible
+        //TODO can be deleted after implementation in DisplayModel
         //Also
         checkEdge(edge);
         checkVertex(vertex);
@@ -283,46 +236,41 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     /**
-     * Checks if a vertex is in the graph and actually a GXvertex.
-     * TODO other way to do the exception handling
+     * Checks if a vertex is in the graph.
      *
-     * @return the GXvertex
+     * @param vertex you want to check
+     * @return true if the {@link GXVertex} is in the graph
+     * @throws ElementNotInGraphException if not an allowed {@link GXVertex}
      */
-    private GXVertex checkVertex(GXVertex vertex) throws ElementNotInGraphException {
+    private boolean checkVertex(GXVertex vertex) throws ElementNotInGraphException {
         if (vertex == null) {
             throw new ElementNotInGraphException("Vertex is null");
         }
-        //TODO
-        GXVertex gxVertex;
-        try {
-            gxVertex = vertex;
-        } catch (ClassCastException e) {
-            throw new ElementNotInGraphException("Not a GXVertex");
-        }
-        //TODO ID or element aas key
         if (!vertices.containsKey(vertex.getId())) {
-            throw  new ElementNotInGraphException("Vertex is not part of this graph");
+            throw new ElementNotInGraphException("Vertex is not part of this graph");
         }
-        return gxVertex;
+        return true;
 
     }
 
-    private GXEdge checkEdge(GXEdge edge) throws ElementNotInGraphException {
+
+    /**
+     * Checks if a {@link GXEdge} is in the graph.
+     *
+     * @param edge you want to check
+     * @return true if the {@link GXEdge} is in the graph
+     * @throws ElementNotInGraphException if not an allowed {@link GXEdge}
+     */
+    private boolean checkEdge(GXEdge edge) throws ElementNotInGraphException {
         if (edge == null) {
             throw new ElementNotInGraphException("Edge is null");
-        }
-        GXEdge gxEdge;
-        try {
-            gxEdge = (GXEdge) edge;
-        } catch (ClassCastException e) {
-            throw new ElementNotInGraphException("Not a GxEdge");
         }
 
         if (!edges.containsKey(((GXEdge) edge).getId())) {
             throw new ElementNotInGraphException("Edge does not belong to this graph");
         }
 
-        return gxEdge;
+        return true;
     }
 
     /**

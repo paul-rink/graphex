@@ -46,7 +46,6 @@ public class GraphAdapter implements Graph {
     public Collection<Edge> incidentEdges(Vertex v) throws InvalidVertexException {
         Collection<Edge> incidentEdges = null;
         try {
-            //TODO better way to call methods on Graph?
             incidentEdges = new ArrayList<>(graph.incidentEdges((GXVertex) v));
         } catch (ElementNotInGraphException eni) {
             throw new InvalidVertexException();

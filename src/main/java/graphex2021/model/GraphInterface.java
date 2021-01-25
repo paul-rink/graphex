@@ -68,7 +68,7 @@ public interface GraphInterface<V, E> {
 
 
     /**
-     * Checks whetheer two {GXVertex} are coonecte by an edge
+     * Checks whether two {GXVertex} are connected by an edge
      *
      * @param u first {@link GXVertex}
      * @param v second {@link GXEdge}
@@ -97,10 +97,11 @@ public interface GraphInterface<V, E> {
     GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException;
 
     /**
-     * Takes a GXEdge and inserts it into the graph.
+     * Takes a GXEdge and inserts it into the graph. If the graph already contains an edge with the same ID this edge
+     * will be returned instead.
      *
-     * @param edge teh edge to be put in the graph
-     * @return the edge that was inserted into the graph.
+     * @param edge the edge to be put in the graph
+     * @return the edge that was inserted into the graph or the edge with the same ID as the passed edge.
      * @throws ElementNotInGraphException if either vertex of the edge is not in the graph
      */
     GXEdge insertEdge(GXEdge edge) throws ElementNotInGraphException;
@@ -124,32 +125,6 @@ public interface GraphInterface<V, E> {
      * @throws ElementNotInGraphException if the edge is not in the graph
      */
     String removeEdge(GXEdge e) throws ElementNotInGraphException;
-
-    /**
-     * Setting all the edges visible that are adjacent to the passed vertex
-     *
-     * @param vertex vertex which adjacent edges should be made visible
-     * @throws ElementNotInGraphException if the vertex was not in the graph
-     */
-    void setEdgeVisible(GXVertex vertex) throws ElementNotInGraphException;
-
-    /**
-     * Making the vertex at the end of an edge visible if before only one vertex was visible.
-     *
-     * @param edge containing the vertex to be made visible. Needs to contain one visible vertex
-     * @throws ElementNotInGraphException if the edge is not in the graph
-     */
-    void setVertexVisible(GXEdge edge, GXVertex opposite)throws ElementNotInGraphException;
-
-    /**
-     * Marks the edge and vertex passed by to the function.
-     *
-     * @param edge to be marked
-     * @param vertex to be marked
-     * @throws ElementNotInGraphException if either the vertex or the edge are not in the graph
-     */
-
-    void mark(GXEdge edge, GXVertex vertex) throws ElementNotInGraphException;
 
     /**
      * Blocks edges adjacent to passed vertex that potentially will form a circle.
@@ -180,17 +155,7 @@ public interface GraphInterface<V, E> {
      * @param v is the {@link GXVertex} you want to know all adjacent vertices of.
      * @return a collection of all adjacent vertices.
      */
-    Collection<GXVertex> getNeighbors(GXVertex v);
-
-
-    /**
-     * Unmarks the vertex passed to this function.
-     *
-     *
-     * @param vertex to be unmarked
-     * @throws ElementNotInGraphException if the passed vertex is not in the graph
-     */
-    void unmarkVertex(GXVertex vertex) throws ElementNotInGraphException;
+    Collection<GXVertex> getNeighbors(GXVertex v) throws ElementNotInGraphException;
 
     /**
      * Sets the passed edge invisible and checks which vertices and edges should now be invisible as well
