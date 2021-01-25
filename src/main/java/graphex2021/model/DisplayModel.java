@@ -68,7 +68,9 @@ public class DisplayModel extends Subject {
 
     }
 
-    public GXGraph getState() { return this.graph; }
+    public GXGraph getState() {
+        return this.graph;
+    }
 
     /**
      * method that gets called when a user requests to undo the last step he did
