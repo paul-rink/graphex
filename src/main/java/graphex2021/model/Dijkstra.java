@@ -3,45 +3,37 @@ package graphex2021.model;
 import java.util.*;
 
 /**
- * This class simulates the Dijksta-Algorithm.
+ * This class simulates the Dijkstra-Algorithm.
  * TODO what should happen with help info, if shortest path is found, but Dijkstra would continue?
  *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
 public class Dijkstra implements Algorithm {
-    private final GXGraph g;
-    private final Collection<GXVertex> vertices;
-    private final GXVertex start;
+    private GXGraph g;
+    private Collection<GXVertex> vertices;
+    private GXVertex start;
     /**
      * Array that holds distances for all {@link GXVertex}s respectively as distance to given
      * {@code start}-vertex. {@code -1} is for {@code infinity}. Only positive values for distances.
      */
-    private final int[] dist;
+    private int[] dist;
     /**
      * Array of {@link GXVertex} where every index of the array refers to the id of a {@link GXVertex} and the element
      * represents the predecessor of the vertex with this id.
      */
-    private final GXVertex[] prev;
+    private GXVertex[] prev;
     /**
      * This queue will hold all unmarked vertices, prioritized by their distance to the start vertex.
      */
     private final PriorityQueue<GXVertex> unmarked;
-    private final List<Step> steps;
+    private List<Step> steps;
 
     /**
-     * Creates a new Dijkstra instance for a given {@link GXGraph}.
-     * @param g is the {@link GXGraph} the algorithm should be executed at.
+     * Creates a new Dijkstra instance for a given {@link GXGraph}. Initializes the PriorityQueue for distance
+     * comparison.
      */
-    public Dijkstra(GXGraph g) {
-        this.g = g;
-        this.vertices = g.vertices();
-        this.start = g.getStartingVertex();
-
-        int size = vertices.size();
-        this.dist = new int[size];
-        this.prev = new GXVertex[size];
-
+    public Dijkstra() {
          //This comparator is used for comparing two vertices by their current distance to the start vertex.
         Comparator<GXVertex> vertexDistanceComparator = (v, u) -> {
             //case u and v are unvisited and therefore distance infinity (-1)
@@ -54,13 +46,17 @@ public class Dijkstra implements Algorithm {
             else return dist[v.getId()] - dist[u.getId()];
         };
         this.unmarked = new PriorityQueue<>(vertexDistanceComparator);
-
         this.steps = new LinkedList<>();
-        createSteps();
     }
 
     @Override
     public List<Step> getSequence(GXGraph g) {
+        //reset instance of dijkstra with new given graph
+        setup(g);
+        //set distances to infinity and fill unmarked list
+        init();
+        //calculate steps by dijkstra
+        createSteps();
         return steps;
     }
 
@@ -77,6 +73,22 @@ public class Dijkstra implements Algorithm {
     @Override
     public boolean hasEndingVertex() {
         return true;
+    }
+
+    /**
+     * Resets the dijkstra instance for a new given graph. Sets starting vertex, arrays for dist and prev and clears
+     * unmarked PQ as well steps.
+     * @param g is the graph dijkstra should now calculate shortest path at.
+     */
+    private void setup(GXGraph g) {
+        this.g = g;
+        this.vertices = g.vertices();
+        this.start = g.getStartingVertex();
+        int size = vertices.size();
+        this.dist = new int[size];
+        this.prev = new GXVertex[size];
+        unmarked.clear();
+        this.steps = new LinkedList<>();
     }
 
     /**
@@ -100,9 +112,8 @@ public class Dijkstra implements Algorithm {
      * {@link GXVertex} and {@link GXEdge} chosen by Dijkstra in the step.
      */
     private void createSteps() {
-        init();
         while (!unmarked.isEmpty()) {
-            GXVertex v = unmarked.remove();     //this is the net chosen vertex
+            GXVertex v = unmarked.remove();     //this is the next chosen vertex
 
             //create a step with this vertex, but don't create a step for starting vertex
             if (!v.equals(start)) { steps.add(extractStep(v)); }
@@ -120,25 +131,19 @@ public class Dijkstra implements Algorithm {
     /**
      * Searches for a given {@link GXVertex} that was the next chosen vertex by the algorithm for the {@link GXEdge}
      * that belongs to it. This said, this edge is the next part of the shortest path calculated by the algorithm.
-     * The edge is identified by the given vertex and a second vertex that is already marked.
+     * The edge is identified by the given vertex and it's previous vertex from prev.
      *
      * @param v is the chosen {@link GXVertex} of the algorithm in one step.
      * @return a {@link Step} containing the chosen {@code vertex} and related edge.
      */
     private Step extractStep(GXVertex v) {
-        Step step = null;
-        Collection<GXVertex> neighbors = g.getNeighbors(v);
-        for (GXVertex u : neighbors) {
-            if (!unmarked.contains(u)) {     //if neighbor u is already marked, the correct vertex is found
-                try {
-                    step = new Step(v, g.getEdge(v, u));
-                } catch (ElementNotInGraphException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
+        GXEdge edgeToV = null;
+        try {
+            edgeToV = g.getEdge(v, prev[v.getId()]);
+        } catch (ElementNotInGraphException e) {
+            e.printStackTrace();
         }
-        return step;
+        return new Step(v, edgeToV);
     }
 
     /**
