@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * This class simulates the Dijkstra-Algorithm.
  * TODO what should happen with help info, if shortest path is found, but Dijkstra would continue?
- *
+ * TODO get the distance to the goal vertex.
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
@@ -27,7 +27,7 @@ public class Dijkstra implements Algorithm {
      * This queue will hold all unmarked vertices, prioritized by their distance to the start vertex.
      */
     private final PriorityQueue<GXVertex> unmarked;
-    private List<Step> steps;
+    private LinkedList<Step> steps;
 
     /**
      * Creates a new Dijkstra instance for a given {@link GXGraph}. Initializes the PriorityQueue for distance
@@ -50,7 +50,7 @@ public class Dijkstra implements Algorithm {
     }
 
     @Override
-    public List<Step> getSequence(GXGraph g) {
+    public LinkedList<Step> getSequence(GXGraph g) {
         //reset instance of dijkstra with new given graph
         setup(g);
         //set distances to infinity and fill unmarked list

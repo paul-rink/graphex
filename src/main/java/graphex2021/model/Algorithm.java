@@ -1,6 +1,6 @@
 package graphex2021.model;
 
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * This interface provides methods required by the {@link DisplayModel} to get the displayed {@link GXGraph} ready for
@@ -11,15 +11,14 @@ import java.util.List;
  */
 public interface Algorithm {
     /**
-     * TODO what (ordered) datatype might fit best? Maybe doubly-linked-list.
-     *
      * This method is <b>crucial</b> for the program to be executed correctly. By calling this method, the algorithm
      * should return a ordered collection of {@link Step}s that indicate the correct step-by-step execution of the
      * algorithm. You should care for a unique interpretation of the collection.
+     *
      * @param g is the {@link GXGraph} the algorithm is applied at.
      * @return a unique ordered collection of {@link Step}s, indicating the algorithm's step-by-step execution.
      */
-    List<Step> getSequence(GXGraph g);
+    LinkedList<Step> getSequence(GXGraph g);
 
     /**
      * Determines, whether the {@link GXGraph} should be fully revealed at the beginning or not. Choosing
