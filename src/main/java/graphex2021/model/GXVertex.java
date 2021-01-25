@@ -100,13 +100,14 @@ public class GXVertex implements Vertex<String> {
     }
 
     /**
-     * Sets the marked state of the vertex to the desired state
+     * Sets the marked state of the vertex to the desired state.
+     * Setting the previous edge to null also.
      * TODO modify so that currentDistance and previous are correctly unmarked in that case
      *
-     * @param marked lets you mark or unmark the vertex
      */
-    public void mark(boolean marked) {
-        this.marked = marked;
+    public void unmark() {
+        this.marked = false;
+        this.previous = null;
     }
 
     /**

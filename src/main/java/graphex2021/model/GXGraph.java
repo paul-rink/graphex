@@ -1,7 +1,5 @@
 package graphex2021.model;
 
-import com.brunomnsilva.smartgraph.graph.*;
-
 import java.util.*;
 
 /**
@@ -255,18 +253,20 @@ public class GXGraph implements GraphInterface<String, String> {
      * @param vertex that should be unmarked
      */
     @Override
-    public void unmarkVertex(GXVertex vertex) {
-        //TODO should checkVertex() be called?
-        vertex.mark(false);
+    public void unmarkVertex(GXVertex vertex) throws ElementNotInGraphException {
+        //TODO should checkVertex() be called? Distance maybe new calculation?
+        checkVertex(vertex);
+        vertex.unmark();
     }
 
     /**
      * method to set an edge to a non marked state
      * @param edge that should be unmarked
      */
-    public void unmarkEdge(GXEdge edge) {
+    public void unmarkEdge(GXEdge edge) throws ElementNotInGraphException {
         //TODO should checkEdge() be called?
-        edge.mark(false);
+        checkEdge(edge);
+        edge.unmark();
     }
 
 
@@ -308,38 +308,38 @@ public class GXGraph implements GraphInterface<String, String> {
      *
      * @return the GXvertex
      */
-    private GXVertex checkVertex(GXVertex vertex) throws InvalidVertexException {
+    private GXVertex checkVertex(GXVertex vertex) throws ElementNotInGraphException {
         if (vertex == null) {
-            throw new InvalidVertexException("Vertex is null");
+            throw new ElementNotInGraphException("Vertex is null");
         }
-
+        //TODO
         GXVertex gxVertex;
         try {
             gxVertex = vertex;
         } catch (ClassCastException e) {
-            throw new InvalidVertexException("Not a GXVertex");
+            throw new ElementNotInGraphException("Not a GXVertex");
         }
         //TODO ID or element aas key
         if (!vertices.containsKey(vertex.getId())) {
-            throw  new InvalidVertexException("Vertex is not part of this graph");
+            throw  new ElementNotInGraphException("Vertex is not part of this graph");
         }
         return gxVertex;
 
     }
 
-    private GXEdge checkEdge(GXEdge edge) throws InvalidEdgeException {
+    private GXEdge checkEdge(GXEdge edge) throws ElementNotInGraphException {
         if (edge == null) {
-            throw new InvalidEdgeException("Edge is null");
+            throw new ElementNotInGraphException("Edge is null");
         }
         GXEdge gxEdge;
         try {
             gxEdge = (GXEdge) edge;
         } catch (ClassCastException e) {
-            throw new InvalidEdgeException("Not a GxEdge");
+            throw new ElementNotInGraphException("Not a GxEdge");
         }
 
         if (!edges.containsKey(((GXEdge) edge).getId())) {
-            throw new InvalidEdgeException("Edge does not belong to this graph");
+            throw new ElementNotInGraphException("Edge does not belong to this graph");
         }
 
         return gxEdge;

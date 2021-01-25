@@ -159,8 +159,22 @@ public class GXEdge implements Edge<String, String> {
         }
     }
 
+    /**
+     * Sets the marked state of the edge to the passed value
+     *
+     * @param marked marks a vertex or unmarks it
+     */
     public void mark(boolean marked) {
+        //TODO maybe dont allow the marked state to just be set. maybe no param needed
+        this.marked = marked;
+    }
 
+    /**
+     * Unmarks the edge.
+     *
+     */
+    public void unmark() {
+        this.marked = false;
     }
 
     /**

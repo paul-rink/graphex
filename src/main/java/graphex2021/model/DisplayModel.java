@@ -48,7 +48,7 @@ public class DisplayModel extends Subject {
      * the method unmarks the last selected edge/vertex and updates the visibility of all edges and vertices
      * accordingly
      */
-    public void undo() {
+    public void undo() throws ElementNotInGraphException {
         Step lastStep = getLastUserStep();
         GXEdge lastEdge = lastStep.getSelectedEdge();
         GXVertex lastVertex = lastStep.getSelectedVertex();
