@@ -2,13 +2,12 @@ package graphex2021.model;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class DijkstraTest {
     Dijkstra d;
@@ -44,7 +43,7 @@ public class DijkstraTest {
         g.insertEdge(e6);
         g.insertEdge(e7);
         g.setStartingVertex(v1);
-        d = new Dijkstra(g);
+        d = new Dijkstra();
     }
 
     @Test
@@ -54,10 +53,50 @@ public class DijkstraTest {
         Step step2 = steps.get(1);
         Step step3 = steps.get(2);
         Step step4 = steps.get(3);
-        assertEquals(3,step1.getSelectedVertex().getId());
-        assertEquals(1,step2.getSelectedVertex().getId());
-        assertEquals(4,step3.getSelectedVertex().getId());
-        assertEquals(2,step4.getSelectedVertex().getId());
+        assertEquals(1,step1.getSelectedEdge().getId());
+        System.out.println("Step 1 for g correct \n");
+        assertEquals(4,step2.getSelectedEdge().getId());
+        System.out.println("Step 2 for g correct \n");
+        assertEquals(5,step3.getSelectedEdge().getId());
+        System.out.println("Step 3 for g correct \n");
+        assertEquals(3,step4.getSelectedEdge().getId());
+        System.out.println("Step 4 for g correct \n");
+    }
+
+    @Test
+    public void testDijkstraSequenceFor2ndGraph() {
+        steps = d.getSequence(g);
+        Step step1 = steps.get(0);
+        Step step2 = steps.get(1);
+        Step step3 = steps.get(2);
+        Step step4 = steps.get(3);
+        assertEquals(1,step1.getSelectedEdge().getId());
+        System.out.println("Step 1 for g correct \n");
+        assertEquals(4,step2.getSelectedEdge().getId());
+        System.out.println("Step 2 for g correct \n");
+        assertEquals(5,step3.getSelectedEdge().getId());
+        System.out.println("Step 3 for g correct \n");
+        assertEquals(3,step4.getSelectedEdge().getId());
+        System.out.println("Step 4 for g correct \n");
+
+        System.out.println("Change edge weight of e_id=3 to 10 \n");
+        for (GXEdge edge : ((ArrayList<GXEdge>) g.edges())) {
+            if (edge.getId() == 3) edge.setWeight(10);
+        }
+        steps = d.getSequence(g);
+        step1 = steps.get(0);
+        step2 = steps.get(1);
+        step3 = steps.get(2);
+        step4 = steps.get(3);
+        assertEquals(1,step1.getSelectedEdge().getId());
+        System.out.println("Step 1 for g correct \n");
+        assertEquals(4,step2.getSelectedEdge().getId());
+        System.out.println("Step 2 for g correct \n");
+        assertEquals(5,step3.getSelectedEdge().getId());
+        System.out.println("Step 3 for g correct \n");
+        assertEquals(2,step4.getSelectedEdge().getId());
+        System.out.println("Step 4 for g correct \n");
+
     }
 
     @After
