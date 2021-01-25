@@ -49,7 +49,7 @@ public class GraphParser {
 
         JSONObject graphObject = getJsonObject(input);
         JSONArray verticesArray = graphObject.getJSONArray("vertices");
-        for(int i = 0; i < verticesArray.length(); i++) {
+        for (int i = 0; i < verticesArray.length(); i++) {
             JSONObject jsonVertex = verticesArray.getJSONObject(i);
             String vertexName = jsonVertex.getString("name");
             int posx = jsonVertex.getInt("posx");
@@ -95,7 +95,7 @@ public class GraphParser {
      * method that parses which vertex is designated as the start vertex in the file
      * @param input the file in which the graph is specified
      * @param vertices the list of vertices in the graph
-     * @return
+     * @return GXVertex that should be the designated starting vertex
      */
     public GXVertex parseStarting(File input, Collection<GXVertex> vertices) {
         JSONObject graphObject = getJsonObject(input);
@@ -107,7 +107,7 @@ public class GraphParser {
      * method that parses which vertex is designated as the end vertex in the file
      * @param input the file in which the graph is specified
      * @param vertices the list of vertices in the graph
-     * @return
+     * @return GXVertex that should be the designated ending vertex
      */
     public GXVertex parseEnding(File input, Collection<GXVertex> vertices) {
         JSONObject graphObject = getJsonObject(input);
