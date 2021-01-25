@@ -1,5 +1,6 @@
 package graphex2021.model;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -39,6 +40,21 @@ public class GXGraph implements GraphInterface<String, String> {
         this.edges = new HashMap<>();
         this.startingVertex = null;
         this.endingVertex = null;
+    }
+
+    public GXGraph(File file) throws ElementNotInGraphException {
+        this.vertices = new HashMap<>();
+        this.edges = new HashMap<>();
+        GraphParser parser = GraphParser.getGraphParser();
+        for (GXVertex vertex : parser.parseVertices(file)) {
+            insertVertex(vertex);
+        }
+        for (GXEdge edge : parser.parseEdges(file, vertices())) {
+            insertEdge(edge);
+        }
+        this.startingVertex = parser.parseStarting(file, vertices());
+        this.endingVertex = parser.parseEnding(file, vertices());
+
     }
 
 
