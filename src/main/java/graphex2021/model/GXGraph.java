@@ -183,6 +183,19 @@ public class GXGraph implements GraphInterface<String, String> {
         }
     }
 
+    /**
+     * method to unblock all edges incident to a vertex
+     * (you can unblock all as the vertex calling this is being unmarked and as a result
+     * the edges wont be blocked by this vertex anymore
+     * @param vertex the vertex whose edges should be unblocked
+     * @throws ElementNotInGraphException if the vertex is not in the graph
+     */
+    public void unblock (GXVertex vertex) throws ElementNotInGraphException {
+        for (GXEdge edge : incidentEdges(vertex)) {
+            edge.setBlocked(false);
+        }
+    }
+
     @Override
     public GXVertex getStartingVertex() {
         return startingVertex;
