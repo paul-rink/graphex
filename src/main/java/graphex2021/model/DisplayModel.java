@@ -1,15 +1,18 @@
 package graphex2021.model;
 
-import java.util.Collection;
-import java.util.List;
+
+import java.util.LinkedList;
 
 /**
+ * TODO JAVADOC
+ *
+ *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
 public class DisplayModel extends Subject {
-    private List<Step> userSteps;
-    private List<Step> algoSteps;
+    private LinkedList<Step> userSteps;
+    private LinkedList<Step> algoSteps;
     private Algorithm algo;
     private GXGraph graph;
     private GXGraph visibleGraph;
@@ -25,7 +28,7 @@ public class DisplayModel extends Subject {
         if (edge.isBlocked()) return; //TODO implement Alert
         //get unmarked vertex of edge and mark both in graph
         GXVertex nextVertex = edge.getNextVertex();
-        edge.mark(true);
+        edge.mark();
         //get distance to already marked vertex of marked edge
         int curDist = graph.opposite(nextVertex, edge).getCurrentDistance();
         nextVertex.mark(curDist, edge);
@@ -49,18 +52,19 @@ public class DisplayModel extends Subject {
      * accordingly
      */
     public void undo() throws ElementNotInGraphException {
+        //TODO remove from visible Graph
         Step lastStep = getLastUserStep();
         GXEdge lastEdge = lastStep.getSelectedEdge();
         GXVertex lastVertex = lastStep.getSelectedVertex();
         removeLastUserStep();
 
-        this.graph.unmarkVertex(lastVertex);
-        this.graph.unmarkEdge(lastEdge);
-        try {
-            this.graph.setVertexInvisible(lastVertex, lastEdge);
-        } catch (ElementNotInGraphException e) {
-            //TODO shouldnt happen as only elements in the step are added that are also in the graph
-        }
+        //TODO make invisible in DP, unblock edges
+        //Just set all incident edges to not be blocked.
+
+        lastVertex.unmark();
+        lastEdge.unmark();
+        makeIncidentsInvisible(lastVertex, lastEdge);
+
         this.notifyObservers();
     }
 
@@ -93,16 +97,14 @@ public class DisplayModel extends Subject {
      * @return the last step in the list of user steps
      */
     private Step getLastUserStep() {
-        //TODO check if highest index is actually the last done user step
-        return userSteps.get(userSteps.size()-1);
+        return userSteps.getLast();
     }
 
     /**
      * method that removes the last step in the list of the userSteps
      */
     private void removeLastUserStep() {
-        //TODO check if highest index is actually the last done user step
-        userSteps.remove(userSteps.size()-1);
+        userSteps.removeLast();
     }
 
     /**
@@ -125,6 +127,10 @@ public class DisplayModel extends Subject {
                 visibleGraph.insertVertex(opposite);
             }
         }
+    }
+
+    private void makeIncidentsInvisible(GXVertex vertex, GXEdge edge) {
+        //TODO steal from graph.
     }
 
 }

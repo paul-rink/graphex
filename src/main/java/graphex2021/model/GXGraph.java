@@ -33,14 +33,12 @@ public class GXGraph implements GraphInterface<String, String> {
 
     /**
      * Empty constructor just initialising the attributes
-     * TODO for now ID as key for map ==> Integer
      */
     public GXGraph() {
-        this.vertices = new HashMap<Integer, GXVertex>();
-        this.edges = new HashMap<Integer, GXEdge>();
+        this.vertices = new HashMap<>();
+        this.edges = new HashMap<>();
         this.startingVertex = null;
         this.endingVertex = null;
-
     }
 
 
@@ -58,9 +56,6 @@ public class GXGraph implements GraphInterface<String, String> {
 
     /**
      * Returns a list containing all the vertices that are part of the graph.
-     * TODO check for better way to be able to return  GXVertex and not have to typecast it later.
-     * TODO Problem Generics invariant.
-     * TODO more checking of how to handle Collection vs. Arraylist or something.
      * Problem is that in case you would use Collection<GXVertex> you would also be able to add Vertex to list.
      * List GXVertex is not a List Vertex since you could potentially insert a different type of Vertex into the list.
      *
@@ -77,7 +72,6 @@ public class GXGraph implements GraphInterface<String, String> {
 
     /**
      * Returns a list containing all the edges that are part of the graph.
-     * TODO check for better way to be able to return  GXVertex and not have to typecast it later.
      *
      * @return ArrayList containing all the vertices of the Graph. For now can be typecast to GXEdge
      */
@@ -135,9 +129,10 @@ public class GXGraph implements GraphInterface<String, String> {
     @Override
     public GXVertex insertVertex(GXVertex vertex) {
         if (vertexInGraph(vertex.getId())) {
-           //TODO how to handle exception here?
+            return vertices.get(vertex.getId());
+        } else {
+            vertices.put(vertex.getId(), vertex);
         }
-        vertices.put(vertex.getId() , vertex);
         return vertex;
     }
 
@@ -180,17 +175,6 @@ public class GXGraph implements GraphInterface<String, String> {
         return edge.element();
     }
 
-    @Override
-    public String replace(GXVertex vertex, String element) throws ElementNotInGraphException {
-        return null;
-    }
-
-
-    @Override
-    public String replace(GXEdge edge, String element) throws ElementNotInGraphException {
-        return null;
-    }
-
     //TODO other way to handle error
     @Override
     public void setEdgeVisible(GXVertex vertex) throws ElementNotInGraphException {
@@ -206,10 +190,6 @@ public class GXGraph implements GraphInterface<String, String> {
         opposite(opposite, edge).setVisible(true);
     }
 
-    @Override
-    public boolean updateDistance() {
-        return false;
-    }
 
     @Override
     public void mark(GXEdge edge, GXVertex vertex) throws ElementNotInGraphException {
@@ -272,7 +252,7 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException {
-        //TODO test this. Really unsure if correct. Unblock edges here?
+        //TODO test this. Really unsure if correct. Unblock edges here? Also check start and finish still stay visible
         //Also
         checkEdge(edge);
         checkVertex(vertex);

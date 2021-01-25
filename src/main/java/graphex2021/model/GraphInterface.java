@@ -78,10 +78,10 @@ public interface GraphInterface<V, E> {
     boolean areAdjacent(GXVertex u, GXVertex v) throws ElementNotInGraphException;
 
     /**
-     * Adds the passed {@link GXVertex} to the graph
+     * Adds the passed {@link GXVertex} to the graph, if there isn't already a {@link GXVertex} with the same ID
      *
      * @param vertex {@link GXVertex} to be inserted
-     * @return the inserted {GXVertex}
+     * @return the inserted vertex or the vertex that has the same ID as the passed vertex.
      */
     GXVertex insertVertex(GXVertex vertex);
 
@@ -97,11 +97,11 @@ public interface GraphInterface<V, E> {
     GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException;
 
     /**
-     * TODO maybe not needed
+     * Takes a GXEdge and inserts it into the graph.
      *
-     * @param edge
-     * @return
-     * @throws ElementNotInGraphException
+     * @param edge teh edge to be put in the graph
+     * @return the edge that was inserted into the graph.
+     * @throws ElementNotInGraphException if either vertex of the edge is not in the graph
      */
     GXEdge insertEdge(GXEdge edge) throws ElementNotInGraphException;
 
@@ -126,28 +126,6 @@ public interface GraphInterface<V, E> {
     String removeEdge(GXEdge e) throws ElementNotInGraphException;
 
     /**
-     * TODO Check if actually needed
-     *
-     * @param v
-     * @param newElement
-     * @return
-     * @throws InvalidVertexException
-     */
-    Object replace(GXVertex v, String newElement) throws ElementNotInGraphException;
-
-
-    /**
-     * TODO Check if actually needed
-     *
-     * @param e
-     * @param newElement
-     * @return
-     * @throws ElementNotInGraphException
-     */
-    Object replace(GXEdge e, String newElement) throws ElementNotInGraphException;
-
-
-    /**
      * Setting all the edges visible that are adjacent to the passed vertex
      *
      * @param vertex vertex which adjacent edges should be made visible
@@ -164,13 +142,6 @@ public interface GraphInterface<V, E> {
     void setVertexVisible(GXEdge edge, GXVertex opposite)throws ElementNotInGraphException;
 
     /**
-     * //TODO propably best done in the vertex when marking or unmarking so propably not needed
-     *
-     * @return
-     */
-    boolean updateDistance();
-
-    /**
      * Marks the edge and vertex passed by to the function.
      *
      * @param edge to be marked
@@ -182,7 +153,6 @@ public interface GraphInterface<V, E> {
 
     /**
      * Blocks edges adjacent to passed vertex that potentially will form a circle.
-     * TODO Check if potentially more than one GXEdge could need to be blocked to avoid circles
      *
      * @param vertex the newly marked vertex, that might make it necessary to block edges.
      * @throws ElementNotInGraphException if the passed vertex is not in the graph
