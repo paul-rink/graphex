@@ -58,6 +58,14 @@
     -fx-opacity: 1;
 }
 
+.blockedEdge {
+    -fx-stroke-width: 8;
+    -fx-stroke: #797882;
+    -fx-fill: transparent; /*important for curved edges. do not remove */
+    -fx-stroke-line-cap: round;
+    -fx-opacity: 0.8;
+}
+
 
 .testClass {
     -fx-stroke-width: 15;

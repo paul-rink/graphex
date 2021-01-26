@@ -11,7 +11,6 @@ import javafx.scene.Node;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.URI;
 
 
 public class GraphView extends SmartGraphPanel<String, String> implements Observer {
@@ -40,17 +39,25 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
     @Override
     public void update() {
         super.update();
-        styleMarkedEdges();
+        styleEdges();
     }
 
-    private void styleMarkedEdges() {
+    /**
+     * Will display every edge according to its state (unmarked, marked, blocked) different.
+     */
+    private void styleEdges() {
         for (Node node : this.getChildren()) {
             if (node instanceof SmartGraphEdgeLine) {
                 SmartGraphEdgeLine edgeNode = (SmartGraphEdgeLine) node;
-                if (((GXEdge) edgeNode.getUnderlyingEdge()).isMarked()) {
+                GXEdge edge = (GXEdge) edgeNode.getUnderlyingEdge();
+                //call this first because every marked edge is blocked as well //TODO maybe change this?
+                if (edge.isBlocked() && !edge.isMarked()) {
+                    edgeNode.setStyleClass("blockedEdge");
+                } else if (edge.isMarked()) {
                     edgeNode.setStyleClass("markedEdge");
                 }
             }
         }
     }
+
 }
