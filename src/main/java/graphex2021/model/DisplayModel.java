@@ -96,6 +96,7 @@ public class DisplayModel extends Subject {
         for (GXEdge edge : graph.edges()) {
             edge.unmark();
             edge.setVisible(false);
+            edge.setBlocked(false);
         }
         //Making all vertices unmarked and invisible
         for (GXVertex vertex : graph.vertices()) {
@@ -105,6 +106,7 @@ public class DisplayModel extends Subject {
         //Creating new visibileGraph that will then have the starting and end vertex be visible.
         this.visibleGraph = new GXGraph();
         initialVisibleGraph();
+        notifyObservers();
     }
 
     private void makeVisible(GXEdge edge) { }
@@ -175,10 +177,11 @@ public class DisplayModel extends Subject {
         for(GXEdge edge : graph.incidentEdges(vertex)) {
             try {
                 GXVertex otherVertex = edge.getNextVertex();
-                otherVertex.setVisible(false);
-                visibleGraph.removeVertex(otherVertex);
                 edge.setVisible(false);
                 visibleGraph.removeEdge(edge);
+                otherVertex.setVisible(false);
+                visibleGraph.removeVertex(otherVertex);
+
             } catch (IllegalArgumentException e) {
                 //this means that the other side is marked and this edge needs to stay visible
             }

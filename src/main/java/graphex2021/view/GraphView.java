@@ -5,12 +5,14 @@ import graphex2021.model.GXEdge;
 import graphex2021.model.GXGraph;
 import graphex2021.model.Observer;
 import graphex2021.model.Subject;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Collection;
 
 
 public class GraphView extends SmartGraphPanel<String, String> implements Observer {
@@ -58,6 +60,12 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
                 }
             }
         }
+
+
+    }
+
+    public ObservableList<Node> children() {
+        return super.getChildren();
     }
 
 }

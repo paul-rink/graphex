@@ -1,11 +1,16 @@
 package graphex2021.controller;
 
+import com.brunomnsilva.smartgraph.graph.Vertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.model.*;
 import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+
+import static com.brunomnsilva.smartgraph.graphview.UtilitiesJavaFX.pick;
 
 public class Controller {
 
@@ -62,26 +67,17 @@ public class Controller {
         graphView.setEdgeDoubleClickAction(e -> onSelectEdge(e));
         graphView.setVertexDoubleClickAction(v -> onSelectVertex(v));
         //TODO WIP
-        /*
-        graphView.setOnMouseEntered((MouseEvent mouseEvent) -> {
-            Node node = pick(graphView, mouseEvent.getSceneX(), mouseEvent.getSceneY());
-            if (node instanceof SmartGraphVertexNode) {
-                SmartGraphVertexNode edge = (SmartGraphVertexNode) node;
-                edge.setOnMouseEntered(e -> onHoverEdge((SmartGraphVertexNode) e.getSource()));
-            }
-        } );
-        */
 
-        /*
-        for (Node child : graphView.getChildren()) {
-            if (child instanceof SmartGraphVertexNode) {
-                SmartGraphVertexNode edge = (SmartGraphVertexNode) child;
-                edge.setOnMouseEntered(e -> onHoverEdge((SmartGraphVertexNode) e.getSource()));
-                edge.setOnMouseExited(e -> onLeaveEdge((SmartGraphVertexNode) e.getSource()));
-                edge.setOnMouseClicked(e -> onHoverEdge((SmartGraphVertexNode) e.getSource()));
-            }
+        for (Node node : graphView.children()) {
+           System.out.println("Hier");
+           if (node instanceof SmartGraphVertexNode) {
+               SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
+               vert.setOnMouseEntered(s-> onHoverEdge((SmartGraphVertexNode) s.getSource()));
+           }
         }
-        */
+
+
+
 
 
 
@@ -153,7 +149,11 @@ public class Controller {
      * everything that comes along with this.
      */
     public void onUndoPressed() {
-
+        try {
+            displayModel.undo();
+        } catch (ElementNotInGraphException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -182,6 +182,6 @@ public class Controller {
      * Called on the reset button being pressed
      */
     public void onResetPressed() {
-
+        displayModel.reset();
     }
 }

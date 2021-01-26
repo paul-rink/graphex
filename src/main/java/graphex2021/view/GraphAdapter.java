@@ -6,6 +6,7 @@ import graphex2021.model.GXEdge;
 import graphex2021.model.GXGraph;
 import graphex2021.model.GXVertex;
 
+import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -38,20 +39,20 @@ public class GraphAdapter implements Graph {
     }
 
     @Override
-    public Collection<Vertex> vertices() {
-        Collection<Vertex> vertices = new ArrayList<>(graph.vertices());
+    public Collection<Vertex<String>> vertices() {
+        Collection<Vertex<String>> vertices = new ArrayList<>(graph.vertices());
         return vertices;
     }
 
     @Override
-    public Collection<Edge> edges() {
-        Collection<Edge> edges = new ArrayList<>(graph.edges());
+    public Collection<Edge<String, String>> edges() {
+        Collection<Edge<String, String>> edges = new ArrayList<>(graph.edges());
         return edges;
     }
 
     @Override
-    public Collection<Edge> incidentEdges(Vertex v) throws InvalidVertexException {
-        Collection<Edge> incidentEdges = null;
+    public Collection<Edge<String, String>> incidentEdges(Vertex v) throws InvalidVertexException {
+        Collection<Edge<String, String>> incidentEdges = null;
         try {
             incidentEdges = new ArrayList<>(graph.incidentEdges((GXVertex) v));
         } catch (ElementNotInGraphException eni) {
@@ -61,7 +62,7 @@ public class GraphAdapter implements Graph {
     }
 
     @Override
-    public Vertex opposite(Vertex v, Edge e) throws InvalidVertexException, InvalidEdgeException {
+    public Vertex<String> opposite(Vertex v, Edge e) throws InvalidVertexException, InvalidEdgeException {
         try {
             return graph.opposite((GXVertex) v, (GXEdge) e);
         } catch (ElementNotInGraphException eni) {
