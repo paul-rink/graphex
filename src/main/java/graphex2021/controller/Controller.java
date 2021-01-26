@@ -2,10 +2,17 @@ package graphex2021.controller;
 
 import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.Vertex;
+import com.brunomnsilva.smartgraph.graphview.SmartGraphEdgeLine;
+import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
+import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.model.Algorithm;
 import graphex2021.model.DisplayModel;
 import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
+
+import static com.brunomnsilva.smartgraph.graphview.UtilitiesJavaFX.pick;
 
 public class Controller {
 
@@ -33,6 +40,7 @@ public class Controller {
         displayModel.notifyObservers();
         graphView.init();
         graphView.update();
+        setActions();
     }
 
     /**
@@ -59,6 +67,39 @@ public class Controller {
     }
 
     public void setActions() {
+        //TODO WIP
+        graphView.setOnMouseEntered((MouseEvent mouseEvent) -> {
+            Node node = pick(graphView, mouseEvent.getSceneX(), mouseEvent.getSceneY());
+            if (node instanceof SmartGraphVertexNode) {
+                SmartGraphVertexNode edge = (SmartGraphVertexNode) node;
+                edge.setOnMouseEntered(e -> onHoverEdge((SmartGraphVertexNode) e.getSource()));
+            }
+        } );
+
+
+        /*
+        for (Node child : graphView.getChildren()) {
+            if (child instanceof SmartGraphVertexNode) {
+                SmartGraphVertexNode edge = (SmartGraphVertexNode) child;
+                edge.setOnMouseEntered(e -> onHoverEdge((SmartGraphVertexNode) e.getSource()));
+                edge.setOnMouseExited(e -> onLeaveEdge((SmartGraphVertexNode) e.getSource()));
+                edge.setOnMouseClicked(e -> onHoverEdge((SmartGraphVertexNode) e.getSource()));
+            }
+        }
+        */
+
+
+
+    }
+
+    public void onHoverEdge(SmartGraphVertexNode e) {
+        e.setStyleClass("testClass");
+        System.out.println("Rein");
+
+    }
+
+    public void onLeaveEdge(SmartGraphVertexNode e) {
+        System.out.println("Raus");
 
     }
 
