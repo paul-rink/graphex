@@ -13,9 +13,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 
 
-public class GraphView extends SmartGraphPanel<String, String> implements Observer {
+public class GraphView extends SmartGraphPanel implements Observer {
 
     //TODO check best Filepath separator
     private static final File STYLESHEET = new File( "src" + File.separator + "main"
@@ -27,7 +28,7 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
 
     public GraphView() throws FileNotFoundException {
         super(new GraphAdapter() , new SmartGraphProperties(new FileInputStream(PROPERTIES)),
-                new SmartCircularSortedPlacementStrategy(), STYLESHEET.toURI());
+                new SmartStaticPlacementStrategy(), STYLESHEET.toURI());
     }
 
     @Override
@@ -42,6 +43,15 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
     public void update() {
         super.update();
         styleEdges();
+        Collection<SmartGraphVertex<String>> vertices = new LinkedHashSet<>();
+        for (Node node : this.getChildren()) {
+            if (node instanceof SmartGraphVertexNode) {
+                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
+                vertices.add(vert);
+            }
+        }
+        SmartPlacementStrategy place = new SmartStaticPlacementStrategy();
+        place.place(super.widthProperty().doubleValue(), super.heightProperty().doubleValue(), super.theGraph, vertices);
     }
 
     /**

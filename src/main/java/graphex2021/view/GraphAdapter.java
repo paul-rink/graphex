@@ -39,8 +39,8 @@ public class GraphAdapter implements Graph {
     }
 
     @Override
-    public Collection<Vertex<String>> vertices() {
-        Collection<Vertex<String>> vertices = new ArrayList<>(graph.vertices());
+    public Collection<Vertex> vertices() {
+        Collection<Vertex> vertices = new ArrayList<>(graph.vertices());
         return vertices;
     }
 

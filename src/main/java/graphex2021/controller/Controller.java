@@ -35,6 +35,7 @@ public class Controller {
      */
     public void initGraphView() {
         displayModel.register(graphView);
+        graphView.setAutomaticLayout(false);
         graphView.init();
         displayModel.notifyObservers();
         setActions();
@@ -64,10 +65,10 @@ public class Controller {
     }
 
     public void setActions() {
-        graphView.setEdgeDoubleClickAction(e -> onSelectEdge(e));
-        graphView.setVertexDoubleClickAction(v -> onSelectVertex(v));
+        graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
+        graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
         //TODO WIP
-
+    /*
         for (Node node : graphView.children()) {
            System.out.println("Hier");
            if (node instanceof SmartGraphVertexNode) {
@@ -75,6 +76,8 @@ public class Controller {
                vert.setOnMouseEntered(s-> onHoverEdge((SmartGraphVertexNode) s.getSource()));
            }
         }
+
+     */
 
 
 
