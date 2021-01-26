@@ -113,4 +113,11 @@ public class Controller {
     public void onDisplayInteractionHelp() {
 
     }
+
+    /**
+     * Called on the reset button being pressed
+     */
+    public void onResetPressed() {
+
+    }
 }

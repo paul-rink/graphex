@@ -5,11 +5,11 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.BorderPane?>
-
 <?import javafx.scene.layout.Pane?>
-<?import graphex2021.view.GraphView?>
+
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
     <top>
         <MenuBar mouseTransparent="true" BorderPane.alignment="CENTER">
@@ -21,18 +21,19 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Algorithmus">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem mnemonicParsing="false" text="Dijkstra" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu mnemonicParsing="false" text="Hilfe">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Fehler check" />
-                        <MenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#onCheck" text="Fehler check" />
+                        <MenuItem mnemonicParsing="false" onAction="#hintRequest" text="Tip" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Informationen">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Freier Modus" />
+                        <MenuItem mnemonicParsing="false" onAction="#onDisplayInteractionHelp" text="Interaktionshilfe" />
+                  <MenuItem mnemonicParsing="false" onAction="#onDisplayAlgorithmExplanation" text="Informationen zum Dijkstra-Algorithmus" />
                     </items>
                 </Menu>
             </menus>
@@ -44,7 +45,10 @@
     <bottom>
         <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #808080;" BorderPane.alignment="CENTER">
             <buttons>
-                <Button mnemonicParsing="false" text="Reset" />
+            <Button contentDisplay="CENTER" layoutX="525.0" layoutY="17.0" mnemonicParsing="false" onAction="#onStartPressed" text="Start" ButtonBar.buttonData="LEFT" />
+                <Button mnemonicParsing="false" onAction="#onResetPressed" text="Reset" ButtonBar.buttonData="RIGHT" />
+            <TextField promptText="Kürzeste Distanz" />
+            <Button mnemonicParsing="false" onAction="#onFinishedPressed" text="Fertig" />
             </buttons>
             <effect>
                 <Blend />
@@ -54,7 +58,6 @@
     <center>
         <Pane>
             <children>
-                <GraphView></GraphView>
             </children>
         </Pane>
     </center>
