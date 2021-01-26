@@ -69,7 +69,7 @@ public class DisplayModel extends Subject {
     }
 
     public GXGraph getState() {
-        return this.graph;
+        return this.visibleGraph;
     }
 
     /**
@@ -194,6 +194,7 @@ public class DisplayModel extends Subject {
         start.mark();
         start.setVisible(true);
         visibleGraph.insertVertex(start);
+        visibleGraph.setStartingVertex(start);
         try {
             for (GXEdge edge : graph.incidentEdges(start)) {
                 GXVertex toIns = edge.getNextVertex();
@@ -212,6 +213,7 @@ public class DisplayModel extends Subject {
         final GXVertex end =  graph.getEndingVertex();
         end.setVisible(true);
         visibleGraph.insertVertex(end);
+        visibleGraph.setEndingVertex(end);
     }
 
 }
