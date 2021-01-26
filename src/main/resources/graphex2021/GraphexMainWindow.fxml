@@ -17,6 +17,8 @@
                 <Menu mnemonicParsing="false" text="Vorlagen">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGenerateRandom" text="zufälliger Graph" />
+                        <MenuItem mnemonicParsing="false" onAction="#onLoadGraph" text="Graph importieren..." />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Algorithmus">
@@ -46,7 +48,8 @@
         <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #808080;" BorderPane.alignment="CENTER">
             <buttons>
             <Button contentDisplay="CENTER" layoutX="525.0" layoutY="17.0" mnemonicParsing="false" onAction="#onStartPressed" text="Start" ButtonBar.buttonData="LEFT" />
-                <Button mnemonicParsing="false" onAction="#onResetPressed" text="Reset" ButtonBar.buttonData="RIGHT" />
+            <Button mnemonicParsing="false" onAction="#onUndoPressed" text="Undo" />
+            <Button mnemonicParsing="false" onAction="#onResetPressed" text="Reset" ButtonBar.buttonData="RIGHT" />
             <TextField promptText="Kürzeste Distanz" />
             <Button mnemonicParsing="false" onAction="#onFinishedPressed" text="Fertig" />
             </buttons>
