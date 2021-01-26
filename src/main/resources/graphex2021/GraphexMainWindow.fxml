@@ -1,14 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.layout.BorderPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="graphex2021.controller.Controller"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<?import javafx.scene.layout.Pane?>
+<?import graphex2021.view.GraphView?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
+    <top>
+        <MenuBar mouseTransparent="true" BorderPane.alignment="CENTER">
+            <menus>
+                <Menu mnemonicParsing="false" text="Vorlagen">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Algorithmus">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Fehler check" />
+                        <MenuItem mnemonicParsing="false" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Informationen">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Freier Modus" />
+                    </items>
+                </Menu>
+            </menus>
+            <effect>
+                <Blend />
+            </effect>
+        </MenuBar>
+    </top>
+    <bottom>
+        <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #808080;" BorderPane.alignment="CENTER">
+            <buttons>
+                <Button mnemonicParsing="false" text="Reset" />
+            </buttons>
+            <effect>
+                <Blend />
+            </effect>
+        </ButtonBar>
+    </bottom>
+    <center>
+        <Pane>
+            <children>
+                <GraphView></GraphView>
+            </children>
+        </Pane>
+    </center>
+</BorderPane>

@@ -6,11 +6,12 @@ import graphex2021.model.Observer;
 import graphex2021.model.Subject;
 
 
-public class GraphView extends SmartGraphPanel implements Observer {
+public class GraphView extends SmartGraphPanel<String, String> implements Observer {
 
+    private GraphAdapter graph;
 
-    public GraphView(Graph theGraph) {
-        super(theGraph);
+    public GraphView() {
+        super(new GraphAdapter());
     }
 
     @Override

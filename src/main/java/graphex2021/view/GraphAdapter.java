@@ -19,6 +19,13 @@ import java.util.Collection;
 public class GraphAdapter implements Graph {
     private GXGraph graph;
 
+    /**
+     * Creates a new {@link GraphAdapter} by creating a new empty {@link GXGraph} as its attributes
+      */
+    public GraphAdapter() {
+        graph = new GXGraph();
+    }
+
 
     @Override
     public int numVertices() {
@@ -111,5 +118,9 @@ public class GraphAdapter implements Graph {
     @Override
     public Object replace(Edge e, Object newElement) throws InvalidEdgeException {
         return null;
+    }
+
+    public void setGXGraph(GXGraph gxGraph) {
+        this.graph = gxGraph;
     }
 }
