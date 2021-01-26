@@ -1,18 +1,16 @@
 package graphex2021.controller;
 
-import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.Vertex;
-import com.brunomnsilva.smartgraph.graphview.SmartGraphEdgeLine;
-import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
+import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
+import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.model.Algorithm;
 import graphex2021.model.DisplayModel;
+import graphex2021.model.ElementNotInGraphException;
+import graphex2021.model.GXEdge;
 import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
-
-import static com.brunomnsilva.smartgraph.graphview.UtilitiesJavaFX.pick;
+import javafx.scene.control.Alert;
 
 public class Controller {
 
@@ -37,9 +35,8 @@ public class Controller {
      */
     public void initGraphView() {
         displayModel.register(graphView);
-        displayModel.notifyObservers();
         graphView.init();
-        graphView.update();
+        displayModel.notifyObservers();
         setActions();
     }
 
@@ -67,7 +64,10 @@ public class Controller {
     }
 
     public void setActions() {
+        graphView.setEdgeDoubleClickAction(e -> onSelectEdge(e));
+        graphView.setVertexDoubleClickAction(v -> onSelectVertex(v));
         //TODO WIP
+        /*
         graphView.setOnMouseEntered((MouseEvent mouseEvent) -> {
             Node node = pick(graphView, mouseEvent.getSceneX(), mouseEvent.getSceneY());
             if (node instanceof SmartGraphVertexNode) {
@@ -75,7 +75,7 @@ public class Controller {
                 edge.setOnMouseEntered(e -> onHoverEdge((SmartGraphVertexNode) e.getSource()));
             }
         } );
-
+        */
 
         /*
         for (Node child : graphView.getChildren()) {
@@ -107,16 +107,25 @@ public class Controller {
      * Is called when an edge is selected.
      * @param e is the edge the user selected.
      */
-    public void onSelectEdge(Edge e) {
-
+    public void onSelectEdge(SmartGraphEdge e) {
+        //TODO where change styles? if here you need to check for circle, e.g. return boolean for mark
+        try {
+            displayModel.markEdge((GXEdge) e.getUnderlyingEdge());
+            e.setStyleClass("markedEdge");
+        } catch (ElementNotInGraphException elementNotInGraphException) {
+            elementNotInGraphException.printStackTrace();
+        }
     }
 
     /**
      * Is called when the user selects a vertex.
      * @param v is the selected vertex.
      */
-    public void onSelectVertex(Vertex v) {
-
+    public void onSelectVertex(SmartGraphVertex v) {
+        Alert vertexClicked = new Alert(Alert.AlertType.INFORMATION);
+        vertexClicked.setTitle("Warnung");
+        vertexClicked.setContentText("Wähle eine Kante aus!");
+        vertexClicked.show();
     }
 
     /**

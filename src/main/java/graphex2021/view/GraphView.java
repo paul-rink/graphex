@@ -35,8 +35,7 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         GXGraph visible = (GXGraph) s.getState();
         GraphAdapter underlyinigGraph = (GraphAdapter) super.theGraph;
         underlyinigGraph.setGXGraph(visible);
-
-
+        update();
 
     }
 }

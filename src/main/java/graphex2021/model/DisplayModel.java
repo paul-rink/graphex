@@ -157,14 +157,14 @@ public class DisplayModel extends Subject {
         //checking all the adjacent edges
         for (GXEdge edge : graph.incidentEdges(vertex)) {
             if (!edge.isVisible()) {
+                //because of insertEdge behaviour you first have to check, if opposite edge is already visible
+                GXVertex opposite = graph.opposite(vertex, edge);
+                if (!opposite.isVisible()) {
+                    opposite.setVisible(true);
+                    visibleGraph.insertVertex(opposite);
+                }
                 edge.setVisible(true);
                 visibleGraph.insertEdge(edge);
-            }
-            //All  the vertices at the end of these edges need to be visible
-            GXVertex opposite = graph.opposite(vertex, edge);
-            if (!opposite.isVisible()) {
-                opposite.setVisible(true);
-                visibleGraph.insertVertex(opposite);
             }
         }
     }
