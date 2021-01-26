@@ -108,11 +108,10 @@ public class Controller {
      * @param e is the edge the user selected.
      */
     public void onSelectEdge(SmartGraphEdge e) {
-        //TODO where change styles? if here you need to check for circle, e.g. return boolean for mark
         try {
             displayModel.markEdge((GXEdge) e.getUnderlyingEdge());
         } catch (ElementNotInGraphException elementNotInGraphException) {
-            elementNotInGraphException.printStackTrace();
+            new ElementNotInGraphAlert().show();
         }
     }
 
@@ -121,10 +120,7 @@ public class Controller {
      * @param v is the selected vertex.
      */
     public void onSelectVertex(SmartGraphVertex v) {
-        Alert vertexClicked = new Alert(Alert.AlertType.INFORMATION);
-        vertexClicked.setTitle("Warnung");
-        vertexClicked.setContentText("Wähle eine Kante aus!");
-        vertexClicked.show();
+        new VertexDoubleClickAlert().show();
     }
 
     /**
