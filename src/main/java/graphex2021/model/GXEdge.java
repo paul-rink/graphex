@@ -128,9 +128,9 @@ public class GXEdge implements Edge<String, String> {
      */
     public GXVertex getNextVertex() {
         if (inboundVertex.isMarked()) {
-            return inboundVertex;
-        } else if (outboundVertex.isMarked()) {
             return outboundVertex;
+        } else if (outboundVertex.isMarked()) {
+            return inboundVertex;
         } else {
             throw new IllegalArgumentException("Both vertices of this edge are marked - Should be blocked");
         }

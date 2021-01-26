@@ -32,6 +32,7 @@ public class Controller {
         displayModel.register(graphView);
         displayModel.notifyObservers();
         graphView.init();
+        graphView.update();
     }
 
     /**
