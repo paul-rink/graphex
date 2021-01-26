@@ -123,6 +123,13 @@ public class GXVertex implements Vertex<String> {
     }
 
     /**
+     * Just marks this vertex
+     */
+    public void mark() {
+        this.marked = true;
+    }
+
+    /**
      * TODO implement and check what is exactly needed as the label
      *
      * @return the label matching this vertex

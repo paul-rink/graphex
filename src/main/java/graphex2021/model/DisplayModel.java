@@ -191,7 +191,7 @@ public class DisplayModel extends Subject {
 
     private void initialVisibleGraph() {
         final GXVertex start = graph.getStartingVertex();
-        start.mark(0, null);
+        start.mark();
         start.setVisible(true);
         visibleGraph.insertVertex(start);
         try {
