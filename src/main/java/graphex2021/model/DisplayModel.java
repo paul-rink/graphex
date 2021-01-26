@@ -45,9 +45,9 @@ public class DisplayModel extends Subject {
         return null;
     }
 
-    public void markEdge(GXEdge edge) throws ElementNotInGraphException {
+    public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {
         //check if edge is blocked because of circle -> create alert
-        if (edge.isBlocked()) return; //TODO implement Alert
+        if (edge.isBlocked()) throw new EdgeCompletesACircleException("");
         //get unmarked vertex of edge and mark both in graph
         GXVertex nextVertex = edge.getNextVertex();
         edge.mark();
@@ -60,7 +60,6 @@ public class DisplayModel extends Subject {
         graph.blockCircles(nextVertex);
         //make all edges from nextVertex visible just as the corresponding vertices
         makeIncidentsVisible(nextVertex);
-        //TODO implement observers
         this.notifyObservers();
     }
 

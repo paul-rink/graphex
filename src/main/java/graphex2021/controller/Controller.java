@@ -1,16 +1,11 @@
 package graphex2021.controller;
 
-import com.brunomnsilva.smartgraph.graph.Vertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
-import graphex2021.model.Algorithm;
-import graphex2021.model.DisplayModel;
-import graphex2021.model.ElementNotInGraphException;
-import graphex2021.model.GXEdge;
+import graphex2021.model.*;
 import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 
 public class Controller {
 
@@ -112,6 +107,8 @@ public class Controller {
             displayModel.markEdge((GXEdge) e.getUnderlyingEdge());
         } catch (ElementNotInGraphException elementNotInGraphException) {
             new ElementNotInGraphAlert().show();
+        } catch (EdgeCompletesACircleException edgeCompletesACircleException) {
+            new EdgeCompletesACircleAlert().show();
         }
     }
 
