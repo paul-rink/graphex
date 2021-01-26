@@ -1,12 +1,11 @@
 package graphex2021.view;
 
-import com.brunomnsilva.smartgraph.graphview.SmartCircularSortedPlacementStrategy;
-import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
-import com.brunomnsilva.smartgraph.graphview.SmartGraphPanel;
-import com.brunomnsilva.smartgraph.graphview.SmartGraphProperties;
+import com.brunomnsilva.smartgraph.graphview.*;
+import graphex2021.model.GXEdge;
 import graphex2021.model.GXGraph;
 import graphex2021.model.Observer;
 import graphex2021.model.Subject;
+import javafx.scene.Node;
 
 
 import java.io.File;
@@ -35,7 +34,23 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         GXGraph visible = (GXGraph) s.getState();
         GraphAdapter underlyinigGraph = (GraphAdapter) super.theGraph;
         underlyinigGraph.setGXGraph(visible);
-        update();
+        this.update();
+    }
 
+    @Override
+    public void update() {
+        super.update();
+        styleMarkedEdges();
+    }
+
+    private void styleMarkedEdges() {
+        for (Node node : this.getChildren()) {
+            if (node instanceof SmartGraphEdgeLine) {
+                SmartGraphEdgeLine edgeNode = (SmartGraphEdgeLine) node;
+                if (((GXEdge) edgeNode.getUnderlyingEdge()).isMarked()) {
+                    edgeNode.setStyleClass("markedEdge");
+                }
+            }
+        }
     }
 }

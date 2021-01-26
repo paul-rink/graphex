@@ -111,7 +111,6 @@ public class Controller {
         //TODO where change styles? if here you need to check for circle, e.g. return boolean for mark
         try {
             displayModel.markEdge((GXEdge) e.getUnderlyingEdge());
-            e.setStyleClass("markedEdge");
         } catch (ElementNotInGraphException elementNotInGraphException) {
             elementNotInGraphException.printStackTrace();
         }
