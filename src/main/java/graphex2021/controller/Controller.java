@@ -3,14 +3,35 @@ package graphex2021.controller;
 import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.Vertex;
 import graphex2021.model.Algorithm;
+import graphex2021.model.DisplayModel;
+import graphex2021.view.GraphView;
+import javafx.fxml.FXML;
 
 public class Controller {
+
+    /**
+     * The {@link DisplayModel}, this controller sets the actions for.
+     */
+    private DisplayModel displayModel;
+
+    @FXML
+    private GraphView graphView;
+
+    /**
+     * Create a new Controller, where the {@link DisplayModel} is newly created
+     * by using the standard {@link graphex2021.model.GXGraph}
+     */
+    public Controller() {
+        this.displayModel = new DisplayModel();
+    }
 
     /**
      * When program is launched this can be called to notify the model that graphview is about to be initialized.
      */
     public void initGraphView() {
-
+        displayModel.register(graphView);
+        displayModel.notifyObservers();
+        graphView.init();
     }
 
     /**
