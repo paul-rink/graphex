@@ -8,6 +8,8 @@ import graphex2021.model.GXGraph;
 import graphex2021.model.Observer;
 import graphex2021.model.Subject;
 
+import java.io.FileInputStream;
+
 
 public class GraphView extends SmartGraphPanel<String, String> implements Observer {
 
