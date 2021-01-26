@@ -4,12 +4,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DijkstraTest {
+    private static final File graphFile = new File("src/test/resources/GraphData/exampleGraph.json");
     Dijkstra d;
     GXGraph g;
     List<Step> steps;
@@ -97,6 +100,55 @@ public class DijkstraTest {
         assertEquals(2,step4.getSelectedEdge().getId());
         System.out.println("Step 4 for g correct \n");
 
+    }
+
+    @Test
+    public void testDijkstraOnExampleGraph() {
+        try {
+            GXGraph graph = new GXGraph(graphFile);
+            steps = d.getSequence(graph);
+            Step step1 = steps.get(0);
+            Step step2 = steps.get(1);
+            Step step3 = steps.get(2);
+            Step step4 = steps.get(3);
+            Step step5 = steps.get(4);
+            Step step6 = steps.get(5);
+            Step step7 = steps.get(6);
+            Step step8 = steps.get(7);
+            Step step9 = steps.get(8);
+            Step step10 = steps.get(9);
+            Step step11 = steps.get(10);
+            Step step12 = steps.get(11);
+            Step step13 = steps.get(12);
+            assertEquals("A",step1.getSelectedVertex().element());
+            assertEquals(2,step1.getSelectedEdge().getWeight());
+            assertEquals("B",step2.getSelectedVertex().element());
+            assertEquals(4,step2.getSelectedEdge().getWeight());
+            assertEquals("D",step3.getSelectedVertex().element());
+            assertEquals(3,step3.getSelectedEdge().getWeight());
+            assertEquals("H",step4.getSelectedVertex().element());
+            assertEquals(2,step4.getSelectedEdge().getWeight());
+            assertEquals("C",step5.getSelectedVertex().element());
+            assertEquals(2,step5.getSelectedEdge().getWeight());
+            assertEquals("E",step6.getSelectedVertex().element());
+            assertEquals(2,step6.getSelectedEdge().getWeight());
+            assertEquals("F",step7.getSelectedVertex().element());
+            assertEquals(5,step7.getSelectedEdge().getWeight());
+            assertEquals("G",step8.getSelectedVertex().element());
+            assertEquals(1,step8.getSelectedEdge().getWeight());
+            assertEquals("I",step9.getSelectedVertex().element());
+            assertEquals(5,step9.getSelectedEdge().getWeight());
+            assertEquals("K",step10.getSelectedVertex().element());
+            assertEquals(10,step10.getSelectedEdge().getWeight());
+            assertEquals("J",step11.getSelectedVertex().element());
+            assertEquals(2,step11.getSelectedEdge().getWeight());
+            assertEquals("L",step12.getSelectedVertex().element());
+            assertEquals(12,step12.getSelectedEdge().getWeight());
+            assertEquals("Z",step13.getSelectedVertex().element());
+            assertEquals(4,step13.getSelectedEdge().getWeight());
+        } catch (ElementNotInGraphException e) {
+            e.printStackTrace();
+        }
     }
 
     @After
