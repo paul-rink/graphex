@@ -18,7 +18,7 @@ import java.util.LinkedHashSet;
 
 public class GraphView extends SmartGraphPanel implements Observer {
 
-    private static final SmartPlacementStrategy STRAT = new SmartCircularSortedPlacementStrategy();//new SmartStaticPlacementStrategy();
+    private static final SmartPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
 
     //TODO check best Filepath separator
     private static final File STYLESHEET = new File( "src" + File.separator + "main"

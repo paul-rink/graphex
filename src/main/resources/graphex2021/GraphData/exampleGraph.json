@@ -3,73 +3,73 @@
     "vertices" : [
         {
             "name" : "A",
-            "posx" : "6",
-            "posy" : "7",
-        },
-        {
-            "name" : "B",
-            "posx" : "6",
-            "posy" : "5",
-        },
-        {
-            "name" : "C",
-            "posx" : "4",
-            "posy" : "8",
-        },
-        {
-            "name" : "D",
-            "posx" : "4",
-            "posy" : "6",
-        },
-        {
-            "name" : "E",
-            "posx" : "3",
-            "posy" : "7",
-        },
-        {
-            "name" : "F",
-            "posx" : "3",
-            "posy" : "6",
-        },
-        {
-            "name" : "G",
-            "posx" : "3",
-            "posy" : "4",
-        },
-        {
-            "name" : "H",
-            "posx" : "3",
-            "posy" : "3",
-        },
-        {
-            "name" : "I",
-            "posx" : "1",
-            "posy" : "6",
-        },
-        {
-            "name" : "J",
-            "posx" : "1",
-            "posy" : "4",
-        },
-        {
-            "name" : "K",
-            "posx" : "1",
-            "posy" : "3",
-        },
-        {
-            "name" : "L",
             "posx" : "200",
             "posy" : "200",
         },
         {
+            "name" : "B",
+            "posx" : "100",
+            "posy" : "100",
+        },
+        {
+            "name" : "C",
+            "posx" : "150",
+            "posy" : "150",
+        },
+        {
+            "name" : "D",
+            "posx" : "250",
+            "posy" : "250",
+        },
+        {
+            "name" : "E",
+            "posx" : "300",
+            "posy" : "200",
+        },
+        {
+            "name" : "F",
+            "posx" : "100",
+            "posy" : "400",
+        },
+        {
+            "name" : "G",
+            "posx" : "400",
+            "posy" : "100",
+        },
+        {
+            "name" : "H",
+            "posx" : "800",
+            "posy" : "700",
+        },
+        {
+            "name" : "I",
+            "posx" : "900",
+            "posy" : "600",
+        },
+        {
+            "name" : "J",
+            "posx" : "600",
+            "posy" : "700",
+        },
+        {
+            "name" : "K",
+            "posx" : "550",
+            "posy" : "550",
+        },
+        {
+            "name" : "L",
+            "posx" : "200",
+            "posy" : "400",
+        },
+        {
             "name" : "S",
-            "posx" : "6",
-            "posy" : "7",
+            "posx" : "500",
+            "posy" : "500",
         },
         {
             "name" : "Z",
-            "posx" : "0",
-            "posy" : "0",
+            "posx" : "400",
+            "posy" : "100",
         }
     ],
     "edges" : [
