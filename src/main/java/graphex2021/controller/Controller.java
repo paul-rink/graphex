@@ -9,10 +9,7 @@ import graphex2021.view.GraphView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 import java.util.Optional;
@@ -38,6 +35,9 @@ public class Controller {
     @FXML
     private MenuItem tip;
 
+    @FXML
+    private Button finish;
+
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
      * by using the standard {@link graphex2021.model.GXGraph}
@@ -54,7 +54,6 @@ public class Controller {
         graphView.setAutomaticLayout(false);
         graphView.init();
         displayModel.notifyObservers();
-        setActions();
     }
 
     /**
@@ -62,6 +61,10 @@ public class Controller {
      * selections (for a specific algorithm).
      */
     public void onStartPressed() {
+        //TODO reenable the button if it ist possible to finish.
+        setActions();
+        finish.setText("Beenden");
+        finish.setDisable(true);
 
     }
 
@@ -86,31 +89,20 @@ public class Controller {
         //TODO WIP
 
         for (Node node : graphView.getChildren()) {
-           System.out.println("Hier");
            if (node instanceof SmartGraphVertexNode) {
                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
                vert.setOnMouseEntered(s-> onHoverEdge((SmartGraphVertexNode) s.getSource()));
+               vert.setOnMouseExited(s -> onLeaveEdge((SmartGraphVertexNode) s.getSource()));
            }
         }
-
-
-
-
-
-
-
-
     }
 
     public void onHoverEdge(SmartGraphVertexNode e) {
         e.setStyleClass("testClass");
-        System.out.println("Rein");
-
     }
 
     public void onLeaveEdge(SmartGraphVertexNode e) {
-        System.out.println("Raus");
-
+        e.setStyleClass("vertex");
     }
 
     /**
