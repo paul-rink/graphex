@@ -6,21 +6,37 @@ import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.model.*;
 import graphex2021.view.GraphView;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
+
+import java.util.Optional;
 
 import static com.brunomnsilva.smartgraph.graphview.UtilitiesJavaFX.pick;
 
 public class Controller {
+
+    private static final String UNLOCKPASSWORD = "Algorithmus";
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
      */
     private DisplayModel displayModel;
 
+
     @FXML
     private GraphView graphView;
+
+    @FXML
+    private MenuItem check;
+
+    @FXML
+    private MenuItem tip;
 
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
@@ -68,7 +84,7 @@ public class Controller {
         graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
         //TODO WIP
-    /*
+
         for (Node node : graphView.children()) {
            System.out.println("Hier");
            if (node instanceof SmartGraphVertexNode) {
@@ -77,7 +93,7 @@ public class Controller {
            }
         }
 
-     */
+
 
 
 
@@ -186,5 +202,22 @@ public class Controller {
      */
     public void onResetPressed() {
         displayModel.reset();
+    }
+
+    public void unlockHints() {
+        TextInputDialog dialog = new TextInputDialog("");
+        dialog.setHeaderText("Gib das Passwort ein um die"
+                + " Hilfefunktionen freizuschalten");
+
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            if (UNLOCKPASSWORD.equals(result.get())) {
+                check.setDisable(false);
+                tip.setDisable(false);
+            } else {
+                new Alert(Alert.AlertType.ERROR, "Das war das falsche Passwort.").showAndWait();
+            }
+        }
     }
 }

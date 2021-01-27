@@ -29,8 +29,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#onCheck" text="Fehler check" />
-                        <MenuItem mnemonicParsing="false" onAction="#hintRequest" text="Tip" />
+                        <MenuItem mnemonicParsing="false" onAction="#unlockHints" text="Tips freischalten" />
+                        <MenuItem mnemonicParsing="false" disable="true" fx:id="check" onAction="#onCheck" text="Fehler check" />
+                        <MenuItem mnemonicParsing="false" disable="true" fx:id="tip" onAction="#hintRequest" text="Tip" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Informationen">
