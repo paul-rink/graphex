@@ -179,8 +179,20 @@ public class DisplayModel extends Subject {
                 GXVertex otherVertex = edge.getNextVertex();
                 edge.setVisible(false);
                 visibleGraph.removeEdge(edge);
-                otherVertex.setVisible(false);
-                visibleGraph.removeVertex(otherVertex);
+
+                //additionally needs to check whether this vertex is also connected to another visible edge
+                //this would mean the vertex stays visible
+                boolean stayVisible = false;
+                for(GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
+                    if(otherEdge.isVisible()) {
+                        stayVisible = true;
+                    }
+                }
+                if(!stayVisible) {
+                    otherVertex.setVisible(false);
+                    visibleGraph.removeVertex(otherVertex);
+                }
+
 
             } catch (IllegalArgumentException e) {
                 //this means that the other side is marked and this edge needs to stay visible
