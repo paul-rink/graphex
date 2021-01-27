@@ -174,7 +174,7 @@ public class DisplayModel extends Subject {
         //check all adjacent edges if vertex on the other side is marked it remains visible
         //otherwise the edge and the vertex at the other end should be invisible and removed
         //from the visible graph
-        for(GXEdge edge : graph.incidentEdges(vertex)) {
+        for(GXEdge edge : visibleGraph.incidentEdges(vertex)) {
             try {
                 GXVertex otherVertex = edge.getNextVertex();
                 edge.setVisible(false);
