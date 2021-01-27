@@ -77,7 +77,7 @@ public class DisplayModel extends Subject {
      * accordingly
      */
     public void undo() throws ElementNotInGraphException {
-        if(userSteps.size() > 0) {
+        if (userSteps.size() > 0) {
             Step lastStep = getLastUserStep();
             GXEdge lastEdge = lastStep.getSelectedEdge();
             GXVertex lastVertex = lastStep.getSelectedVertex();

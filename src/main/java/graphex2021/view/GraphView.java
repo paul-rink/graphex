@@ -18,7 +18,7 @@ import java.util.LinkedHashSet;
 
 public class GraphView extends SmartGraphPanel implements Observer {
 
-    private static final SmartStaticPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
+    private static final SmartPlacementStrategy STRAT = new SmartCircularSortedPlacementStrategy();//new SmartStaticPlacementStrategy();
 
     //TODO check best Filepath separator
     private static final File STYLESHEET = new File( "src" + File.separator + "main"
@@ -61,6 +61,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
                     edgeNode.setStyleClass("blockedEdge");
                 } else if (edge.isMarked()) {
                     edgeNode.setStyleClass("markedEdge");
+                } else if (!edge.isMarked()) {
+                    edgeNode.setStyleClass("edge");
                 }
             }
         }

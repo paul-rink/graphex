@@ -80,7 +80,7 @@ public class GXEdge implements Edge<String, String> {
      */
     @Override
     public String element() {
-        return null;
+        return this.element;
     }
 
     /**
