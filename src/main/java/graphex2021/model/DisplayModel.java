@@ -77,15 +77,17 @@ public class DisplayModel extends Subject {
      * accordingly
      */
     public void undo() throws ElementNotInGraphException {
-        Step lastStep = getLastUserStep();
-        GXEdge lastEdge = lastStep.getSelectedEdge();
-        GXVertex lastVertex = lastStep.getSelectedVertex();
-        removeLastUserStep();
-        makeIncidentsInvisible(lastVertex, lastEdge);
-        lastVertex.unmark();
-        lastEdge.unmark();
-        graph.unblock(lastVertex);
-        this.notifyObservers();
+        if(userSteps.size() > 0) {
+            Step lastStep = getLastUserStep();
+            GXEdge lastEdge = lastStep.getSelectedEdge();
+            GXVertex lastVertex = lastStep.getSelectedVertex();
+            removeLastUserStep();
+            makeIncidentsInvisible(lastVertex, lastEdge);
+            lastVertex.unmark();
+            lastEdge.unmark();
+            graph.unblock(lastVertex);
+            this.notifyObservers();
+        }
     }
 
     /**
