@@ -85,7 +85,7 @@ public class Controller {
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
         //TODO WIP
 
-        for (Node node : graphView.children()) {
+        for (Node node : graphView.getChildren()) {
            System.out.println("Hier");
            if (node instanceof SmartGraphVertexNode) {
                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;

@@ -18,6 +18,8 @@ import java.util.LinkedHashSet;
 
 public class GraphView extends SmartGraphPanel implements Observer {
 
+    private static final SmartStaticPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
+
     //TODO check best Filepath separator
     private static final File STYLESHEET = new File( "src" + File.separator + "main"
             + File.separator + "resources" + File.separator + "graphex2021"
@@ -28,14 +30,14 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     public GraphView() throws FileNotFoundException {
         super(new GraphAdapter() , new SmartGraphProperties(new FileInputStream(PROPERTIES)),
-                new SmartStaticPlacementStrategy(), STYLESHEET.toURI());
+                STRAT, STYLESHEET.toURI());
     }
 
     @Override
     public void doUpdate(Subject s) {
         GXGraph visible = (GXGraph) s.getState();
-        GraphAdapter underlyinigGraph = (GraphAdapter) super.theGraph;
-        underlyinigGraph.setGXGraph(visible);
+        GraphAdapter underlyiigGraph = (GraphAdapter) super.theGraph;
+        underlyiigGraph.setGXGraph(visible);
         this.update();
     }
 
@@ -43,15 +45,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
     public void update() {
         super.update();
         styleEdges();
-        Collection<SmartGraphVertex<String>> vertices = new LinkedHashSet<>();
-        for (Node node : this.getChildren()) {
-            if (node instanceof SmartGraphVertexNode) {
-                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
-                vertices.add(vert);
-            }
-        }
-        SmartPlacementStrategy place = new SmartStaticPlacementStrategy();
-        place.place(super.widthProperty().doubleValue(), super.heightProperty().doubleValue(), super.theGraph, vertices);
+        placeVertices();
     }
 
     /**
@@ -74,8 +68,23 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     }
 
-    public ObservableList<Node> children() {
-        return super.getChildren();
+    @Override
+    public void init() {
+        super.init();
+
+    }
+
+    private void placeVertices() {
+        //TODO unessecary to loop here and in styleEdges
+        Collection<SmartGraphVertex<String>> vertices = new LinkedHashSet<>();
+        for (Node node : this.getChildren()) {
+            if (node instanceof SmartGraphVertexNode) {
+                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
+                vertices.add(vert);
+            }
+        }
+        STRAT.place(super.widthProperty().doubleValue(), super.heightProperty().doubleValue(),
+                super.theGraph, vertices);
     }
 
 }
