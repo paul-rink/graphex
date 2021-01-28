@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import java.util.Optional;
@@ -207,8 +208,25 @@ public class Controller {
             if (UNLOCKPASSWORD.equals(result.get())) {
                 check.setDisable(false);
                 tip.setDisable(false);
+            } else if ("Test".equals(result.get())) {
+                displayCoordinates();
             } else {
                 new Alert(Alert.AlertType.ERROR, "Das war das falsche Passwort.").showAndWait();
+            }
+        }
+    }
+
+    private void displayCoordinates() {
+        for (Node vertex : graphView.getChildren())  {
+            if (vertex.toString().contains("Circle")) {
+                SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
+                vert.setOnMousePressed((MouseEvent mouseEvent) -> {
+                    if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
+                        double x = vert.getPositionCenterX() / graphView.getWidth();
+                        double y = vert.getPositionCenterY() / graphView.getHeight();
+                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = " + x + " , y = " + y);
+                    }
+                });
             }
         }
     }
