@@ -21,7 +21,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
     private static final SmartPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
 
     //TODO check best Filepath separator
-    private static final File STYLESHEET = new File( "src" + File.separator + "main"
+    private static final File STYLESHEET = new File("src" + File.separator + "main"
             + File.separator + "resources" + File.separator + "graphex2021"
             + File.separator + "smartgraph.css");
     private static final File PROPERTIES = new File("src" + File.separator + "main"
@@ -29,7 +29,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
             + File.separator + "smartgraph.properties");
 
     public GraphView() throws FileNotFoundException {
-        super(new GraphAdapter() , new SmartGraphProperties(new FileInputStream(PROPERTIES)),
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
                 STRAT, STYLESHEET.toURI());
     }
 
@@ -44,31 +44,24 @@ public class GraphView extends SmartGraphPanel implements Observer {
     @Override
     public void update() {
         super.update();
-        styleEdges();
-        placeVertices();
+        iterChildren();
     }
 
     /**
      * Will display every edge according to its state (unmarked, marked, blocked) different.
      */
-    private void styleEdges() {
-        for (Node node : this.getChildren()) {
-            if (node instanceof SmartGraphEdgeLine) {
-                SmartGraphEdgeLine edgeNode = (SmartGraphEdgeLine) node;
-                GXEdge edge = (GXEdge) edgeNode.getUnderlyingEdge();
-                //call this first because every marked edge is blocked as well //TODO maybe change this?
-                if (edge.isBlocked() && !edge.isMarked()) {
-                    edgeNode.setStyleClass("blockedEdge");
-                } else if (edge.isMarked()) {
-                    edgeNode.setStyleClass("markedEdge");
-                } else if (!edge.isMarked()) {
-                    edgeNode.setStyleClass("edge");
-                }
-            }
+    private void styleEdge(SmartGraphEdgeLine edge) {
+        GXEdge gxEdge = (GXEdge) edge.getUnderlyingEdge();
+        //call this first because every marked edge is blocked as well //TODO maybe change this?
+        if (gxEdge.isBlocked() && !gxEdge.isMarked()) {
+            edge.setStyleClass("blockedEdge");
+        } else if (gxEdge.isMarked()) {
+            edge.setStyleClass("markedEdge");
+        } else if (!gxEdge.isMarked()) {
+            edge.setStyleClass("edge");
         }
-
-
     }
+
 
     @Override
     public void init() {
@@ -76,17 +69,21 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     }
 
-    private void placeVertices() {
-        //TODO unessecary to loop here and in styleEdges
-        Collection<SmartGraphVertex<String>> vertices = new LinkedHashSet<>();
-        for (Node node : this.getChildren()) {
-            if (node instanceof SmartGraphVertexNode) {
-                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
-                vertices.add(vert);
-            }
-        }
+    private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
         STRAT.place(super.widthProperty().doubleValue(), super.heightProperty().doubleValue(),
                 super.theGraph, vertices);
+    }
+
+    private void iterChildren() {
+        Collection<SmartGraphVertexNode<String>> vertices = new LinkedHashSet<>();
+        for (Node node : this.getChildren()) {
+            if (node.toString().startsWith("Line")) {
+                styleEdge((SmartGraphEdgeLine) node);
+            } else if (node.toString().startsWith("Circle")) {
+                vertices.add((SmartGraphVertexNode<String>) node);
+            }
+        }
+        placeVertices(vertices);
     }
 
 }
