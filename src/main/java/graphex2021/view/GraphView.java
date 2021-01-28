@@ -5,7 +5,6 @@ import graphex2021.model.GXEdge;
 import graphex2021.model.GXGraph;
 import graphex2021.model.Observer;
 import graphex2021.model.Subject;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 
 
@@ -43,7 +42,9 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     @Override
     public void update() {
-        super.update();
+        //TODO possible fix for vertices now being placed correctly immediately.
+        // Not sure what all the implications of this change are.
+        super.updateNodes();
         iterChildren();
     }
 
