@@ -47,7 +47,7 @@
 
     </top>
     <center>
-        <GraphView fx:id="graphView" prefHeight="1000" prefWidth="750" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-size: ;">
+        <GraphView fx:id="graphView" prefHeight="1000" prefWidth="750" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-size: cover;">
         </GraphView>
     </center>
    <bottom>

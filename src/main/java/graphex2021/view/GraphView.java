@@ -82,7 +82,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
-        STRAT.place(super.widthProperty().doubleValue(), super.heightProperty().doubleValue(),
+        STRAT.place(this.widthProperty().doubleValue(), this.heightProperty().doubleValue(),
                 super.theGraph, vertices);
     }
 

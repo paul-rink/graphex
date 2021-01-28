@@ -2,10 +2,13 @@ package graphex2021.view;
 
 import com.brunomnsilva.smartgraph.graph.Graph;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
+
 import com.brunomnsilva.smartgraph.graphview.SmartPlacementStrategy;
 import graphex2021.model.GXVertex;
 
+
 import java.util.Collection;
+
 
 public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
 
@@ -16,12 +19,19 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
         for (SmartGraphVertex<V> vertex : vertices) {
 
             GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
-            double x = vert.getPosition().getPosition()[0];
-            double y = vert.getPosition().getPosition()[1];
+            double x = calcXFromRelative(width, vert.getPosition().getPosition()[0]);
+            double y = calcYFromRelative(height, vert.getPosition().getPosition()[1]);
 
             vertex.setPosition(x, y);
         }
-
-
     }
+
+    private double calcXFromRelative(double width, int x) {
+        return (x / 100.) * width;
+    }
+
+    private double calcYFromRelative(double height, int y) {
+        return (y / 100.) * height;
+    }
+
 }
