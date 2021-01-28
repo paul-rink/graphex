@@ -1,10 +1,7 @@
 package graphex2021.view;
 
 import com.brunomnsilva.smartgraph.graphview.*;
-import graphex2021.model.GXEdge;
-import graphex2021.model.GXGraph;
-import graphex2021.model.Observer;
-import graphex2021.model.Subject;
+import graphex2021.model.*;
 import javafx.scene.Node;
 
 
@@ -63,6 +60,16 @@ public class GraphView extends SmartGraphPanel implements Observer {
         }
     }
 
+    private void styleVertex(SmartGraphVertexNode vertex) {
+        GXVertex gxVertex = (GXVertex) vertex.getUnderlyingVertex();
+
+        if (gxVertex.isMarked()) {
+            vertex.setStyleClass("markedVertex");
+        } else if (!gxVertex.isMarked()) {
+            vertex.setStyleClass("vertex");
+        }
+    }
+
 
     @Override
     public void init() {
@@ -81,6 +88,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
             if (node.toString().startsWith("Line")) {
                 styleEdge((SmartGraphEdgeLine) node);
             } else if (node.toString().startsWith("Circle")) {
+                styleVertex((SmartGraphVertexNode) node);
                 vertices.add((SmartGraphVertexNode<String>) node);
             }
         }

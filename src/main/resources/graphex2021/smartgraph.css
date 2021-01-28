@@ -66,6 +66,14 @@
     -fx-opacity: 0.8;
 }
 
+.markedVertex {
+    -fx-stroke-width: 5;
+    -fx-stroke: yellow;
+    -fx-stroke-type: inside; /* you should keep this for vertex.radius to hold */
+    -fx-fill: yellow;
+    -fx-opacity: 1;
+}
+
 
 .testClass {
     -fx-stroke-width: 15;
