@@ -1,4 +1,4 @@
-module graphex {
+module graphex2021 {
     requires javafx.controls;
     requires javafx.fxml;
     requires SmartGraph;

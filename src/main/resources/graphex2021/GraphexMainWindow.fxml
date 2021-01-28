@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
-<?import graphex2021.view.GraphView?>
 
+<?import graphex2021.view.GraphView?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
     <top>
         <MenuBar>
@@ -30,8 +29,8 @@
                 <Menu mnemonicParsing="false" text="Hilfe">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#unlockHints" text="Tips freischalten" />
-                        <MenuItem mnemonicParsing="false" disable="true" fx:id="check" onAction="#onCheck" text="Fehler check" />
-                        <MenuItem mnemonicParsing="false" disable="true" fx:id="tip" onAction="#hintRequest" text="Tip" />
+                        <MenuItem fx:id="check" disable="true" mnemonicParsing="false" onAction="#onCheck" text="Fehler check" />
+                        <MenuItem fx:id="tip" disable="true" mnemonicParsing="false" onAction="#hintRequest" text="Tip" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Informationen">
@@ -47,25 +46,19 @@
         </MenuBar>
 
     </top>
-    <bottom>
-        <ButtonBar prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #808080;" BorderPane.alignment="CENTER">
-            <buttons>
-            <Button contentDisplay="CENTER" fx:id="finish" layoutX="525.0" layoutY="17.0" mnemonicParsing="false" onAction="#onStartPressed" text="Start" ButtonBar.buttonData="LEFT" />
+    <center>
+        <GraphView fx:id="graphView" prefHeight="1000" prefWidth="750" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-size: ;">
+        </GraphView>
+    </center>
+   <bottom>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+            <Button fx:id="finish" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartPressed" text="Start" />
             <Button mnemonicParsing="false" onAction="#onUndoPressed" text="Undo" />
-            <Button mnemonicParsing="false" onAction="#onResetPressed" text="Reset" ButtonBar.buttonData="RIGHT" />
             <TextField promptText="Kürzeste Distanz" />
             <Button mnemonicParsing="false" onAction="#onFinishedPressed" text="Fertig" />
-            </buttons>
-            <effect>
-                <Blend />
-            </effect>
-        </ButtonBar>
-    </bottom>
-    <center>
-        <Pane>
-            <children>
-                <GraphView fx:id="graphView" prefHeight="700" prefWidth="1000"> </GraphView>
-            </children>
-        </Pane>
-    </center>
+            <Button mnemonicParsing="false" onAction="#onResetPressed" text="Reset" />
+        </items>
+      </ToolBar>
+   </bottom>
 </BorderPane>

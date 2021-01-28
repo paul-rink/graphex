@@ -41,6 +41,10 @@ public class GraphView extends SmartGraphPanel implements Observer {
     public void update() {
         //TODO possible fix for vertices now being placed correctly immediately.
         // Not sure what all the implications of this change are.
+        if (this.getScene() == null) {
+            throw new IllegalStateException("You must call this method after the instance was added to a scene.");
+        }
+
         super.updateNodes();
         iterChildren();
     }
