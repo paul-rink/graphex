@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.BorderPane?>
 
 <?import graphex2021.view.GraphView?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
     <top>
         <MenuBar>
             <menus>
@@ -47,7 +47,7 @@
 
     </top>
     <center>
-        <GraphView fx:id="graphView" prefHeight="1000" prefWidth="750" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-size: cover;">
+        <GraphView fx:id="graphView" prefHeight="1532" prefWidth="938" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: 100%;">
         </GraphView>
     </center>
    <bottom>

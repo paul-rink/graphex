@@ -2,6 +2,7 @@ package graphex2021.view;
 
 import com.brunomnsilva.smartgraph.graphview.*;
 import graphex2021.model.*;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 
 
@@ -79,6 +80,17 @@ public class GraphView extends SmartGraphPanel implements Observer {
     public void init() {
         super.init();
 
+
+    }
+
+    private void placeVertices() {
+        Collection<SmartGraphVertexNode<String>> vertices = new LinkedHashSet<>();
+        for (Node node : this.getChildren()) {
+            if (node.toString().startsWith("Circle")) {
+                vertices.add((SmartGraphVertexNode<String>) node);
+            }
+        }
+        placeVertices(vertices);
     }
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
@@ -99,4 +111,11 @@ public class GraphView extends SmartGraphPanel implements Observer {
         placeVertices(vertices);
     }
 
+    private void graphViewSizeListener() {
+        ChangeListener<Number> listener = ((observable, oldValue, newValue) -> this.placeVertices());
+        this.widthProperty().addListener(listener);
+        this.heightProperty().addListener(listener);
+
+
+    }
 }

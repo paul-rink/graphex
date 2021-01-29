@@ -12,6 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.util.Optional;
 
@@ -26,6 +28,8 @@ public class Controller {
      */
     private DisplayModel displayModel;
 
+    @FXML
+    private BorderPane borderPane;
 
     @FXML
     private GraphView graphView;
@@ -52,6 +56,7 @@ public class Controller {
      */
     public void initGraphView() {
         displayModel.register(graphView);
+        //this.bindAspectRation();
         graphView.setAutomaticLayout(false);
         graphView.init();
         displayModel.notifyObservers();
@@ -229,5 +234,13 @@ public class Controller {
                 });
             }
         }
+    }
+
+    private void bindAspectRation() {
+        Stage stage = (Stage) borderPane.getScene().getWindow();
+        double ratio = stage.getWidth() / stage.getHeight();
+        stage.minWidthProperty().bind(stage.heightProperty().multiply(ratio));
+        stage.minHeightProperty().bind(stage.widthProperty().divide(ratio));
+
     }
 }

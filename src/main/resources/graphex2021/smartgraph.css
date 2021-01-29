@@ -1,6 +1,7 @@
 .graph {
-    -fx-background-image: url("bg-map-1.jpg");
+    /*-fx-background-image: url("bg-map-1.jpg");
     -fx-background-size: cover;
+    */
 }
 
 .vertex {
