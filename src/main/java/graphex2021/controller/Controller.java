@@ -5,13 +5,17 @@ import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.model.*;
+import graphex2021.view.GXTable;
 import graphex2021.view.GraphView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.util.Optional;
 
@@ -26,6 +30,7 @@ public class Controller {
      */
     private DisplayModel displayModel;
 
+    private GXTable gxTable;
 
     @FXML
     private GraphView graphView;
@@ -45,6 +50,7 @@ public class Controller {
      */
     public Controller() {
         this.displayModel = new DisplayModel();
+        this.gxTable = new GXTable();
     }
 
     /**
@@ -52,6 +58,8 @@ public class Controller {
      */
     public void initGraphView() {
         displayModel.register(graphView);
+        displayModel.register(gxTable);
+        iniTableView();
         graphView.setAutomaticLayout(false);
         graphView.init();
         displayModel.notifyObservers();
@@ -81,7 +89,10 @@ public class Controller {
      * Initialize the table where user steps (according to algorithm) are displayed.
      */
     public void iniTableView() {
-
+        gxTable.initTable();
+    }
+    public void showTable() {
+        gxTable.showTable();
     }
 
     public void setActions() {
@@ -141,6 +152,8 @@ public class Controller {
     public void onCheck() {
 
     }
+
+
 
     /**
      * Will give the user the ability to load a new graph via a json file.
