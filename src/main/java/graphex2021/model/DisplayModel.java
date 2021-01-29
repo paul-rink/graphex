@@ -232,4 +232,9 @@ public class DisplayModel extends Subject {
         visibleGraph.setEndingVertex(end);
     }
 
+    //TODO be deleted
+    public GXGraph getGraph() {
+        return this.graph;
+    }
+
 }

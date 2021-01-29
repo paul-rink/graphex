@@ -6,6 +6,7 @@ import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.model.*;
 import graphex2021.view.GXTable;
+import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,7 +35,9 @@ public class Controller {
 
     @FXML
     private BorderPane borderPane;
-    private GXTable gxTable;
+
+    Stage tableStage = new Stage();
+    private GXTableView gxTable;
 
     @FXML
     private GraphView graphView;
@@ -54,7 +57,7 @@ public class Controller {
      */
     public Controller() {
         this.displayModel = new DisplayModel();
-        this.gxTable = new GXTable();
+        this.gxTable = new GXTableView(displayModel.getGraph());
     }
 
     /**
@@ -94,10 +97,15 @@ public class Controller {
      * Initialize the table where user steps (according to algorithm) are displayed.
      */
     public void iniTableView() {
-        gxTable.initTable();
+        tableStage.setTitle("Tabelle");
+        VBox tableBox = new VBox(gxTable);
+        Scene tableScene = new Scene(tableBox);
+        tableStage.setScene(tableScene);
+        tableStage.hide();
+
     }
     public void showTable() {
-        gxTable.showTable();
+        tableStage.show();
     }
 
     public void setActions() {
