@@ -1,14 +1,11 @@
 package graphex2021.controller;
 
-import com.brunomnsilva.smartgraph.graph.Vertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.model.*;
-import graphex2021.view.GXTable;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,11 +15,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 import java.util.Optional;
-
-import static com.brunomnsilva.smartgraph.graphview.UtilitiesJavaFX.pick;
 
 public class Controller {
 
@@ -33,11 +27,10 @@ public class Controller {
      */
     private DisplayModel displayModel;
 
+    private GXTableView gxTable;
+
     @FXML
     private BorderPane borderPane;
-
-    Stage tableStage = new Stage();
-    private GXTableView gxTable;
 
     @FXML
     private GraphView graphView;
@@ -57,7 +50,13 @@ public class Controller {
      */
     public Controller() {
         this.displayModel = new DisplayModel();
-        this.gxTable = new GXTableView(displayModel.getGraph());
+        this.gxTable = new GXTableView();
+    }
+
+    public void init() {
+        initGraphView();
+        initTableView();
+        displayModel.notifyObservers();
     }
 
     /**
@@ -65,12 +64,8 @@ public class Controller {
      */
     public void initGraphView() {
         displayModel.register(graphView);
-        displayModel.register(gxTable);
-        iniTableView();
-        //this.bindAspectRation();
         graphView.setAutomaticLayout(false);
         graphView.init();
-        displayModel.notifyObservers();
     }
 
     /**
@@ -96,16 +91,18 @@ public class Controller {
     /**
      * Initialize the table where user steps (according to algorithm) are displayed.
      */
-    public void iniTableView() {
-        tableStage.setTitle("Tabelle");
-        VBox tableBox = new VBox(gxTable);
-        Scene tableScene = new Scene(tableBox);
-        tableStage.setScene(tableScene);
-        tableStage.hide();
-
+    public void initTableView() {
+        gxTable.init(displayModel.getAllVertices());
+        displayModel.register(gxTable);
     }
+
     public void showTable() {
+        Stage tableStage = new Stage();
+        tableStage.setTitle("Tabelle");
+        tableStage.setScene(new Scene(new VBox(gxTable)));
         tableStage.show();
+
+
     }
 
     public void setActions() {

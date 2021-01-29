@@ -26,6 +26,6 @@ public class Main extends Application {
         primaryStage.show();
 
         Controller graphController = loader.getController();
-        graphController.initGraphView();
+        graphController.init();
     }
 }

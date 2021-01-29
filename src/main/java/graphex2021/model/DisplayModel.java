@@ -2,6 +2,7 @@ package graphex2021.model;
 
 
 import java.io.File;
+import java.util.Collection;
 import java.util.LinkedList;
 
 /**
@@ -233,8 +234,8 @@ public class DisplayModel extends Subject {
     }
 
     //TODO be deleted
-    public GXGraph getGraph() {
-        return this.graph;
+    public Collection<GXVertex> getAllVertices() {
+        return this.graph.vertices();
     }
 
 }

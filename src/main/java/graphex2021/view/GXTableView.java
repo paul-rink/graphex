@@ -7,41 +7,54 @@ import graphex2021.model.Subject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
-import javafx.scene.control.cell.PropertyValueFactory;
+
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GXTableView extends TableView<Map<String, String>> implements Observer {
-    ObservableList<Map<String, String>> step;
-    TableView<Map> table;
+    private ObservableList<Map<String, String>> step;
+    private TableView<Map> table;
+    private int stepCounter;
 
-    public GXTableView(GXGraph graph) {
+    public GXTableView() {
          this.table = new TableView<>();
-         this.step = FXCollections.<Map<String, String>>observableArrayList();
-         create(graph);
+         this.step = FXCollections.observableArrayList();
+         this.stepCounter = 0;
     }
 
 
 
-    public void create(GXGraph graph) {
-        for (GXVertex vertex : graph.vertices()) {
-            TableColumn<Map, String> column =  new TableColumn<>(vertex.element());
-            column.setCellValueFactory(new MapValueFactory<>(vertex.element()));
-            this.table.getColumns().add(column);
+    public void init(Collection<GXVertex> vertices) {
+        TableColumn<Map<String, String>, String> stepColumn = new TableColumn<>("Schritt");
+        stepColumn.setCellValueFactory(new MapValueFactory("Schritt"));
+        this.getColumns().add(stepColumn);
+        for (GXVertex vertex : vertices) {
+            TableColumn<Map<String, String>, String> column =  new TableColumn<>(vertex.element());
+            column.setCellValueFactory(new MapValueFactory(vertex.element()));
+            this.getColumns().add(column);
         }
     }
 
     public void addRow(GXGraph graph) {
         Map<String, String> item = new HashMap<>();
+        item.put("Schritt", String.valueOf(stepCounter));
+        stepCounter++;
         for (GXVertex vertex : graph.vertices()) {
-            item.put(vertex.element(), String.valueOf(vertex.getCurrentDistance()));
+            int currDist = vertex.getCurrentDistance();
+            String entry;
+            if (currDist > 0) {
+                entry = String.valueOf(currDist);
+            } else {
+                entry = "-";
+            }
+            item.put(vertex.element(), entry);
         }
         step.add(item);
+        this.getItems().add(item);
 
     }
 
@@ -50,6 +63,9 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         addRow((GXGraph) s.getState());
 
     }
+
+
+
 
 
 
