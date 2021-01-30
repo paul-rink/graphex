@@ -104,11 +104,18 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         final GXGraph graph = (GXGraph) s.getState();
         final int markedVertices = markedVertices(graph);
         if (markedVertices > prevMarked) {
+            // more marked vertices ==> new row needed
             addRow(graph);
             this.prevMarked = markedVertices;
         } else if (markedVertices == 1) {
+            // one vertex marked ==> reset or undo the first selection ==> works too
             reset();
+        } else {
+            // one less marked vertex ==> something undone
+            undo();
+            this.prevMarked = markedVertices;
         }
+
     }
 
 
@@ -126,6 +133,11 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         steps.remove(1, steps.size());
         stepCounter = 1;
         this.prevMarked = 1;
+    }
+
+    private void undo() {
+        steps.remove(steps.size() - 1);
+        stepCounter--;
     }
 
 
