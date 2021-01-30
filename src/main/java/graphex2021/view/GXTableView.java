@@ -30,8 +30,9 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
      * Each step will be saved in Map, where the key is the vertex element and the entry is the current distance
      * from the starting vertex. These maps are corresponding to the steps.
      */
-    private ObservableList<Map<String, String>> step;
+    private ObservableList<Map<String, String>> steps;
     private int stepCounter;
+    private int prevMarked;
 
 
     /**
@@ -40,8 +41,9 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
      *
      */
     public GXTableView() {
-        this.step = FXCollections.observableArrayList();
+        this.steps = FXCollections.observableArrayList();
         this.stepCounter = 0;
+        this.prevMarked = 0;
 
     }
 
@@ -59,11 +61,13 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         for (GXVertex vertex : vertices) {
             TableColumn<Map<String, String>, String> column =  new TableColumn<>(vertex.element());
             // The value of each cell in a column will be taken from a map. If the column name ("element") exists in the
-            // map the coresponding value will be pulled and inserted into the cell.
+            // map the corresponding value will be pulled and inserted into the cell.
             column.setCellValueFactory(new MapValueFactory(vertex.element()));
             column.setSortable(false);
             this.getColumns().add(column);
         }
+        // The content of the table is now set to
+        this.setItems(steps);
     }
 
 
@@ -75,8 +79,8 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
      */
     private void addRow(GXGraph graph) {
         // The map that will represent the state for that row
-        Map<String, String> item = new HashMap<>();
-        item.put("Schritt", String.valueOf(stepCounter));
+        Map<String, String> row = new HashMap<>();
+        row.put("Schritt", String.valueOf(stepCounter));
         stepCounter++;
         for (GXVertex vertex : graph.vertices()) {
             int currDist = vertex.getCurrentDistance();
@@ -90,18 +94,39 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
                 // If the vertex is not reachable but in the current visible graph a '-' will be put in that place
                 entry = "-";
             }
-            item.put(vertex.element(), entry);
+            row.put(vertex.element(), entry);
         }
-        step.add(item);
-        this.getItems().add(item);
-
+        steps.add(row);
     }
 
     @Override
     public void doUpdate(Subject s) {
-        addRow((GXGraph) s.getState());
+        final GXGraph graph = (GXGraph) s.getState();
+        final int markedVertices = markedVertices(graph);
+        if (markedVertices > prevMarked) {
+            addRow(graph);
+            this.prevMarked = markedVertices;
+        } else if (markedVertices == 1) {
+            reset();
+        }
     }
 
+
+    private int markedVertices(GXGraph graph) {
+        int marked = 0;
+        for (GXVertex vertex : graph.vertices()) {
+            if (vertex.isMarked()) {
+                marked++;
+            }
+        }
+        return marked;
+    }
+
+    private void reset() {
+        steps.remove(1, steps.size());
+        stepCounter = 1;
+        this.prevMarked = 1;
+    }
 
 
 
