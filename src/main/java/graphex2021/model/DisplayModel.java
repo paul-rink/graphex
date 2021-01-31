@@ -94,6 +94,18 @@ public class DisplayModel extends Subject {
        return false;
     }
 
+    /**
+     * Checks if the user steps do match all the algo steps. So the user needs the exact same number if steps in the
+     * same order.
+     * @param distance is the input distance from user
+     * @return {@code true} if user steps do match algo steps, {@code false} otherwise.
+     */
+    public boolean checkFinishRequirements(int distance) {
+        boolean correctDistance = algo.isCorrectDistance(graph.getEndingVertex(), distance);
+        boolean correctPath = algo.isCorrectPath(graph.getStartingVertex());
+        return correctDistance && correctPath;
+    }
+
     public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {
         //check if edge is blocked because of circle -> create alert
         if (edge.isBlocked()) throw new EdgeCompletesACircleException("");
@@ -159,6 +171,7 @@ public class DisplayModel extends Subject {
         }
         //Creating new visibileGraph that will then have the starting and end vertex be visible.
         this.visibleGraph = new GXGraph();
+        this.userSteps = new LinkedList<>();
         initialVisibleGraph();
         notifyObservers();
     }
@@ -304,6 +317,7 @@ public class DisplayModel extends Subject {
         final GXVertex start = graph.getStartingVertex();
         start.mark();
         start.setVisible(true);
+        start.setCurrentDistance(0);
         visibleGraph.insertVertex(start);
         visibleGraph.setStartingVertex(start);
         try {

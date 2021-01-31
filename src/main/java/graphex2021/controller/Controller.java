@@ -21,6 +21,7 @@ import java.util.Optional;
 public class Controller {
 
     private static final String UNLOCKPASSWORD = "Algorithmus";
+    private static final String PATTERN_FIN_TEXT = "[0-9]+";
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -43,6 +44,9 @@ public class Controller {
 
     @FXML
     private Button finish;
+
+    @FXML
+    private TextField finTextField;
 
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
@@ -91,7 +95,25 @@ public class Controller {
      * Then the user will get a feedback.
      */
     public void onFinishedPressed() {
-
+        Alert alert;
+        String finText = finTextField.getText();
+        if (!finText.matches(PATTERN_FIN_TEXT)) {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Ungültige Eingabe!");
+            alert.setContentText("Du musst noch die kürzeste Distanz zum Ziel im Textfeld eintragen.");
+        } else {
+            int finalDist = Integer.parseInt(finTextField.getText());
+            if (displayModel.checkFinishRequirements(finalDist)) {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Geschafft!");
+                alert.setContentText("Super! Du hast den kürzesten Weg gefunden!");
+            } else {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Noch nicht!");
+                alert.setContentText("Du hast noch keinen kürzesten Weg zum Ziel gefunden, versuche es noch weiter!");
+            }
+        }
+        alert.show();
     }
 
     /**

@@ -44,4 +44,20 @@ public interface Algorithm {
      * @return {@code true} if the algorithm needs an End-{@link GXVertex}, {@code false} if not.
      */
     boolean hasEndingVertex();
+
+    /**
+     * Returns whether distance is correct.
+     *
+     * @param goal is the goal vertex
+     * @param distance is the distance to the goal vertex you want to check.
+     * @return {@code true} if distance is correct, {@code false} else.
+     */
+    boolean isCorrectDistance(GXVertex goal, int distance);
+
+    /**
+     * Checks if the found path doas match the path the algo would choose (regardless correct order)
+     * @param goal is the goal vertex
+     * @return true, if user found correct path but not necessary full correct algo, false otherwise
+     */
+    boolean isCorrectPath(GXVertex goal);
 }

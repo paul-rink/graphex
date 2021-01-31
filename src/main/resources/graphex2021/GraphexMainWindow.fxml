@@ -56,7 +56,7 @@
         <items>
             <Button fx:id="finish" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartPressed" text="Start" />
             <Button mnemonicParsing="false" onAction="#onUndoPressed" text="Undo" />
-            <TextField promptText="Kürzeste Distanz" />
+            <TextField fx:id="finTextField" promptText="Kürzeste Distanz" />
             <Button mnemonicParsing="false" onAction="#onFinishedPressed" text="Fertig" />
             <Button mnemonicParsing="false" onAction="#onResetPressed" text="Reset" />
         </items>
