@@ -63,6 +63,9 @@ public class GraphView extends SmartGraphPanel implements Observer {
         } else if (!gxEdge.isMarked()) {
             edge.setStyleClass("edge");
         }
+        if (gxEdge.isHint()) {
+            edge.setStyleClass("hintEdge");
+        }
     }
 
     private void styleVertex(SmartGraphVertexNode vertex) {
@@ -72,6 +75,10 @@ public class GraphView extends SmartGraphPanel implements Observer {
             vertex.setStyleClass("markedVertex");
         } else if (!gxVertex.isMarked()) {
             vertex.setStyleClass("vertex");
+        }
+        //TODO rethinkt the order here
+        if (gxVertex.isHint()) {
+            vertex.setStyleClass("hintVertex");
         }
     }
 

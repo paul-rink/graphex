@@ -3,6 +3,7 @@ package graphex2021.model;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -42,8 +43,25 @@ public class DisplayModel extends Subject {
 
     }
 
-    public GXEdge nexStep() {
-        return null;
+    public void nexStep() {
+        Iterator iter = userSteps.iterator();
+        Step hintStep = algoSteps.getFirst();
+        for (Step step : algoSteps) {
+            hintStep = step;
+            if (!iter.hasNext() ) {
+                step.getSelectedEdge().setHint(true);
+                step.getSelectedVertex().setHint(true);
+                break;
+            } else if (!iter.next().equals(step)) {
+                //TODO what happens if mistakes were made?
+                break;
+            }
+        }
+        notifyObservers();
+
+        // Reset the the components so that the they are not marked as hints after next selection.
+        hintStep.getSelectedVertex().setHint(false);
+        hintStep.getSelectedEdge().setHint(false);
     }
 
     public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {
@@ -173,11 +191,11 @@ public class DisplayModel extends Subject {
         }
     }
 
-    private void makeIncidentsInvisible(GXVertex vertex, GXEdge originalEdge) throws ElementNotInGraphException{
+    private void makeIncidentsInvisible(GXVertex vertex, GXEdge originalEdge) throws ElementNotInGraphException {
         //check all adjacent edges if vertex on the other side is marked it remains visible
         //otherwise the edge and the vertex at the other end should be invisible and removed
         //from the visible graph
-        for(GXEdge edge : visibleGraph.incidentEdges(vertex)) {
+        for (GXEdge edge : visibleGraph.incidentEdges(vertex)) {
             try {
                 GXVertex otherVertex = edge.getNextVertex();
                 edge.setVisible(false);
@@ -186,12 +204,12 @@ public class DisplayModel extends Subject {
                 //additionally needs to check whether this vertex is also connected to another visible edge
                 //this would mean the vertex stays visible
                 boolean stayVisible = false;
-                for(GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
-                    if(otherEdge.isVisible()) {
+                for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
+                    if (otherEdge.isVisible()) {
                         stayVisible = true;
                     }
                 }
-                if(!stayVisible) {
+                if (!stayVisible) {
                     otherVertex.setVisible(false);
                     visibleGraph.removeVertex(otherVertex);
                 }

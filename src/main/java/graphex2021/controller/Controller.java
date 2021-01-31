@@ -153,7 +153,7 @@ public class Controller {
      * When the user requests a hint, the next step according to the selected algorithm should be shown.
      */
     public void hintRequest() {
-
+        displayModel.nexStep();
     }
 
     /**
@@ -247,7 +247,8 @@ public class Controller {
                     if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
                         double x = vert.getPositionCenterX() / graphView.getWidth();
                         double y = vert.getPositionCenterY() / graphView.getHeight();
-                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = " + x + " , y = " + y);
+                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = " + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
+
                     }
                 });
             }

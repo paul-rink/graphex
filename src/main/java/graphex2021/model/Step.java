@@ -1,5 +1,7 @@
 package graphex2021.model;
 
+import java.util.Objects;
+
 /**
  * This class is for saving each step of an algorithm or a modification on a {@link GXGraph}. Therefore it holds
  * references to a {@link GXVertex} and/or {@link GXEdge} that was selected/modified at a specific time.
@@ -39,4 +41,19 @@ public class Step {
         return selectedEdge;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Step step = (Step) o;
+        return selectedVertex.equals(step.selectedVertex) && selectedEdge.equals(step.selectedEdge);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(selectedVertex, selectedEdge);
+    }
 }
