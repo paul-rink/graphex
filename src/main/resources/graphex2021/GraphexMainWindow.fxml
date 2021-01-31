@@ -31,7 +31,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#unlockHints" text="Tips freischalten" />
                         <MenuItem fx:id="check" disable="true" mnemonicParsing="false" onAction="#onCheck" text="Fehler check" />
                         <MenuItem fx:id="tip" disable="true" mnemonicParsing="false" onAction="#hintRequest" text="Tip" />
-                        <MenuItem fx:id = "tabelle" disable ="false" mnemonicParsing="false" onAction = "#showTable" text="Tabelle"/>
+                        <MenuItem disable ="false" mnemonicParsing="false" onAction = "#showTable" text="Tabelle"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Informationen">

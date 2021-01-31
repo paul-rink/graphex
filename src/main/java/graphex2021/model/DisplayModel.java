@@ -2,6 +2,7 @@ package graphex2021.model;
 
 
 import java.io.File;
+import java.util.Collection;
 import java.util.LinkedList;
 
 /**
@@ -230,6 +231,11 @@ public class DisplayModel extends Subject {
         end.setVisible(true);
         visibleGraph.insertVertex(end);
         visibleGraph.setEndingVertex(end);
+    }
+
+    //TODO be deleted
+    public Collection<GXVertex> getAllVertices() {
+        return this.graph.vertices();
     }
 
 }
