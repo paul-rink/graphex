@@ -20,7 +20,7 @@ public class DisplayModel extends Subject {
     private GXGraph graph;
     private GXGraph visibleGraph;
 
-    public DisplayModel() {
+    public DisplayModel() throws WrongFileFormatException{
         //TODO maybe better way for file Separator
         File example = new File(
                 "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"

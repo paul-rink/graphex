@@ -42,7 +42,7 @@ public class GXGraph implements GraphInterface<String, String> {
         this.endingVertex = null;
     }
 
-    public GXGraph(File file) throws ElementNotInGraphException {
+    public GXGraph(File file) throws ElementNotInGraphException, WrongFileFormatException {
         this.vertices = new HashMap<>();
         this.edges = new HashMap<>();
         GraphParser parser = GraphParser.getGraphParser();

@@ -49,7 +49,13 @@ public class Controller {
      * by using the standard {@link graphex2021.model.GXGraph}
      */
     public Controller() {
-        this.displayModel = new DisplayModel();
+        try {
+            this.displayModel = new DisplayModel();
+        } catch (WrongFileFormatException e) {
+            //TODO handle this error by displaying a message box
+            e.printStackTrace();
+        }
+
         this.gxTable = new GXTableView();
     }
 

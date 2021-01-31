@@ -58,12 +58,18 @@ public class GraphParserTest {
         Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
     }
 
+    //@Ignore
     @Test
     public void testParseVertices() {
         Collection<GXVertex> expectation = createExpectedVertices();
 
         //read the vertex from the file
-        Collection<GXVertex> verticesList = parser.parseVertices(copiedFile);
+        Collection<GXVertex> verticesList = null;
+        try {
+            verticesList = parser.parseVertices(copiedFile);
+        } catch (WrongFileFormatException e) {
+            assertTrue(false);
+        }
 
         Iterator<GXVertex> it = verticesList.iterator();
         Iterator<GXVertex> ite = expectation.iterator();
@@ -79,14 +85,18 @@ public class GraphParserTest {
         assertTrue(allSame);
     }
 
-    //@Test
-    @Ignore
+    @Test
+    //@Ignore
     public void testParseEdges() {
         Collection<GXVertex> expectedVertices = createExpectedVertices();
         Collection<GXEdge> expectedEdges = createExpectedEdges(expectedVertices);
 
-        Collection<GXEdge> readEdges = parser.parseEdges(copiedFile, expectedVertices);
-
+        Collection<GXEdge> readEdges = null;
+        try {
+            readEdges = parser.parseEdges(copiedFile, expectedVertices);
+        } catch (WrongFileFormatException e) {
+            assertTrue(false);
+        }
         assertEquals(expectedEdges.size(), readEdges.size());
         Iterator<GXEdge> it = readEdges.iterator();
         Iterator<GXEdge> ite = expectedEdges.iterator();
