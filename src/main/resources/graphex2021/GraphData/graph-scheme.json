@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft/2019-09/schema#",
+    "title": "GXGraph-schema",
+    "description": "the schema used for the definition used for a GXGraph used in GrpahEx",
+    "type": "object",
+    "required":["vertices", "edges", "startVertex", "endVertex"],
+    "properties":
+    {
+        "vertices":
+        {
+            "type":"array",
+            "items": 
+            {
+                "type": "object",
+                "properties":
+                {
+                   "name":{"type": "string"},
+                   "posx":{"type": "string"},
+                   "posy":{"type": "string"},
+                }
+            }
+        },
+        "edges":
+        {
+            "type": "array",
+            "items":
+            {
+                "type": "object",
+                "properties":
+                {
+                   "vertex1":{"type": "string"},
+                   "vertex2":{"type": "string"},
+                   "weight":{"type": "string"},
+                }
+            }
+        },
+        "startVertex": {"type": "string"},
+        "endVertex": {"type": "string"}
+    }
+}

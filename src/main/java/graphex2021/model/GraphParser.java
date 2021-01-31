@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 
-import org.json.*;
 
+import org.everit.json.schema.ValidationException;
+import org.json.*;
+import org.everit.json.schema.*;
+import org.everit.json.schema.loader.*;
 
 /**
  * Class to parse JSON files which specify a graph
@@ -17,8 +20,10 @@ import org.json.*;
 public class GraphParser {
 
     private static final GraphParser singleInstance = new GraphParser();
+    private static final String GraphTypeFile = "src/main/resources/graphex2021/GraphData/graph-scheme.json";
     private int freeVertexId;
     private  int freeEdgeId;
+
 
     /**
      * private constructor for the singleton
@@ -42,12 +47,18 @@ public class GraphParser {
      * @param input the file the graph should be read from
      * @return a collection of GXVertex specified in the file
      */
-    public Collection<GXVertex> parseVertices(File input) {
+    public Collection<GXVertex> parseVertices(File input) {//throws WrongFileFormatException {
+        //TODO actually handle the exception in the controller if the file has the wrong format
         freeVertexId = 0;
         freeEdgeId = 0;
         Collection<GXVertex> vertexList = new <GXVertex>ArrayList();
 
-        JSONObject graphObject = getJsonObject(input);
+        JSONObject graphObject = null;
+        try {
+            graphObject = getJsonObject(input);
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();
+        }
         JSONArray verticesArray = graphObject.getJSONArray("vertices");
         for (int i = 0; i < verticesArray.length(); i++) {
             JSONObject jsonVertex = verticesArray.getJSONObject(i);
@@ -68,10 +79,16 @@ public class GraphParser {
      * @param vertices the collection of vertices the edges will connect
      * @return a Collection of edges for the graph
      */
-    public Collection<GXEdge> parseEdges(File input, Collection<GXVertex> vertices) {
+    public Collection<GXEdge> parseEdges(File input, Collection<GXVertex> vertices){// throws WrongFileFormatException {
+        //TODO actually handle the exception in the controller if the file has the wrong format
         Collection<GXEdge> edgeList = new ArrayList<>();
 
-        JSONObject graphObject = getJsonObject(input);
+        JSONObject graphObject = null;
+        try {
+            graphObject = getJsonObject(input);
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();
+        }
         JSONArray edgeArray = graphObject.getJSONArray("edges");
 
         for (int i = 0; i < edgeArray.length(); i++) {
@@ -97,8 +114,14 @@ public class GraphParser {
      * @param vertices the list of vertices in the graph
      * @return GXVertex that should be the designated starting vertex
      */
-    public GXVertex parseStarting(File input, Collection<GXVertex> vertices) {
-        JSONObject graphObject = getJsonObject(input);
+    public GXVertex parseStarting(File input, Collection<GXVertex> vertices) {// throws WrongFileFormatException {
+        //TODO actually handle the exception in the controller if the file has the wrong format
+        JSONObject graphObject = null;
+        try {
+            graphObject = getJsonObject(input);
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();
+        }
         String startName =  graphObject.getString("startVertex");
         return findMatchingVertex(startName, vertices);
     }
@@ -109,8 +132,14 @@ public class GraphParser {
      * @param vertices the list of vertices in the graph
      * @return GXVertex that should be the designated ending vertex
      */
-    public GXVertex parseEnding(File input, Collection<GXVertex> vertices) {
-        JSONObject graphObject = getJsonObject(input);
+    public GXVertex parseEnding(File input, Collection<GXVertex> vertices) {//throws WrongFileFormatException{
+        //TODO actually handle the exception in the controller if the file has the wrong format
+        JSONObject graphObject = null;
+        try {
+            graphObject = getJsonObject(input);
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();
+        }
         String endName =  graphObject.getString("endVertex");
         return findMatchingVertex(endName, vertices);
     }
@@ -120,12 +149,24 @@ public class GraphParser {
      * @param input the file which is being read
      * @return a JSONObject which is defined in the file
      */
-    private JSONObject getJsonObject(File input) {
-        //TODO make a JSON matcher to test if the file is actually a graph and names are unique.
+    private JSONObject getJsonObject(File input) throws WrongFileFormatException {
         String inputFile = readFromFile(input);
-        return new JSONObject(inputFile);
+
+        JSONObject object = new JSONObject(inputFile);
+        try {
+            checkFileFormat(object);
+        } catch (ValidationException e) {
+            throw new WrongFileFormatException(e.getErrorMessage());
+        }
+        return object;
     }
 
+    private void checkFileFormat(JSONObject input) throws ValidationException {
+        String jsonSchemaString = readFromFile(new File(GraphTypeFile));
+        JSONObject jsonSchema = new JSONObject(jsonSchemaString);
+        Schema schema = SchemaLoader.load(jsonSchema);
+        schema.validate(input);
+    }
 
     /**
      * method to read a string from a given File
