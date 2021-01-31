@@ -153,14 +153,21 @@ public class Controller {
      * When the user requests a hint, the next step according to the selected algorithm should be shown.
      */
     public void hintRequest() {
-
+        displayModel.nexStep();
     }
 
     /**
      * Checks, if the user input corresponds to the steps the selected algorithm would perform.
      */
     public void onCheck() {
-
+        Alert check = new Alert(Alert.AlertType.INFORMATION);
+        check.setTitle("Check");
+        if (displayModel.checkCorrect()) {
+            check.setHeaderText("Bisher ist alles richtig.");
+        } else {
+            check.setHeaderText("Da hat sich leider ein Fehler eingeschlichen");
+        }
+        check.showAndWait();
     }
 
 
@@ -247,7 +254,8 @@ public class Controller {
                     if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
                         double x = vert.getPositionCenterX() / graphView.getWidth();
                         double y = vert.getPositionCenterY() / graphView.getHeight();
-                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = " + x + " , y = " + y);
+                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = " + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
+
                     }
                 });
             }

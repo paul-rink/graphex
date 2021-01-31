@@ -23,6 +23,7 @@ public class GXVertex implements Vertex<String> {
 
     private boolean visible;
     private boolean marked;
+    private boolean isHint;
 
     /**
      * The previous edge that was chosen to mark this vertex
@@ -41,6 +42,8 @@ public class GXVertex implements Vertex<String> {
      * The position you want the vertex to be in
      */
     private GXPosition position;
+
+
 
 
     /**
@@ -196,4 +199,11 @@ public class GXVertex implements Vertex<String> {
         return isGXVertex && hasSameID;
     }
 
+    public void setHint(boolean isHint) {
+        this.isHint = isHint;
+    }
+
+    public boolean isHint() {
+        return this.isHint;
+    }
 }

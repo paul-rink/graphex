@@ -53,6 +53,11 @@ public class GXEdge implements Edge<String, String> {
     private boolean visible;
 
     /**
+     * Stores whether this edge should be displayed as a hint
+     */
+    private boolean isHint;
+
+    /**
      * Creates new Vertex with a weight
      * TODO finish constructor to contain missing attributes. Check how to generate the IDs
      * @param inboundVertex the first vertex of the edge
@@ -70,6 +75,7 @@ public class GXEdge implements Edge<String, String> {
         this.marked = false;
         this.weight = weight;
         this.id = id;
+        this.isHint = false;
 
     }
 
@@ -206,5 +212,13 @@ public class GXEdge implements Edge<String, String> {
      */
     public void setWeight(int w) {
         this.weight = w;
+    }
+
+    public void setHint(boolean isHint) {
+        this.isHint = isHint;
+    }
+
+    public boolean isHint() {
+        return this.isHint;
     }
 }
