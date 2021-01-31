@@ -47,18 +47,15 @@ public class GraphParser {
      * @param input the file the graph should be read from
      * @return a collection of GXVertex specified in the file
      */
-    public Collection<GXVertex> parseVertices(File input) {//throws WrongFileFormatException {
+    public Collection<GXVertex> parseVertices(File input) throws WrongFileFormatException {
         //TODO actually handle the exception in the controller if the file has the wrong format
         freeVertexId = 0;
         freeEdgeId = 0;
         Collection<GXVertex> vertexList = new <GXVertex>ArrayList();
 
         JSONObject graphObject = null;
-        try {
-            graphObject = getJsonObject(input);
-        } catch (WrongFileFormatException e) {
-            e.printStackTrace();
-        }
+        graphObject = getJsonObject(input);
+
         JSONArray verticesArray = graphObject.getJSONArray("vertices");
         for (int i = 0; i < verticesArray.length(); i++) {
             JSONObject jsonVertex = verticesArray.getJSONObject(i);
@@ -79,16 +76,13 @@ public class GraphParser {
      * @param vertices the collection of vertices the edges will connect
      * @return a Collection of edges for the graph
      */
-    public Collection<GXEdge> parseEdges(File input, Collection<GXVertex> vertices){// throws WrongFileFormatException {
+    public Collection<GXEdge> parseEdges(File input, Collection<GXVertex> vertices) throws WrongFileFormatException {
         //TODO actually handle the exception in the controller if the file has the wrong format
         Collection<GXEdge> edgeList = new ArrayList<>();
 
         JSONObject graphObject = null;
-        try {
-            graphObject = getJsonObject(input);
-        } catch (WrongFileFormatException e) {
-            e.printStackTrace();
-        }
+        graphObject = getJsonObject(input);
+
         JSONArray edgeArray = graphObject.getJSONArray("edges");
 
         for (int i = 0; i < edgeArray.length(); i++) {
@@ -114,14 +108,11 @@ public class GraphParser {
      * @param vertices the list of vertices in the graph
      * @return GXVertex that should be the designated starting vertex
      */
-    public GXVertex parseStarting(File input, Collection<GXVertex> vertices) {// throws WrongFileFormatException {
+    public GXVertex parseStarting(File input, Collection<GXVertex> vertices)  throws WrongFileFormatException {
         //TODO actually handle the exception in the controller if the file has the wrong format
         JSONObject graphObject = null;
-        try {
-            graphObject = getJsonObject(input);
-        } catch (WrongFileFormatException e) {
-            e.printStackTrace();
-        }
+        graphObject = getJsonObject(input);
+
         String startName =  graphObject.getString("startVertex");
         return findMatchingVertex(startName, vertices);
     }
@@ -132,14 +123,11 @@ public class GraphParser {
      * @param vertices the list of vertices in the graph
      * @return GXVertex that should be the designated ending vertex
      */
-    public GXVertex parseEnding(File input, Collection<GXVertex> vertices) {//throws WrongFileFormatException{
+    public GXVertex parseEnding(File input, Collection<GXVertex> vertices) throws WrongFileFormatException{
         //TODO actually handle the exception in the controller if the file has the wrong format
         JSONObject graphObject = null;
-        try {
-            graphObject = getJsonObject(input);
-        } catch (WrongFileFormatException e) {
-            e.printStackTrace();
-        }
+        graphObject = getJsonObject(input);
+
         String endName =  graphObject.getString("endVertex");
         return findMatchingVertex(endName, vertices);
     }

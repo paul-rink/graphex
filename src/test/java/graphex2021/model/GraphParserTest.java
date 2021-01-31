@@ -64,11 +64,11 @@ public class GraphParserTest {
 
         //read the vertex from the file
         Collection<GXVertex> verticesList = null;
-        //try {
+        try {
             verticesList = parser.parseVertices(copiedFile);
-        //} catch (WrongFileFormatException e) {
-        //    assertTrue(false);
-        //}
+        } catch (WrongFileFormatException e) {
+            assertTrue(false);
+        }
 
         Iterator<GXVertex> it = verticesList.iterator();
         Iterator<GXVertex> ite = expectation.iterator();
@@ -91,11 +91,11 @@ public class GraphParserTest {
         Collection<GXEdge> expectedEdges = createExpectedEdges(expectedVertices);
 
         Collection<GXEdge> readEdges = null;
-        //try {
+        try {
             readEdges = parser.parseEdges(copiedFile, expectedVertices);
-        //} catch (WrongFileFormatException e) {
-        //    assertTrue(false);
-        //}
+        } catch (WrongFileFormatException e) {
+            assertTrue(false);
+        }
         assertEquals(expectedEdges.size(), readEdges.size());
         Iterator<GXEdge> it = readEdges.iterator();
         Iterator<GXEdge> ite = expectedEdges.iterator();
