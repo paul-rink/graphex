@@ -58,7 +58,8 @@ public class GraphParserTest {
         Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    @Ignore//Test
+    //@Ignore
+    @Test
     public void testParseVertices() {
         Collection<GXVertex> expectation = createExpectedVertices();
 
@@ -84,8 +85,8 @@ public class GraphParserTest {
         assertTrue(allSame);
     }
 
-    //@Test
-    @Ignore
+    @Test
+    //@Ignore
     public void testParseEdges() {
         Collection<GXVertex> expectedVertices = createExpectedVertices();
         Collection<GXEdge> expectedEdges = createExpectedEdges(expectedVertices);
