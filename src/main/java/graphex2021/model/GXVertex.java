@@ -98,7 +98,8 @@ public class GXVertex implements Vertex<String> {
     }
 
     /**
-     * Sets the marked state of the vertex to the desired state.
+     * TODO why -1, need constant, probably this is obsolete here.
+     * Unmarks the vertex and sets its current distance to -1.
      * Setting the previous edge to null also.
      *
      */
@@ -173,6 +174,14 @@ public class GXVertex implements Vertex<String> {
      */
     public GXPosition getPosition() {
         return position;
+    }
+
+    /**
+     * Sets the current distance of this vertex.
+     * @param dist is the new distance of this vertex.
+     */
+    public void setCurrentDistance(int dist) {
+        this.currentDistance = dist;
     }
 
     /**

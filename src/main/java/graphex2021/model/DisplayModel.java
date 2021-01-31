@@ -35,6 +35,15 @@ public class DisplayModel extends Subject {
 
         this.algo = new Dijkstra();
         algoSteps = algo.getSequence(graph);
+        //mark starting vertex from the beginning and update distances for incidents, if algo request a starting vertex
+        if (algo.hasStartingVertex()) {
+            graph.getStartingVertex().mark();
+            try {
+                updateCurrentDistancesForIncidents(graph.getStartingVertex());
+            } catch (ElementNotInGraphException e) {
+                e.printStackTrace();
+            }
+        }
 
         this.userSteps = new LinkedList<>();
 
@@ -55,6 +64,8 @@ public class DisplayModel extends Subject {
         //get distance to already marked vertex of marked edge
         int curDist = graph.opposite(nextVertex, edge).getCurrentDistance();
         nextVertex.mark(curDist, edge);
+        //update current distance for other incident vertices
+        updateCurrentDistancesForIncidents(nextVertex);
         //make a new step with nextVertex and edge
         userSteps.add(new Step(nextVertex, edge));
         //block edges that are part of a circle
@@ -86,6 +97,7 @@ public class DisplayModel extends Subject {
             makeIncidentsInvisible(lastVertex, lastEdge);
             lastVertex.unmark();
             lastEdge.unmark();
+            updateCurrentDistance(lastVertex);
             graph.unblock(lastVertex);
             this.notifyObservers();
         }
@@ -206,6 +218,49 @@ public class DisplayModel extends Subject {
 
     }
 
+    /**
+     * Updates current distances for all incident vertices of a specific (marked) vertex. When a vertex is marked,
+     * check all its incident vertices for one of the following cases: <br>
+     *     - vertex is marked: do nothing <br>
+     *     - vertex in unmarked: if current distance > new distance -> update, else do nothing
+     * @param markedVertex is the vertex that is marked
+     */
+    private void updateCurrentDistancesForIncidents(GXVertex markedVertex) throws ElementNotInGraphException {
+        for (GXEdge edge : graph.incidentEdges(markedVertex)) {
+            GXVertex incident = graph.opposite(markedVertex, edge);
+            int oldDist = incident.getCurrentDistance();
+            int uptDist = markedVertex.getCurrentDistance() + edge.getWeight();
+            //TODO need static variable for init values or infinite values, right now very inconsistent
+            if (!incident.isMarked() && (oldDist == -1 || oldDist == 0 || oldDist > uptDist)) {
+                incident.setCurrentDistance(uptDist);
+            }
+        }
+    }
+
+    /**
+     * Updates the current distance for a specific vertex. The distance is calculated by the shortest connection from
+     * start to this vertex. The lowest distance of all incident vertices + edge weight is chosen as new distance. <br>
+     *     Distance for <b>starting vertex</b> is always set to 0.
+     * @param vertex is the vertex you want to update its distance.
+     * @throws ElementNotInGraphException
+     */
+    private void updateCurrentDistance(GXVertex vertex) throws ElementNotInGraphException {
+        if (vertex.equals(graph.getStartingVertex())) {
+            vertex.setCurrentDistance(0);
+        } else {
+            int oldDist = vertex.getCurrentDistance();
+            for (GXEdge edge : graph.incidentEdges(vertex)) {
+                GXVertex incident = graph.opposite(vertex, edge);
+                int newDist = incident.getCurrentDistance() + edge.getWeight();
+                //TODO magic number
+                //if resulting distance from previous (marked) vertex is better, update
+                if (incident.isMarked() && (newDist < oldDist || oldDist == -1)) {
+                    vertex.setCurrentDistance(newDist);
+                }
+            }
+        }
+    }
+
     private void initialVisibleGraph() {
         final GXVertex start = graph.getStartingVertex();
         start.mark();
@@ -213,6 +268,7 @@ public class DisplayModel extends Subject {
         visibleGraph.insertVertex(start);
         visibleGraph.setStartingVertex(start);
         try {
+            updateCurrentDistancesForIncidents(start);
             for (GXEdge edge : graph.incidentEdges(start)) {
                 GXVertex toIns = edge.getNextVertex();
                 //Setting the initial edge visible and the vertex at the other end

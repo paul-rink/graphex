@@ -85,8 +85,10 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         for (GXVertex vertex : graph.vertices()) {
             int currDist = vertex.getCurrentDistance();
             String entry;
-
-            if (currDist > 0) {
+            //display distance (0) for starting vertex
+            if (graph.getStartingVertex().equals(vertex)) {
+                entry = "0";
+            } else if (currDist > 0) {
                 // If the distance is greater than zero the vertex is reachable
                 // and the distance will be added to the row
                 entry = String.valueOf(currDist);
