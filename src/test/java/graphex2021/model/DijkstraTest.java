@@ -105,7 +105,12 @@ public class DijkstraTest {
     @Test
     public void testDijkstraOnExampleGraph() {
         try {
-            GXGraph graph = new GXGraph(graphFile);
+            GXGraph graph = null;
+            try {
+                graph = new GXGraph(graphFile);
+            } catch (WrongFileFormatException e) {
+                e.printStackTrace();
+            }
             steps = d.getSequence(graph);
             Step step1 = steps.get(0);
             Step step2 = steps.get(1);

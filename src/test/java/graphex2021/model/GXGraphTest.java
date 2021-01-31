@@ -19,7 +19,11 @@ public class GXGraphTest {
     @Test
     public void testGXGraphConstructor() {
         try {
-            g = new GXGraph(graphFile);
+            try {
+                g = new GXGraph(graphFile);
+            } catch (WrongFileFormatException e) {
+                e.printStackTrace();
+            }
         } catch (ElementNotInGraphException e) {
             e.printStackTrace();
         }
