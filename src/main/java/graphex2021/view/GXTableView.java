@@ -33,6 +33,12 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
     private ObservableList<Map<String, String>> steps;
     private int stepCounter;
     private int prevMarked;
+    private Map<String, String> lastEntries;
+
+    /**
+     * If this is true distances will only be put into the table if distance has changed from the previous one
+     */
+    private boolean onlyShowChanged;
 
 
     /**
@@ -44,6 +50,8 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         this.steps = FXCollections.observableArrayList();
         this.stepCounter = 0;
         this.prevMarked = 0;
+        this.lastEntries = new HashMap<>();
+        this.onlyShowChanged = false;
 
     }
 
@@ -65,6 +73,8 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
             column.setCellValueFactory(new MapValueFactory(vertex.element()));
             column.setSortable(false);
             this.getColumns().add(column);
+            this.lastEntries.put(vertex.element(), "");
+
         }
         // The content of the table is now set to
         this.setItems(steps);
@@ -92,6 +102,11 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
                 // If the distance is greater than zero the vertex is reachable
                 // and the distance will be added to the row
                 entry = String.valueOf(currDist);
+                if (onlyShowChanged && lastEntries.get(vertex.element()).equals(entry) ) {
+                    entry = "";
+                } else {
+                    lastEntries.put(vertex.element(), entry);
+                }
             } else {
                 // If the vertex is not reachable but in the current visible graph a '-' will be put in that place
                 entry = "-";
