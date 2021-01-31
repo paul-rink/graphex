@@ -43,6 +43,11 @@ public class DisplayModel extends Subject {
 
     }
 
+    /**
+     * Highlights the next correct edge and vertex, that should be marked. If a mistake has been made before,
+     * the last correctly marked vertex and edge will be highlighted.
+     *
+     */
     public void nexStep() {
         Iterator iter = userSteps.iterator();
         Step hintStep = algoSteps.getFirst();
@@ -53,7 +58,8 @@ public class DisplayModel extends Subject {
                 step.getSelectedVertex().setHint(true);
                 break;
             } else if (!iter.next().equals(step)) {
-                //TODO what happens if mistakes were made?
+                step.getSelectedEdge().setHint(true);
+                step.getSelectedVertex().setHint(true);
                 break;
             }
         }
@@ -62,6 +68,21 @@ public class DisplayModel extends Subject {
         // Reset the the components so that the they are not marked as hints after next selection.
         hintStep.getSelectedVertex().setHint(false);
         hintStep.getSelectedEdge().setHint(false);
+    }
+
+    public boolean checkCorrect() {
+       Iterator iter = userSteps.iterator();
+
+       for (Step step : algoSteps) {
+           if (!iter.hasNext() ) {
+               return true;
+           } else if (!iter.next().equals(step)) {
+               return false;
+           }
+       }
+
+       //TODO shouldn't happen
+       return false;
     }
 
     public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {

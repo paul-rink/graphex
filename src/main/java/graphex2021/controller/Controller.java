@@ -160,7 +160,14 @@ public class Controller {
      * Checks, if the user input corresponds to the steps the selected algorithm would perform.
      */
     public void onCheck() {
-
+        Alert check = new Alert(Alert.AlertType.INFORMATION);
+        check.setTitle("Check");
+        if (displayModel.checkCorrect()) {
+            check.setHeaderText("Bisher ist alles richtig.");
+        } else {
+            check.setHeaderText("Da hat sich leider ein Fehler eingeschlichen");
+        }
+        check.showAndWait();
     }
 
 
