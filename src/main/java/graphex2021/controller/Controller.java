@@ -13,9 +13,11 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
+import java.io.File;
 import java.util.Optional;
 
 public class Controller {
@@ -182,7 +184,22 @@ public class Controller {
      * Will give the user the ability to load a new graph via a json file.
      */
     public void onLoadGraph() {
+        Stage browserStage = new Stage();
+        browserStage.setTitle("FileBrowser");
+        browserStage.setScene(new Scene(new VBox()));
+        //browserStage.show();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Graph auswaehlen");
+        File file =fileChooser.showOpenDialog(browserStage);
 
+        
+        try {
+            this.displayModel = new DisplayModel(file);
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();//TODO handle this
+        }
+        this.gxTable = new GXTableView();
+        init();
     }
 
     /**

@@ -20,14 +20,22 @@ public class DisplayModel extends Subject {
     private GXGraph graph;
     private GXGraph visibleGraph;
 
-    public DisplayModel() throws WrongFileFormatException{
+    public DisplayModel() throws WrongFileFormatException {
         //TODO maybe better way for file Separator
         File example = new File(
                 "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
                         + File.separator + "GraphData" + File.separator + "exampleGraph.json");
+        loadGraph(example);
+        return;
+    }
 
+    public DisplayModel(File inputFile) throws WrongFileFormatException {
+        loadGraph(inputFile);
+        return;
+    }
+    private void loadGraph(File inputFile) throws WrongFileFormatException {
         try {
-            this.graph = new GXGraph(example);
+            this.graph = new GXGraph(inputFile);
         } catch (ElementNotInGraphException eni) {
             //TODO better way to handle this. Wrong exception here
         }
