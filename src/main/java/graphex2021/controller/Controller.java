@@ -7,15 +7,20 @@ import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Optional;
 
 public class Controller {
@@ -217,7 +222,61 @@ public class Controller {
      * Will give the user the ability to load a new graph via a json file.
      */
     public void onLoadGraph() {
+        Stage browserStage = new Stage();
+        browserStage.setTitle("FileBrowser");
+        browserStage.setScene(new Scene(new VBox()));
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Graph auswaehlen");
+        File file = fileChooser.showOpenDialog(browserStage);
+        if (file == null) {
+            // do nothing as no file was selected or the selction was cancelled
+        }
+        else {
+            //unregistering the graphView and table from the Displaymodel, since they will not be needed.
+            //Also so they won't updated everytime
+            displayModel.unregister(graphView);
+            displayModel.unregister(gxTable);
 
+            // New Displaymodel created from the chosen file
+            try {
+                this.displayModel = new DisplayModel(file);
+            } catch (WrongFileFormatException e) {
+                e.printStackTrace();//TODO handle this
+            }
+
+            // The Pane that graphView is part of (In this case boder pane)
+            Pane parent = (Pane) graphView.getParent();
+
+            // Removing the graphView so that later a graphView with other properties can be added.
+            parent.getChildren().remove(graphView);
+
+            // TODO check how height is set
+            double height = graphView.getHeight();
+            double width = graphView.getWidth();
+
+            try {
+                // TODO propably needs to be done like this, so that properties can be changed as well.
+                this.graphView = new GraphView();
+
+                //TODO Check what needs to happen for this to work correctly
+                graphView.setPrefSize(width, height);
+                // Adding the new graphView to the pane
+                parent.getChildren().add(graphView);
+                parent.setPrefSize(1000, 100);
+                parent.layout();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            // new Tableview
+            this.gxTable = new GXTableView();
+
+            displayModel.register(graphView);
+            //Reinitializing all the views
+            init();
+            displayModel.notifyObservers();
+        }
     }
 
     /**
