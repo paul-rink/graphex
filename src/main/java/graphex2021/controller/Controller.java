@@ -7,6 +7,7 @@ import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -186,12 +187,6 @@ public class Controller {
      * Will give the user the ability to load a new graph via a json file.
      */
     public void onLoadGraph() {
-        //TODO make it so that if the choosing is canceled they are not unregisterd
-        //unregistering the graphView and table from the Displaymodel, since they will not be needed.
-        //Also so they won't updated everytime
-        displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
-
         Stage browserStage = new Stage();
         browserStage.setTitle("FileBrowser");
         browserStage.setScene(new Scene(new VBox()));
@@ -199,50 +194,53 @@ public class Controller {
         fileChooser.setTitle("Graph auswaehlen");
         File file = fileChooser.showOpenDialog(browserStage);
 
+        //TODO make it so that if the choosing is canceled they are not unregisterd
+        //unregistering the graphView and table from the Displaymodel, since they will not be needed.
+        //Also so they won't updated everytime
+        displayModel.unregister(graphView);
+        displayModel.unregister(gxTable);
 
+        // New Displaymodel created from the chosen file
         try {
             this.displayModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
             e.printStackTrace();//TODO handle this
         }
-        /*
-        TODO for now the new graphView is just loaded by exchanging the graph, which really limits the possibilities.
-        TODO either change by correctly removing and adding to the pane or propably best to reload controller
+
         // The Pane that graphView is part of (In this case boder pane)
         Pane parent = (Pane) graphView.getParent();
 
         // Removing the graphView so that later a graphView with other properties can be added.
         parent.getChildren().remove(graphView);
 
+        // TODO check how height is set
         double height = graphView.getHeight();
-        double width = graphView.getWidth() ;
-        */
-        //
-        /*
+        double width = graphView.getWidth();
+
         try {
-            // TODO propably needs to be done like this, so that properites can be changed as well.
+            // TODO propably needs to be done like this, so that properties can be changed as well.
             this.graphView = new GraphView();
 
-            /*
+            //TODO Check what needs to happen for this to work correctly
             graphView.setPrefSize(width, height);
             // Adding the new graphView to the pane
             parent.getChildren().add(graphView);
+            parent.setPrefSize(1000, 100);
             parent.layout();
-            */
-        /*
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        */
+
+        // new Tableview
         this.gxTable = new GXTableView();
 
         displayModel.register(graphView);
-        initTableView();
-        displayModel.notifyObservers();
-        /*
+        //Reinitializing all the views
         init();
         displayModel.notifyObservers();
-         */
+
+
 
     }
 
