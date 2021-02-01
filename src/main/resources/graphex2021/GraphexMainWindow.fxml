@@ -49,8 +49,8 @@
 
     </top>
     <center>
-        <Pane prefWidth="Infinity" prefHeight="Infinity">
-            <GraphView fx:id="graphView" prefHeight="1532" prefWidth="938" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: 100%;">
+        <Pane prefHeight="1538" prefWidth="960" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
+            <GraphView fx:id="graphView" prefHeight="Infinity" prefWidth="Infinity">
             </GraphView>
         </Pane>
     </center>
