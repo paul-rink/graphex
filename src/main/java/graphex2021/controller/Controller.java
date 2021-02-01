@@ -193,55 +193,55 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Graph auswaehlen");
         File file = fileChooser.showOpenDialog(browserStage);
-
-        //TODO make it so that if the choosing is canceled they are not unregisterd
-        //unregistering the graphView and table from the Displaymodel, since they will not be needed.
-        //Also so they won't updated everytime
-        displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
-
-        // New Displaymodel created from the chosen file
-        try {
-            this.displayModel = new DisplayModel(file);
-        } catch (WrongFileFormatException e) {
-            e.printStackTrace();//TODO handle this
+        if (file == null) {
+            // do nothing as no file was selected or the selction was cancelled
         }
+        else {
+            //unregistering the graphView and table from the Displaymodel, since they will not be needed.
+            //Also so they won't updated everytime
+            displayModel.unregister(graphView);
+            displayModel.unregister(gxTable);
 
-        // The Pane that graphView is part of (In this case boder pane)
-        Pane parent = (Pane) graphView.getParent();
+            // New Displaymodel created from the chosen file
+            try {
+                this.displayModel = new DisplayModel(file);
+            } catch (WrongFileFormatException e) {
+                e.printStackTrace();//TODO handle this
+            }
 
-        // Removing the graphView so that later a graphView with other properties can be added.
-        parent.getChildren().remove(graphView);
+            // The Pane that graphView is part of (In this case boder pane)
+            Pane parent = (Pane) graphView.getParent();
 
-        // TODO check how height is set
-        double height = graphView.getHeight();
-        double width = graphView.getWidth();
+            // Removing the graphView so that later a graphView with other properties can be added.
+            parent.getChildren().remove(graphView);
 
-        try {
-            // TODO propably needs to be done like this, so that properties can be changed as well.
-            this.graphView = new GraphView();
+            // TODO check how height is set
+            double height = graphView.getHeight();
+            double width = graphView.getWidth();
 
-            //TODO Check what needs to happen for this to work correctly
-            graphView.setPrefSize(width, height);
-            // Adding the new graphView to the pane
-            parent.getChildren().add(graphView);
-            parent.setPrefSize(1000, 100);
-            parent.layout();
+            try {
+                // TODO propably needs to be done like this, so that properties can be changed as well.
+                this.graphView = new GraphView();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+                //TODO Check what needs to happen for this to work correctly
+                graphView.setPrefSize(width, height);
+                // Adding the new graphView to the pane
+                parent.getChildren().add(graphView);
+                parent.setPrefSize(1000, 100);
+                parent.layout();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            // new Tableview
+            this.gxTable = new GXTableView();
+
+            displayModel.register(graphView);
+            //Reinitializing all the views
+            init();
+            displayModel.notifyObservers();
         }
-
-        // new Tableview
-        this.gxTable = new GXTableView();
-
-        displayModel.register(graphView);
-        //Reinitializing all the views
-        init();
-        displayModel.notifyObservers();
-
-
-
     }
 
     /**
