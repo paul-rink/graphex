@@ -183,12 +183,14 @@ public class DisplayModel extends Subject {
     public void highlightShortestPathTo(GXVertex vertex) {
         LinkedList<GXEdge> highlightedEdges = new LinkedList<>();
         GXEdge edge = vertex.getPrevious();
+        GXVertex cur = vertex;
         while (edge != null) {
             edge.setHighlighted(true);
             highlightedEdges.add(edge);
             try {
                 //next edge
-                edge = graph.opposite(vertex, vertex.getPrevious()).getPrevious();
+                cur = graph.opposite(cur, edge);
+                edge = cur.getPrevious();
             } catch (ElementNotInGraphException e) {
                 e.printStackTrace();
             }

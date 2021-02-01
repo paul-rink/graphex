@@ -174,6 +174,7 @@ public class Controller {
     public void onSelectEdge(SmartGraphEdge e) {
         try {
             displayModel.markEdge((GXEdge) e.getUnderlyingEdge());
+            setActions();
         } catch (ElementNotInGraphException elementNotInGraphException) {
             new ElementNotInGraphAlert().show();
         } catch (EdgeCompletesACircleException edgeCompletesACircleException) {
