@@ -250,14 +250,21 @@ public class DisplayModel extends Subject {
                 //additionally needs to check whether this vertex is also connected to another visible edge
                 //this would mean the vertex stays visible
                 boolean stayVisible = false;
-                for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
-                    if (otherEdge.isVisible()) {
-                        stayVisible = true;
+                int i = graph.getEndingVertex().getId();
+                int j = otherVertex.getId();
+                if(graph.getEndingVertex().getId() == otherVertex.getId()
+                        || graph.getStartingVertex().getId() == otherVertex.getId()){
+
+                } else {
+                    for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
+                        if (otherEdge.isVisible()) {
+                            stayVisible = true;
+                        }
                     }
-                }
-                if (!stayVisible) {
-                    otherVertex.setVisible(false);
-                    visibleGraph.removeVertex(otherVertex);
+                    if (!stayVisible) {
+                        otherVertex.setVisible(false);
+                        visibleGraph.removeVertex(otherVertex);
+                    }
                 }
 
 
