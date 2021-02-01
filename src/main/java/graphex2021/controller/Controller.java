@@ -280,8 +280,8 @@ public class Controller {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
-                        double x = vert.getPositionCenterX() / graphView.getWidth();
-                        double y = vert.getPositionCenterY() / graphView.getHeight();
+                        double x = vert.getPositionCenterX() / graphView.getSceneWidth();
+                        double y = vert.getPositionCenterY() / graphView.getSceneHeight();
                         System.out.println(vert.getUnderlyingVertex().element().toString() + " x = " + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
 
                     }
