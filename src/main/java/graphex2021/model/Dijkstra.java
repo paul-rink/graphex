@@ -79,6 +79,29 @@ public class Dijkstra implements Algorithm {
         return true;
     }
 
+    @Override
+    public boolean isCorrectDistance(GXVertex goal, int distance) {
+        return distance == dist[goal.getId()];
+    }
+
+    @Override
+    public boolean isCorrectPath(GXVertex goal) {
+        GXVertex current = goal;
+        GXVertex previous = prev[goal.getId()];
+        while (previous != null) {
+            GXEdge edge;
+            try {
+                edge = g.getEdge(current, previous);
+                if (!edge.isMarked()) return false;
+            } catch (ElementNotInGraphException e) {
+                e.printStackTrace();
+            }
+            current = previous;
+            previous = prev[current.getId()];
+        }
+        return true;
+    }
+
     /**
      * Resets the dijkstra instance for a new given graph. Sets starting vertex, arrays for dist and prev and clears
      * unmarked PQ as well steps.

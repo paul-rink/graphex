@@ -102,6 +102,18 @@ public class DisplayModel extends Subject {
        return false;
     }
 
+    /**
+     * Checks if the user steps do match all the algo steps. So the user needs the exact same number if steps in the
+     * same order.
+     * @param distance is the input distance from user
+     * @return {@code true} if user steps do match algo steps, {@code false} otherwise.
+     */
+    public boolean checkFinishRequirements(int distance) {
+        boolean correctDistance = algo.isCorrectDistance(graph.getEndingVertex(), distance);
+        boolean correctPath = algo.isCorrectPath(graph.getStartingVertex());
+        return correctDistance && correctPath;
+    }
+
     public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {
         //check if edge is blocked because of circle -> create alert
         if (edge.isBlocked()) throw new EdgeCompletesACircleException("");
@@ -167,8 +179,36 @@ public class DisplayModel extends Subject {
         }
         //Creating new visibileGraph that will then have the starting and end vertex be visible.
         this.visibleGraph = new GXGraph();
+        this.userSteps = new LinkedList<>();
         initialVisibleGraph();
         notifyObservers();
+    }
+
+    /**
+     * Highlights all edges that are on the path from start to the given vertex.
+     * @param vertex is the vertex, the path should be highlighted for.
+     */
+    public void highlightShortestPathTo(GXVertex vertex) {
+        LinkedList<GXEdge> highlightedEdges = new LinkedList<>();
+        GXEdge edge = vertex.getPrevious();
+        GXVertex cur = vertex;
+        while (edge != null) {
+            edge.setHighlighted(true);
+            highlightedEdges.add(edge);
+            try {
+                //next edge
+                cur = graph.opposite(cur, edge);
+                edge = cur.getPrevious();
+            } catch (ElementNotInGraphException e) {
+                e.printStackTrace();
+            }
+        }
+        notifyObservers();
+
+        //reset vertex property, that they are no longer highlighted for further steps
+        for (GXEdge e: highlightedEdges) {
+            e.setHighlighted(false);
+        }
     }
 
     private void makeVisible(GXEdge edge) { }
@@ -245,14 +285,21 @@ public class DisplayModel extends Subject {
                 //additionally needs to check whether this vertex is also connected to another visible edge
                 //this would mean the vertex stays visible
                 boolean stayVisible = false;
-                for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
-                    if (otherEdge.isVisible()) {
-                        stayVisible = true;
+                int i = graph.getEndingVertex().getId();
+                int j = otherVertex.getId();
+                if(graph.getEndingVertex().getId() == otherVertex.getId()
+                        || graph.getStartingVertex().getId() == otherVertex.getId()){
+
+                } else {
+                    for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
+                        if (otherEdge.isVisible()) {
+                            stayVisible = true;
+                        }
                     }
-                }
-                if (!stayVisible) {
-                    otherVertex.setVisible(false);
-                    visibleGraph.removeVertex(otherVertex);
+                    if (!stayVisible) {
+                        otherVertex.setVisible(false);
+                        visibleGraph.removeVertex(otherVertex);
+                    }
                 }
 
 
@@ -312,6 +359,7 @@ public class DisplayModel extends Subject {
         final GXVertex start = graph.getStartingVertex();
         start.mark();
         start.setVisible(true);
+        start.setCurrentDistance(0);
         visibleGraph.insertVertex(start);
         visibleGraph.setStartingVertex(start);
         try {

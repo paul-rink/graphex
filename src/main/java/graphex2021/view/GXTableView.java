@@ -127,7 +127,7 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         } else if (markedVertices == 1) {
             // one vertex marked ==> reset or undo the first selection ==> works too
             reset();
-        } else {
+        } else if (markedVertices > prevMarked) {
             // one less marked vertex ==> something undone
             undo();
             this.prevMarked = markedVertices;

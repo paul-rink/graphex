@@ -91,6 +91,14 @@
     -fx-opacity: 0.8;
 }
 
+.highlightedEdge{
+    -fx-stroke-width: 12;
+    -fx-stroke: #0ed61f;
+    -fx-fill: transparent; /*important for curved edges. do not remove */
+    -fx-stroke-line-cap: round;
+    -fx-opacity: 0.8;
+}
+
 
 .testClass {
     -fx-stroke-width: 15;
