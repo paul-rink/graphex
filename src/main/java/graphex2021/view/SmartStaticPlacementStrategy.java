@@ -27,11 +27,11 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
     }
 
     private double calcXFromRelative(double width, int x) {
-        return (x / 100.) * width;
+        return (x / 1000.) * width;
     }
 
     private double calcYFromRelative(double height, int y) {
-        return (y / 100.) * height;
+        return (y / 1000.) * height;
     }
 
 }
