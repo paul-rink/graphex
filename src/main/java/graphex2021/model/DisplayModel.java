@@ -176,6 +176,31 @@ public class DisplayModel extends Subject {
         notifyObservers();
     }
 
+    /**
+     * Highlights all edges that are on the path from start to the given vertex.
+     * @param vertex is the vertex, the path should be highlighted for.
+     */
+    public void highlightShortestPathTo(GXVertex vertex) {
+        LinkedList<GXEdge> highlightedEdges = new LinkedList<>();
+        GXEdge edge = vertex.getPrevious();
+        while (edge != null) {
+            edge.setHighlighted(true);
+            highlightedEdges.add(edge);
+            try {
+                //next edge
+                edge = graph.opposite(vertex, vertex.getPrevious()).getPrevious();
+            } catch (ElementNotInGraphException e) {
+                e.printStackTrace();
+            }
+        }
+        notifyObservers();
+
+        //reset vertex property, that they are no longer highlighted for further steps
+        for (GXEdge e: highlightedEdges) {
+            e.setHighlighted(false);
+        }
+    }
+
     private void makeVisible(GXEdge edge) { }
 
     private void makeVisible(GXVertex vertex) { }

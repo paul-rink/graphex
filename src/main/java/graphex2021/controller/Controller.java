@@ -136,7 +136,19 @@ public class Controller {
     public void setActions() {
         graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
+
         //TODO WIP
+        for (Node vertex : graphView.getChildren())  {
+            if (vertex.toString().contains("Circle")) {
+                SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
+                vert.setOnMousePressed((MouseEvent mouseEvent) -> {
+                    if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                        System.out.println("Clicked me!");
+                        onVertexClicked((SmartGraphVertex) vertex);
+                    }
+                });
+            }
+        }
 
         for (Node node : graphView.getChildren()) {
            if (node instanceof SmartGraphVertexNode) {
@@ -212,6 +224,15 @@ public class Controller {
      */
     public void onGenerateRandom() {
 
+    }
+
+    /**
+     *When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
+     * selected edges by the user.
+     */
+    public void onVertexClicked(SmartGraphVertex v) {
+        GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
+        displayModel.highlightShortestPathTo(vertex);
     }
 
     /**

@@ -66,6 +66,9 @@ public class GraphView extends SmartGraphPanel implements Observer {
         if (gxEdge.isHint()) {
             edge.setStyleClass("hintEdge");
         }
+        if (gxEdge.isHighlighted()) {
+            edge.setStyleClass("highlightedEdge");
+        }
     }
 
     private void styleVertex(SmartGraphVertexNode vertex) {
