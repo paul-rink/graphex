@@ -46,7 +46,7 @@ public class DisplayModel extends Subject {
         algoSteps = algo.getSequence(graph);
         //mark starting vertex from the beginning and update distances for incidents, if algo request a starting vertex
         if (algo.hasStartingVertex()) {
-            graph.getStartingVertex().mark();
+            graph.getStartingVertex().mark();//TODO why mark here
             try {
                 updateCurrentDistancesForIncidents(graph.getStartingVertex());
             } catch (ElementNotInGraphException e) {
