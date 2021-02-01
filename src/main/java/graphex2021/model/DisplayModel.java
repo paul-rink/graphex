@@ -14,6 +14,11 @@ import java.util.LinkedList;
  * @version 1.0 14.01.2021
  */
 public class DisplayModel extends Subject {
+    //TODO best way to use File.Separator
+    private static final File EXAMPLEGRAPH = new File(
+            "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
+                    + File.separator + "GraphData" + File.separator + "exampleGraph.json");
+
     private LinkedList<Step> userSteps;
     private LinkedList<Step> algoSteps;
     private Algorithm algo;
@@ -21,18 +26,13 @@ public class DisplayModel extends Subject {
     private GXGraph visibleGraph;
 
     public DisplayModel() throws WrongFileFormatException {
-        //TODO maybe better way for file Separator
-        File example = new File(
-                "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
-                        + File.separator + "GraphData" + File.separator + "exampleGraph.json");
-        loadGraph(example);
-        return;
+        this(EXAMPLEGRAPH);
     }
 
     public DisplayModel(File inputFile) throws WrongFileFormatException {
         loadGraph(inputFile);
-        return;
     }
+
     private void loadGraph(File inputFile) throws WrongFileFormatException {
         try {
             this.graph = new GXGraph(inputFile);
