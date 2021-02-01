@@ -101,8 +101,11 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
-        STRAT.place(this.widthProperty().doubleValue(), this.heightProperty().doubleValue(),
-                super.theGraph, vertices);
+        double sceneHeight = getSceneHeight();
+        double sceneWidth = getSceneWidth();
+        STRAT.place(sceneWidth, sceneHeight, super.theGraph, vertices);
+        //STRAT.place(this.widthProperty().doubleValue(), this.heightProperty().doubleValue(),
+        //        super.theGraph, vertices);
     }
 
     private void iterChildren() {
@@ -124,5 +127,21 @@ public class GraphView extends SmartGraphPanel implements Observer {
         this.heightProperty().addListener(listener);
 
 
+    }
+
+    /**
+     * method that returns the width of the scene the graphView is in in pixels
+     * @return the width of the scene in pixels
+     */
+    public double getSceneWidth() {
+        return this.getScene().getWidth();
+    }
+
+    /**
+     * method that returns the height of the scene the graphView is in in pixels
+     * @return the height of the scene in pixels
+     */
+    public double getSceneHeight() {
+        return this.getScene().getHeight();
     }
 }
