@@ -48,8 +48,15 @@
 
     </top>
     <center>
+<<<<<<< Updated upstream
         <GraphView fx:id="graphView" prefHeight="1532" prefWidth="938" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover;">
         </GraphView>
+=======
+        <Pane prefHeight="1440" prefWidth="2560" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
+            <GraphView fx:id="graphView" prefHeight="1440" prefWidth="2560">
+            </GraphView>
+        </Pane>
+>>>>>>> Stashed changes
     </center>
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
