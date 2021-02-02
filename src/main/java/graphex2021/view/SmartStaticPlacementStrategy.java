@@ -24,11 +24,9 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
     @Override
     public <V, E> void place(double width, double height, Graph<V, E> theGraph, Collection<?
             extends SmartGraphVertex<V>> vertices) {
-        // 1532 is the width of the window second part is added height
         //TODO find way to get rid of magic numbers
         //TODO find way to get the actual height of the Pane and not the size of the window
-        //TODO check behaviour below min size of the graphView pane
-        double startingRatio = this.startWidth / (this.startHeight + 38. + 29.);
+        double startingRatio = this.startWidth / (this.startHeight );
         double currentRatio = width / height;
 
         /*
@@ -45,23 +43,26 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
         if (width < minWidth &&  height < minHeight) {
             System.out.println("both");
             if (correctionFactor < 1) {
-                for (SmartGraphVertex<V> vertex : vertices) {
-
-                    GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
-                    double x = calcFromRelative(minWidth, vert.getPosition().getPosition()[0]) * correctionFactor;
-                    double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]);
-                    vertex.setPosition(x, y);
-                }
-            } else if (correctionFactor > 1) {
+                System.out.println("taller");
                 for (SmartGraphVertex<V> vertex : vertices) {
 
                     GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
                     double x = calcFromRelative(minWidth, vert.getPosition().getPosition()[0]);
-                    double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]) * correctionFactor;
+                    double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]);
+                    vertex.setPosition(x, y);
+                }
+            } else if (correctionFactor > 1) {
+                System.out.println("wider");
+                for (SmartGraphVertex<V> vertex : vertices) {
+
+                    GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+                    double x = calcFromRelative(minWidth, vert.getPosition().getPosition()[0]);
+                    double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]);
                     vertex.setPosition(x, y);
                 }
             }
         } else {
+
             if (correctionFactor == 1) {
 
                 for (SmartGraphVertex<V> vertex : vertices) {
@@ -106,7 +107,7 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
         this.startWidth = width;
         this.startHeight = height;
         this.minWidth = minWidth;
-        this.minHeight = minHeight + 38. + 29.;
+        this.minHeight = minHeight;
     }
 
     private double calcFromRelative(double size, int x) {

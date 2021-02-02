@@ -4,6 +4,7 @@ import com.brunomnsilva.smartgraph.graphview.*;
 import graphex2021.model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 
 import java.io.File;
@@ -103,10 +104,11 @@ public class GraphView extends SmartGraphPanel implements Observer {
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
         double sceneHeight = getSceneHeight();
         double sceneWidth = getSceneWidth();
-        STRAT.place(sceneWidth, sceneHeight, super.theGraph, vertices);
+        //STRAT.place(sceneWidth, sceneHeight, super.theGraph, vertices);
         //TODO somehow need to get the real size of the pane, so that will
         // start reacting correctly to changes below min size
-        //STRAT.place(this.getWidth(), this.getHeight(), super.theGraph, vertices);
+        Pane parent = (Pane) this.getParent();
+        STRAT.place(parent.getWidth(), parent.getHeight(), super.theGraph, vertices);
 
     }
 
