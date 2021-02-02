@@ -8,10 +8,12 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.BorderPane?>
-
-<?import graphex2021.view.GraphView?>
 <?import javafx.scene.layout.Pane?>
+<?import graphex2021.view.*?>
+
+
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
+
     <top>
         <MenuBar>
             <menus>
@@ -37,7 +39,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#unlockHints" text="Tips freischalten" />
                         <MenuItem fx:id="check" disable="true" mnemonicParsing="false" onAction="#onCheck" text="Fehler check" />
                         <MenuItem fx:id="tip" disable="true" mnemonicParsing="false" onAction="#hintRequest" text="Tip" />
-                        <MenuItem disable ="false" mnemonicParsing="false" onAction = "#showTable" text="Tabelle"/>
+                        <MenuItem mnemonicParsing="false" onAction="#showTable" text="Tabelle" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Informationen">
@@ -51,18 +53,17 @@
                 <Blend />
             </effect>
         </MenuBar>
-
     </top>
     <center>
-        <Pane prefHeight="1538" prefWidth="960" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
-            <GraphView fx:id="graphView" prefHeight="720" prefWidth="1290">
+        <Pane minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
+            <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532">
             </GraphView>
         </Pane>
     </center>
    <bottom>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ToolBar  BorderPane.alignment="CENTER">
         <items>
-            <Button fx:id="finish" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartPressed" text="Start" />
+            <Button fx:id="finish" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartPressed" text="Start"  />
             <Button mnemonicParsing="false" onAction="#onUndoPressed" text="Undo" />
             <TextField fx:id="finTextField" promptText="Kürzeste Distanz" />
             <Button mnemonicParsing="false" onAction="#onFinishedPressed" text="Fertig" />

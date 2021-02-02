@@ -4,7 +4,9 @@ import com.brunomnsilva.smartgraph.graphview.*;
 import graphex2021.model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import javafx.scene.control.Tooltip;
+
 
 
 import javax.tools.Tool;
@@ -17,7 +19,7 @@ import java.util.LinkedHashSet;
 
 public class GraphView extends SmartGraphPanel implements Observer {
 
-    private static final SmartPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
+    private static final SmartStaticPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
 
     //TODO check best Filepath separator
     private static final File STYLESHEET = new File("src" + File.separator + "main"
@@ -35,8 +37,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
     @Override
     public void doUpdate(Subject s) {
         GXGraph visible = (GXGraph) s.getState();
-        GraphAdapter underlyiigGraph = (GraphAdapter) super.theGraph;
-        underlyiigGraph.setGXGraph(visible);
+        GraphAdapter underlyingGraph = (GraphAdapter) super.theGraph;
+        underlyingGraph.setGXGraph(visible);
         this.update();
     }
 
@@ -83,7 +85,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
             vertex.setStyleClass("vertex");
             showTooltip(vertex, false);
         }
-        //TODO rethinkt the order here
+        //TODO rethink the order here
         if (gxVertex.isHint()) {
             vertex.setStyleClass("hintVertex");
         }
@@ -92,9 +94,9 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     @Override
     public void init() {
+        STRAT.setSizes(this.getWidth(), this.getHeight(), this.getMinWidth(), this.getMinHeight());
         super.init();
-
-
+        graphViewSizeListener();
     }
 
     private void placeVertices() {
@@ -108,8 +110,14 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
-        STRAT.place(this.widthProperty().doubleValue(), this.heightProperty().doubleValue(),
-                super.theGraph, vertices);
+        double sceneHeight = getSceneHeight();
+        double sceneWidth = getSceneWidth();
+        //STRAT.place(sceneWidth, sceneHeight, super.theGraph, vertices);
+        //TODO somehow need to get the real size of the pane, so that will
+        // start reacting correctly to changes below min size
+        Pane parent = (Pane) this.getParent();
+        STRAT.place(parent.getWidth(), parent.getHeight(), super.theGraph, vertices);
+
     }
 
     private void iterChildren() {
@@ -127,9 +135,12 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     private void graphViewSizeListener() {
         ChangeListener<Number> listener = ((observable, oldValue, newValue) -> this.placeVertices());
-        this.widthProperty().addListener(listener);
-        this.heightProperty().addListener(listener);
+
+        this.getScene().widthProperty().addListener(listener);
+        this.getScene().heightProperty().addListener(listener);
+
     }
+
 
     /**
      * Enables or disables tooltip for a vertex that contains its current distance to the start.
@@ -144,5 +155,21 @@ public class GraphView extends SmartGraphPanel implements Observer {
         } else {
             Tooltip.uninstall(v, t);
         }
+    }
+
+    /**
+     * method that returns the width of the scene the graphView is in in pixels
+     * @return the width of the scene in pixels
+     */
+    public double getSceneWidth() {
+        return this.getScene().getWidth();
+    }
+
+    /**
+     * method that returns the height of the scene the graphView is in in pixels
+     * @return the height of the scene in pixels
+     */
+    public double getSceneHeight() {
+        return this.getScene().getHeight();
     }
 }
