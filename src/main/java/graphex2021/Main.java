@@ -21,7 +21,7 @@ public class Main extends Application {
 
         primaryStage.setTitle("GraphEx");
 
-        primaryStage.setScene(new Scene(root, 1024, 768));
+        primaryStage.setScene(new Scene(root));
 
         primaryStage.show();
 
