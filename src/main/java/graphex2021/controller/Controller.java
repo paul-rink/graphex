@@ -7,15 +7,22 @@ import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
+import javax.tools.Tool;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Optional;
 
 public class Controller {
@@ -79,14 +86,22 @@ public class Controller {
     }
 
     /**
-     * Tells the model that user interaction with graph should be enabled and the user is about to perform edge/vertex
-     * selections (for a specific algorithm).
+     * Start/finish button has 2 states. In Start state, pressing will enable interactions with the graph. The button
+     * then switches in finish state. This will be disabled until the "done" button is pressed with success. Then the
+     * finish button will be enabled. Pressing the finish button will (reset the graphview and turn the button state
+     * into start state) exiting the program.
+     * the
      */
     public void onStartPressed() {
-        //TODO reenable the button if it ist possible to finish.
         setActions();
-        finish.setText("Beenden");
-        finish.setDisable(true);
+        if(finish.getText().equals("Start")) {
+            finish.setText("Beenden");
+            finish.setDisable(true);
+        } else {
+            Stage stage = (Stage) finish.getScene().getWindow();
+            stage.close();
+            finish.setText("Start");
+        }
 
     }
 
@@ -107,6 +122,7 @@ public class Controller {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Geschafft!");
                 alert.setContentText("Super! Du hast den kürzesten Weg gefunden!");
+                finish.setDisable(false);
             } else {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Noch nicht!");
@@ -136,7 +152,18 @@ public class Controller {
     public void setActions() {
         graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
+
         //TODO WIP
+        for (Node vertexNode : graphView.getChildren())  {
+            if (vertexNode.toString().contains("Circle")) {
+                SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
+                vert.setOnMousePressed((MouseEvent mouseEvent) -> {
+                    if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                        onVertexClicked(vert);
+                    }
+                });
+            }
+        }
 
         for (Node node : graphView.getChildren()) {
            if (node instanceof SmartGraphVertexNode) {
@@ -162,6 +189,7 @@ public class Controller {
     public void onSelectEdge(SmartGraphEdge e) {
         try {
             displayModel.markEdge((GXEdge) e.getUnderlyingEdge());
+            setActions();
         } catch (ElementNotInGraphException elementNotInGraphException) {
             new ElementNotInGraphAlert().show();
         } catch (EdgeCompletesACircleException edgeCompletesACircleException) {
@@ -204,7 +232,95 @@ public class Controller {
      * Will give the user the ability to load a new graph via a json file.
      */
     public void onLoadGraph() {
+        Stage browserStage = new Stage();
+        browserStage.setTitle("FileBrowser");
+        browserStage.setScene(new Scene(new VBox()));
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Graph auswaehlen");
+        File file = fileChooser.showOpenDialog(browserStage);
+        if (file == null) {
+            // do nothing as no file was selected or the selction was cancelled
+        }
+        else {
+            //unregistering the graphView and table from the Displaymodel, since they will not be needed.
+            //Also so they won't updated everytime
+            initNewGraph(file);
+        }
+    }
 
+    public void onStandardGraph() {
+        File file = new File("src/main/resources/graphex2021/GraphData/exampleGraph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph1() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph2() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-3-node-graph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph3() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph4() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph5() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
+        initNewGraph(file);
+    }
+
+    private void initNewGraph(File file) {
+        displayModel.unregister(graphView);
+        displayModel.unregister(gxTable);
+        try {
+            this.displayModel = new DisplayModel(file);
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();//TODO handle this
+        }
+
+        // The Pane that graphView is part of (In this case boder pane)
+        Pane parent = (Pane) graphView.getParent();
+
+        // Removing the graphView so that later a graphView with other properties can be added.
+        parent.getChildren().remove(graphView);
+        finish.setText("Start");
+        finish.setDisable(false);
+
+        // TODO check how height is set
+        double height = graphView.getHeight();
+        double width = graphView.getWidth();
+
+        try {
+            // TODO propably needs to be done like this, so that properties can be changed as well.
+            this.graphView = new GraphView();
+
+            //TODO Check what needs to happen for this to work correctly
+            graphView.setPrefSize(width, height);
+            // Adding the new graphView to the pane
+            parent.getChildren().add(graphView);
+            parent.setPrefSize(1000, 100);
+            parent.layout();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // new Tableview
+        this.gxTable = new GXTableView();
+
+        displayModel.register(graphView);
+        //Reinitializing all the views
+        init();
+        displayModel.notifyObservers();
     }
 
     /**
@@ -212,6 +328,16 @@ public class Controller {
      */
     public void onGenerateRandom() {
 
+    }
+
+    /**
+     *When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
+     * selected edges by the user.
+     * @param v
+     */
+    public void onVertexClicked(SmartGraphVertexNode v) {
+        GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
+        displayModel.highlightShortestPathTo(vertex);
     }
 
     /**

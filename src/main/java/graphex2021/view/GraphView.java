@@ -5,8 +5,11 @@ import graphex2021.model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.Tooltip;
 
 
+
+import javax.tools.Tool;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,6 +70,9 @@ public class GraphView extends SmartGraphPanel implements Observer {
         if (gxEdge.isHint()) {
             edge.setStyleClass("hintEdge");
         }
+        if (gxEdge.isHighlighted()) {
+            edge.setStyleClass("highlightedEdge");
+        }
     }
 
     private void styleVertex(SmartGraphVertexNode vertex) {
@@ -74,8 +80,10 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
         if (gxVertex.isMarked()) {
             vertex.setStyleClass("markedVertex");
+            showTooltip(vertex, true);
         } else if (!gxVertex.isMarked()) {
             vertex.setStyleClass("vertex");
+            showTooltip(vertex, false);
         }
         //TODO rethink the order here
         if (gxVertex.isHint()) {
@@ -127,10 +135,26 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     private void graphViewSizeListener() {
         ChangeListener<Number> listener = ((observable, oldValue, newValue) -> this.placeVertices());
+
         this.getScene().widthProperty().addListener(listener);
         this.getScene().heightProperty().addListener(listener);
 
+    }
 
+
+    /**
+     * Enables or disables tooltip for a vertex that contains its current distance to the start.
+     * @param v is the vertex
+     * @param show is {@code true} if tooltip should be displayed, {@code false} otherwise.
+     */
+    private void showTooltip(SmartGraphVertexNode v, boolean show) {
+        GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
+        Tooltip t = new Tooltip("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+        if (show) {
+            Tooltip.install(v, t);
+        } else {
+            Tooltip.uninstall(v, t);
+        }
     }
 
     /**

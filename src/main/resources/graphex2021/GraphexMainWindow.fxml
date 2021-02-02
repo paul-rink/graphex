@@ -9,16 +9,22 @@
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
-
 <?import graphex2021.view.*?>
 
-<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
+
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
+
     <top>
         <MenuBar>
             <menus>
                 <Menu mnemonicParsing="false" text="Vorlagen">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#onStandardGraph" text="Standard Graph" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph1" text="Graph 1" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph2" text="Graph 2" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph3" text="Graph 3" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph4" text="Graph 4" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph5" text="Graph 5" />
                         <MenuItem mnemonicParsing="false" onAction="#onGenerateRandom" text="zufälliger Graph" />
                         <MenuItem mnemonicParsing="false" onAction="#onLoadGraph" text="Graph importieren..." />
                     </items>

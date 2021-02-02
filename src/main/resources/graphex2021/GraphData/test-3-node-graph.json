@@ -1,0 +1,39 @@
+{
+    "type" : "GXGraph",
+    "vertices" : [
+        {
+            "name" : "S",
+            "posx" : "20",
+            "posy" : "70",
+        },
+        {
+            "name" : "A",
+            "posx" : "55",
+            "posy" : "25",
+        },
+        {
+            "name" : "Z",
+            "posx" : "70",
+            "posy" : "35",
+        }
+    ],
+    "edges" : [
+        {
+            "vertex1" : "S",
+            "vertex2" : "Z",
+            "weight" :"20",
+        },
+        {
+            "vertex1" : "S",
+            "vertex2" : "A",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "A",
+            "vertex2" : "Z",
+            "weight" :"1",
+        }
+    ],
+    "startVertex" : "S",
+    "endVertex" : "Z"
+}

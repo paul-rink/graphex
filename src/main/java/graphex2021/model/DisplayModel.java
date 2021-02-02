@@ -14,20 +14,28 @@ import java.util.LinkedList;
  * @version 1.0 14.01.2021
  */
 public class DisplayModel extends Subject {
+    //TODO best way to use File.Separator
+    private static final File EXAMPLEGRAPH = new File(
+            "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
+                    + File.separator + "GraphData" + File.separator + "exampleGraph.json");
+
     private LinkedList<Step> userSteps;
     private LinkedList<Step> algoSteps;
     private Algorithm algo;
     private GXGraph graph;
     private GXGraph visibleGraph;
 
-    public DisplayModel() throws WrongFileFormatException{
-        //TODO maybe better way for file Separator
-        File example = new File(
-                "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
-                        + File.separator + "GraphData" + File.separator + "exampleGraph.json");
+    public DisplayModel() throws WrongFileFormatException {
+        this(EXAMPLEGRAPH);
+    }
 
+    public DisplayModel(File inputFile) throws WrongFileFormatException {
+        loadGraph(inputFile);
+    }
+
+    private void loadGraph(File inputFile) throws WrongFileFormatException {
         try {
-            this.graph = new GXGraph(example);
+            this.graph = new GXGraph(inputFile);
         } catch (ElementNotInGraphException eni) {
             //TODO better way to handle this. Wrong exception here
         }
@@ -38,7 +46,7 @@ public class DisplayModel extends Subject {
         algoSteps = algo.getSequence(graph);
         //mark starting vertex from the beginning and update distances for incidents, if algo request a starting vertex
         if (algo.hasStartingVertex()) {
-            graph.getStartingVertex().mark();
+            graph.getStartingVertex().mark();//TODO why mark here
             try {
                 updateCurrentDistancesForIncidents(graph.getStartingVertex());
             } catch (ElementNotInGraphException e) {
@@ -174,6 +182,33 @@ public class DisplayModel extends Subject {
         this.userSteps = new LinkedList<>();
         initialVisibleGraph();
         notifyObservers();
+    }
+
+    /**
+     * Highlights all edges that are on the path from start to the given vertex.
+     * @param vertex is the vertex, the path should be highlighted for.
+     */
+    public void highlightShortestPathTo(GXVertex vertex) {
+        LinkedList<GXEdge> highlightedEdges = new LinkedList<>();
+        GXEdge edge = vertex.getPrevious();
+        GXVertex cur = vertex;
+        while (edge != null) {
+            edge.setHighlighted(true);
+            highlightedEdges.add(edge);
+            try {
+                //next edge
+                cur = graph.opposite(cur, edge);
+                edge = cur.getPrevious();
+            } catch (ElementNotInGraphException e) {
+                e.printStackTrace();
+            }
+        }
+        notifyObservers();
+
+        //reset vertex property, that they are no longer highlighted for further steps
+        for (GXEdge e: highlightedEdges) {
+            e.setHighlighted(false);
+        }
     }
 
     private void makeVisible(GXEdge edge) { }

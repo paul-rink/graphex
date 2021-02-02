@@ -1,0 +1,24 @@
+{
+    "type" : "GXGraph",
+    "vertices" : [
+        {
+            "name" : "S",
+            "posx" : "30",
+            "posy" : "30",
+        },
+        {
+            "name" : "Z",
+            "posx" : "70",
+            "posy" : "50",
+        }
+    ],
+    "edges" : [
+        {
+            "vertex1" : "S",
+            "vertex2" : "Z",
+            "weight" :"99",
+        }
+    ],
+    "startVertex" : "S",
+    "endVertex" : "Z"
+}

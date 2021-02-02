@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft/2019-09/schema#",
     "title": "GXGraph-schema",
-    "description": "the schema used for the definition used for a GXGraph used in GrpahEx",
+    "description": "the schema used for the definition used for a GXGraph used in GraphEx. Coordinates are a relative percentage of the window size (range 0-1000).",
     "type": "object",
     "required":["vertices", "edges", "startVertex", "endVertex"],
     "properties":

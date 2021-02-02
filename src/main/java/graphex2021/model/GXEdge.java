@@ -57,6 +57,8 @@ public class GXEdge implements Edge<String, String> {
      */
     private boolean isHint;
 
+    private boolean isHighlighted;
+
     /**
      * Creates new Vertex with a weight
      * TODO finish constructor to contain missing attributes. Check how to generate the IDs
@@ -220,5 +222,23 @@ public class GXEdge implements Edge<String, String> {
 
     public boolean isHint() {
         return this.isHint;
+    }
+
+
+
+    /**
+     * Returns whether the vertex is highlighted.
+     * @return {@code true} if the vertex is highlighted, {@code false} else.
+     */
+    public boolean isHighlighted() {
+        return isHighlighted;
+    }
+
+    /**
+     * Sets the highlight status for this vertex.
+     * @param highlighted is {@code true} if the vertex should be highlighted, {@code false} otherwise.
+     */
+    public void setHighlighted(boolean highlighted) {
+        isHighlighted = highlighted;
     }
 }
