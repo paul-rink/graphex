@@ -19,6 +19,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
+import javax.tools.Tool;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Optional;
@@ -143,13 +144,13 @@ public class Controller {
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
 
         //TODO WIP
-        for (Node vertex : graphView.getChildren())  {
-            if (vertex.toString().contains("Circle")) {
-                SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
+        for (Node vertexNode : graphView.getChildren())  {
+            if (vertexNode.toString().contains("Circle")) {
+                SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                         System.out.println("Clicked me!");
-                        onVertexClicked((SmartGraphVertex) vertex);
+                        onVertexClicked(vert);
                     }
                 });
             }
@@ -289,8 +290,9 @@ public class Controller {
     /**
      *When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
      * selected edges by the user.
+     * @param v
      */
-    public void onVertexClicked(SmartGraphVertex v) {
+    public void onVertexClicked(SmartGraphVertexNode v) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
         displayModel.highlightShortestPathTo(vertex);
     }
