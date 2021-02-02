@@ -279,26 +279,29 @@ public class DisplayModel extends Subject {
         for (GXEdge edge : visibleGraph.incidentEdges(vertex)) {
             try {
                 GXVertex otherVertex = edge.getNextVertex();
-                edge.setVisible(false);
-                visibleGraph.removeEdge(edge);
+                //need this check because getNextVertex can return null
+                if (otherVertex != null) {
+                    edge.setVisible(false);
+                    visibleGraph.removeEdge(edge);
 
-                //additionally needs to check whether this vertex is also connected to another visible edge
-                //this would mean the vertex stays visible
-                boolean stayVisible = false;
-                int i = graph.getEndingVertex().getId();
-                int j = otherVertex.getId();
-                if(graph.getEndingVertex().getId() == otherVertex.getId()
-                        || graph.getStartingVertex().getId() == otherVertex.getId()){
+                    //additionally needs to check whether this vertex is also connected to another visible edge
+                    //this would mean the vertex stays visible
+                    boolean stayVisible = false;
+                    int i = graph.getEndingVertex().getId();
+                    int j = otherVertex.getId();
+                    if (graph.getEndingVertex().getId() == otherVertex.getId()
+                            || graph.getStartingVertex().getId() == otherVertex.getId()) {
 
-                } else {
-                    for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
-                        if (otherEdge.isVisible()) {
-                            stayVisible = true;
+                    } else {
+                        for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
+                            if (otherEdge.isVisible()) {
+                                stayVisible = true;
+                            }
                         }
-                    }
-                    if (!stayVisible) {
-                        otherVertex.setVisible(false);
-                        visibleGraph.removeVertex(otherVertex);
+                        if (!stayVisible) {
+                            otherVertex.setVisible(false);
+                            visibleGraph.removeVertex(otherVertex);
+                        }
                     }
                 }
 
