@@ -6,9 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Tooltip;
-
-
-
+import javax.tools.Tool;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,6 +73,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
         if (gxEdge.isHighlighted()) {
             edge.setStyleClass("highlightedEdge");
         }
+        showDistanceTooltip(edge);
     }
 
     private void styleVertex(SmartGraphVertexNode vertex) {
@@ -82,10 +81,10 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
         if (gxVertex.isMarked()) {
             vertex.setStyleClass("markedVertex");
-            showTooltip(vertex, true);
+            showDistanceTooltip(vertex, true);
         } else if (!gxVertex.isMarked()) {
             vertex.setStyleClass("vertex");
-            showTooltip(vertex, false);
+            showDistanceTooltip(vertex, false);
         }
         //TODO rethink the order here
         if (gxVertex.isHint()) {
@@ -150,13 +149,31 @@ public class GraphView extends SmartGraphPanel implements Observer {
      * @param v is the vertex
      * @param show is {@code true} if tooltip should be displayed, {@code false} otherwise.
      */
-    private void showTooltip(SmartGraphVertexNode v, boolean show) {
+    private void showDistanceTooltip(SmartGraphVertexNode v, boolean show) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
         Tooltip t = new Tooltip("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
         if (show) {
             Tooltip.install(v, t);
         } else {
             Tooltip.uninstall(v, t);
+        }
+    }
+
+    /**
+     * Tooltip for an edge that will display the resulting distance to the next vertex. This feature is only available
+     * for unmarked and unblocked edges and with exact 1 marked vertex.
+     * @param e is the hovered edge
+     */
+    private void showDistanceTooltip(SmartGraphEdgeLine e) {
+        GXEdge gxEdge = (GXEdge) e.getUnderlyingEdge();
+        GXVertex unmarkedVertex = gxEdge.getNextVertex();
+        Tooltip t = new Tooltip();
+        if (gxEdge.getNextDistance() != GXEdge.INVALID_DISTANCE) {
+            t.setText("Distanz nach " + unmarkedVertex.element()
+                    + " über " + gxEdge.opposite(unmarkedVertex).element() + " = " + gxEdge.getNextDistance());
+            Tooltip.install(e, t);
+        } else {
+            Tooltip.uninstall(e, t);
         }
     }
 
