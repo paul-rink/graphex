@@ -119,6 +119,8 @@ public class DisplayModel extends Subject {
         if (edge.isBlocked()) throw new EdgeCompletesACircleException("");
         //get unmarked vertex of edge and mark both in graph
         GXVertex nextVertex = edge.getNextVertex();
+        //this shouldn't happen: an edge can only be marked if exact one vertex of it is marked
+        if (nextVertex == null) return;
         edge.mark();
         //get distance to already marked vertex of marked edge
         int curDist = graph.opposite(nextVertex, edge).getCurrentDistance();
@@ -279,26 +281,29 @@ public class DisplayModel extends Subject {
         for (GXEdge edge : visibleGraph.incidentEdges(vertex)) {
             try {
                 GXVertex otherVertex = edge.getNextVertex();
-                edge.setVisible(false);
-                visibleGraph.removeEdge(edge);
+                //need this check because getNextVertex can return null
+                if (otherVertex != null) {
+                    edge.setVisible(false);
+                    visibleGraph.removeEdge(edge);
 
-                //additionally needs to check whether this vertex is also connected to another visible edge
-                //this would mean the vertex stays visible
-                boolean stayVisible = false;
-                int i = graph.getEndingVertex().getId();
-                int j = otherVertex.getId();
-                if(graph.getEndingVertex().getId() == otherVertex.getId()
-                        || graph.getStartingVertex().getId() == otherVertex.getId()){
+                    //additionally needs to check whether this vertex is also connected to another visible edge
+                    //this would mean the vertex stays visible
+                    boolean stayVisible = false;
+                    int i = graph.getEndingVertex().getId();
+                    int j = otherVertex.getId();
+                    if (graph.getEndingVertex().getId() == otherVertex.getId()
+                            || graph.getStartingVertex().getId() == otherVertex.getId()) {
 
-                } else {
-                    for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
-                        if (otherEdge.isVisible()) {
-                            stayVisible = true;
+                    } else {
+                        for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
+                            if (otherEdge.isVisible()) {
+                                stayVisible = true;
+                            }
                         }
-                    }
-                    if (!stayVisible) {
-                        otherVertex.setVisible(false);
-                        visibleGraph.removeVertex(otherVertex);
+                        if (!stayVisible) {
+                            otherVertex.setVisible(false);
+                            visibleGraph.removeVertex(otherVertex);
+                        }
                     }
                 }
 
@@ -366,6 +371,8 @@ public class DisplayModel extends Subject {
             updateCurrentDistancesForIncidents(start);
             for (GXEdge edge : graph.incidentEdges(start)) {
                 GXVertex toIns = edge.getNextVertex();
+                //shouldn't never be the case, at beginning only start is marked and no other vertex
+                if(toIns == null) continue;
                 //Setting the initial edge visible and the vertex at the other end
                 toIns.setVisible(true);
                 edge.setVisible(true);
