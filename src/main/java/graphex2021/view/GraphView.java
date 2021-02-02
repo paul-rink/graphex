@@ -165,10 +165,13 @@ public class GraphView extends SmartGraphPanel implements Observer {
     private void showDistanceTooltip(SmartGraphEdgeLine e) {
         GXEdge gxEdge = (GXEdge) e.getUnderlyingEdge();
         GXVertex unmarkedVertex = gxEdge.getNextVertex();
+        Tooltip t = new Tooltip();
         if (gxEdge.getNextDistance() != GXEdge.INVALID_DISTANCE) {
-            Tooltip t = new Tooltip("Distanz nach " + unmarkedVertex.element()
+            t.setText("Distanz nach " + unmarkedVertex.element()
                     + " über " + gxEdge.opposite(unmarkedVertex).element() + " = " + gxEdge.getNextDistance());
             Tooltip.install(e, t);
+        } else {
+            Tooltip.uninstall(e, t);
         }
     }
 
