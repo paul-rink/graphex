@@ -24,12 +24,18 @@ import javafx.scene.layout.BorderPane;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.Optional;
 
 public class Controller {
 
     private static final String UNLOCKPASSWORD = "Algorithmus";
     private static final String PATTERN_FIN_TEXT = "[0-9]+";
+    private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -292,8 +298,11 @@ public class Controller {
 
         // Removing the graphView so that later a graphView with other properties can be added.
         parent.getChildren().remove(graphView);
+
+        //TODO maybe add reset buttons method to reset the button state for all since it is needed more tha once.
         finish.setText("Start");
         finish.setDisable(false);
+
 
         // TODO check how height is set
         double height = graphView.getHeight();
@@ -414,11 +423,39 @@ public class Controller {
         }
     }
 
-    private void bindAspectRation() {
-        Stage stage = (Stage) borderPane.getScene().getWindow();
-        double ratio = stage.getWidth() / stage.getHeight();
-        stage.minWidthProperty().bind(stage.heightProperty().multiply(ratio));
-        stage.minHeightProperty().bind(stage.widthProperty().divide(ratio));
-
+    /**
+     * Takes a JSON file for a graph and checks if a background image with the same name is in the folder.
+     * Checks for file types like jpg, jpeg, png, bmp
+     *
+     * @param graph the json file that the graph was saved in
+     * @return the {@link File} of the matching background. If there is no {@link File} with this name null is returned.
+     */
+    private File loadBackgroundImage(File graph) {
+        String name = graph.getName();
+        Path pathToDir = Path.of(graph.getParentFile().getAbsolutePath());
+        String[] allowedPictures = new String[IMAGE_FILE_ENDINGS.length];
+        for (int i = 0; i < IMAGE_FILE_ENDINGS.length; i++) {
+            allowedPictures[i] = name + IMAGE_FILE_ENDINGS;
+        }
+        if (Files.isDirectory(pathToDir)) {
+            try {
+                DirectoryStream dirStream = Files.newDirectoryStream(pathToDir);
+                Iterator<Path> fileIterator = dirStream.iterator();
+                Path pathToFile = null;
+                while (fileIterator.hasNext()) {
+                    pathToFile = fileIterator.next();
+                    for (String allowedName : IMAGE_FILE_ENDINGS) {
+                        if (pathToFile.endsWith(Path.of(allowedName))) {
+                            dirStream.close();
+                            return new File(String.valueOf(pathToFile));
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                //TODO
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }
