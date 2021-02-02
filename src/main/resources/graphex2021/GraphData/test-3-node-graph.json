@@ -3,18 +3,18 @@
     "vertices" : [
         {
             "name" : "S",
-            "posx" : "20",
-            "posy" : "70",
+            "posx" : "200",
+            "posy" : "700",
         },
         {
             "name" : "A",
-            "posx" : "55",
-            "posy" : "25",
+            "posx" : "550",
+            "posy" : "250",
         },
         {
             "name" : "Z",
-            "posx" : "70",
-            "posy" : "35",
+            "posx" : "700",
+            "posy" : "350",
         }
     ],
     "edges" : [
