@@ -132,7 +132,7 @@ public class GXEdge implements Edge<String, String> {
     /**
      * Gets the unmarked GXVertex from this edge, which will be the next to mark if edge is picked
      *
-     * @return the unmarked vertex that is part of this edge
+     * @return the unmarked vertex that is part of this edge or {@code null} if both vertices are marked or unmarked.
      */
     public GXVertex getNextVertex() {
         if (inboundVertex.isMarked() && !outboundVertex.isMarked()) {
@@ -140,7 +140,7 @@ public class GXEdge implements Edge<String, String> {
         } else if (outboundVertex.isMarked() && !inboundVertex.isMarked()) {
             return inboundVertex;
         } else {
-            throw new IllegalArgumentException("Both vertices of this edge are marked - Should be blocked");
+            return null;
         }
     }
 
