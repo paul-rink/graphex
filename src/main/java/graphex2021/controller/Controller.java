@@ -6,10 +6,11 @@ import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
-import javafx.collections.ObservableList;
+
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+
 import javafx.scene.Node;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -20,13 +21,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
-import javax.tools.Tool;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Optional;
 
 public class Controller {
@@ -282,10 +279,11 @@ public class Controller {
     private void initNewGraph(File file) {
         displayModel.unregister(graphView);
         displayModel.unregister(gxTable);
+        graphView.removeListener();
+
         try {
             this.displayModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
-
             e.printStackTrace();//TODO handle this
         }
 
@@ -309,9 +307,8 @@ public class Controller {
             graphView.setPrefSize(width, height);
             // Adding the new graphView to the pane
             parent.getChildren().add(graphView);
-            parent.setPrefSize(1000, 100);
+            graphView.getParent();
             parent.layout();
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -319,7 +316,6 @@ public class Controller {
         // new Tableview
         this.gxTable = new GXTableView();
 
-        displayModel.register(graphView);
         //Reinitializing all the views
         init();
         displayModel.notifyObservers();
