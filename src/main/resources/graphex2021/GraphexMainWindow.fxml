@@ -49,15 +49,15 @@
         </MenuBar>
     </top>
     <center>
-        <Pane minHeight="938" minWidth="1532" prefHeight="938" prefWidth="1532" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
-            <GraphView fx:id="graphView" minHeight="768" minWidth="1024">
+        <Pane minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
+            <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532">
             </GraphView>
         </Pane>
     </center>
    <bottom>
       <ToolBar  BorderPane.alignment="CENTER">
         <items>
-            <Button fx:id="finish" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartPressed" text="Start" />
+            <Button fx:id="finish" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartPressed" text="Start"  />
             <Button mnemonicParsing="false" onAction="#onUndoPressed" text="Undo" />
             <TextField fx:id="finTextField" promptText="Kürzeste Distanz" />
             <Button mnemonicParsing="false" onAction="#onFinishedPressed" text="Fertig" />

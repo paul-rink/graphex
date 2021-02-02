@@ -15,7 +15,7 @@ import java.util.LinkedHashSet;
 
 public class GraphView extends SmartGraphPanel implements Observer {
 
-    private static final SmartPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
+    private static final SmartStaticPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
 
     //TODO check best Filepath separator
     private static final File STYLESHEET = new File("src" + File.separator + "main"
@@ -76,7 +76,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
         } else if (!gxVertex.isMarked()) {
             vertex.setStyleClass("vertex");
         }
-        //TODO rethinkt the order here
+        //TODO rethink the order here
         if (gxVertex.isHint()) {
             vertex.setStyleClass("hintVertex");
         }
@@ -85,6 +85,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     @Override
     public void init() {
+        STRAT.setSizes(this.getWidth(), this.getHeight(), this.getMinWidth(), this.getMinHeight());
         super.init();
         graphViewSizeListener();
     }
