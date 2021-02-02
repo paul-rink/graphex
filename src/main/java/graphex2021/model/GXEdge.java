@@ -21,6 +21,15 @@ public class GXEdge implements Edge<String, String> {
     private GXVertex inboundVertex;
     private GXVertex outboundVertex;
 
+    /**
+     * If a distance is invalid, it holds the value -1;
+     */
+    public static final int INVALID_DISTANCE = -1;
+    /**
+     * Is the distance to the unmarked vertex of this edge.
+     */
+    private int nextDistance;
+
 
     /**
      * The element contained in the edge
@@ -78,6 +87,7 @@ public class GXEdge implements Edge<String, String> {
         this.weight = weight;
         this.id = id;
         this.isHint = false;
+        this.nextDistance = INVALID_DISTANCE;
 
     }
 
@@ -240,5 +250,33 @@ public class GXEdge implements Edge<String, String> {
      */
     public void setHighlighted(boolean highlighted) {
         isHighlighted = highlighted;
+    }
+
+    /**
+     * Returns the distance to the unmarked vertex of this edge. This requires exact one marked vertex. So edge is not
+     * allowed to be blocked, selected or not marked at all.
+     * @return distance if conditions are met, else {@link GXEdge#INVALID_DISTANCE}
+     */
+    public int getNextDistance() {
+        GXVertex unMarkedVertex = this.getNextVertex();
+        if (!isMarked() && !isBlocked() && unMarkedVertex != null) {
+            return opposite(unMarkedVertex).getCurrentDistance() + this.weight;
+        } else {
+            return INVALID_DISTANCE;
+        }
+    }
+
+    /**
+     * Gets opposite {@link GXVertex} in this edge for a given vertex.
+     * @return the opposite vertex and {@code null} if given vertex is not part of this edge.
+     */
+    public GXVertex opposite(GXVertex vertex) {
+        if (vertex.equals(inboundVertex)) {
+            return outboundVertex;
+        } else if (vertex.equals(outboundVertex)) {
+            return inboundVertex;
+        } else {
+            return null;
+        }
     }
 }
