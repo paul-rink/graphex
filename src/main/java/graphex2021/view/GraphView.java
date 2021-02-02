@@ -6,9 +6,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Tooltip;
-
-
 import javax.tools.Tool;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,6 +26,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
     private static final File PROPERTIES = new File("src" + File.separator + "main"
             + File.separator + "resources" + File.separator + "graphex2021"
             + File.separator + "smartgraph.properties");
+
+    private ChangeListener listener;
 
     public GraphView() throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
@@ -110,10 +111,6 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
-        double sceneHeight = getSceneHeight();
-        double sceneWidth = getSceneWidth();
-        //STRAT.place(sceneWidth, sceneHeight, super.theGraph, vertices);
-        //TODO somehow need to get the real size of the pane, so that will
         // start reacting correctly to changes below min size
         Pane parent = (Pane) this.getParent();
         STRAT.place(parent.getWidth(), parent.getHeight(), super.theGraph, vertices);
@@ -138,7 +135,12 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
         this.getScene().widthProperty().addListener(listener);
         this.getScene().heightProperty().addListener(listener);
+        this.listener = listener;
+    }
 
+    public void removeListener() {
+        this.getScene().widthProperty().removeListener(listener);
+        this.getScene().heightProperty().removeListener(listener);
     }
 
 

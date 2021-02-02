@@ -6,9 +6,11 @@ import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
+
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+
 import javafx.scene.Node;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -19,10 +21,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
-import javax.tools.Tool;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.Optional;
 
 public class Controller {
@@ -234,16 +235,13 @@ public class Controller {
     public void onLoadGraph() {
         Stage browserStage = new Stage();
         browserStage.setTitle("FileBrowser");
-        browserStage.setScene(new Scene(new VBox()));
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Graph auswaehlen");
+        FileChooser.ExtensionFilter jsonFilter
+                 = new FileChooser.ExtensionFilter("JSON filter (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(jsonFilter);
         File file = fileChooser.showOpenDialog(browserStage);
-        if (file == null) {
-            // do nothing as no file was selected or the selction was cancelled
-        }
-        else {
-            //unregistering the graphView and table from the Displaymodel, since they will not be needed.
-            //Also so they won't updated everytime
+        if (!(file == null)) {
             initNewGraph(file);
         }
     }
@@ -281,6 +279,8 @@ public class Controller {
     private void initNewGraph(File file) {
         displayModel.unregister(graphView);
         displayModel.unregister(gxTable);
+        graphView.removeListener();
+
         try {
             this.displayModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
@@ -307,9 +307,8 @@ public class Controller {
             graphView.setPrefSize(width, height);
             // Adding the new graphView to the pane
             parent.getChildren().add(graphView);
-            parent.setPrefSize(1000, 100);
+            graphView.getParent();
             parent.layout();
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -317,7 +316,6 @@ public class Controller {
         // new Tableview
         this.gxTable = new GXTableView();
 
-        displayModel.register(graphView);
         //Reinitializing all the views
         init();
         displayModel.notifyObservers();
