@@ -110,7 +110,7 @@ public class DisplayModel extends Subject {
      */
     public boolean checkFinishRequirements(int distance) {
         boolean correctDistance = algo.isCorrectDistance(graph.getEndingVertex(), distance);
-        boolean correctPath = algo.isCorrectPath(graph.getStartingVertex());
+        boolean correctPath = algo.isCorrectPath(graph.getEndingVertex());
         return correctDistance && correctPath;
     }
 
