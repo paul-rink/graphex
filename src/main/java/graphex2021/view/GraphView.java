@@ -33,8 +33,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
     @Override
     public void doUpdate(Subject s) {
         GXGraph visible = (GXGraph) s.getState();
-        GraphAdapter underlyiigGraph = (GraphAdapter) super.theGraph;
-        underlyiigGraph.setGXGraph(visible);
+        GraphAdapter underlyingGraph = (GraphAdapter) super.theGraph;
+        underlyingGraph.setGXGraph(visible);
         this.update();
     }
 
@@ -86,8 +86,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
     @Override
     public void init() {
         super.init();
-
-
+        graphViewSizeListener();
     }
 
     private void placeVertices() {
@@ -104,8 +103,10 @@ public class GraphView extends SmartGraphPanel implements Observer {
         double sceneHeight = getSceneHeight();
         double sceneWidth = getSceneWidth();
         STRAT.place(sceneWidth, sceneHeight, super.theGraph, vertices);
-        //STRAT.place(this.widthProperty().doubleValue(), this.heightProperty().doubleValue(),
-        //        super.theGraph, vertices);
+        //TODO somehow need to get the real size of the pane, so that will
+        // start reacting correctly to changes below min size
+        //STRAT.place(this.getWidth(), this.getHeight(), super.theGraph, vertices);
+
     }
 
     private void iterChildren() {
@@ -123,8 +124,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     private void graphViewSizeListener() {
         ChangeListener<Number> listener = ((observable, oldValue, newValue) -> this.placeVertices());
-        this.widthProperty().addListener(listener);
-        this.heightProperty().addListener(listener);
+        this.getScene().widthProperty().addListener(listener);
+        this.getScene().heightProperty().addListener(listener);
 
 
     }

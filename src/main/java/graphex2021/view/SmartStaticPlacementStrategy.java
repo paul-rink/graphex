@@ -15,23 +15,64 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
     @Override
     public <V, E> void place(double width, double height, Graph<V, E> theGraph, Collection<?
             extends SmartGraphVertex<V>> vertices) {
+        // 1532 is the width of the window second part is added height
+        //TODO find way to get rid of magic numbers
+        //TODO find way to get the actual height of the Pane and not the size of the window
+        //TODO check behaviour below min size of the graphView pane
+        double startingRatio = 1532. / (938. + 38. + 29.);
+        double currentRatio = width / height;
 
-        for (SmartGraphVertex<V> vertex : vertices) {
+        /*
+        If the factor is 1 the ratio of the sides is still kept correct.
+        If it is less than 1 the window it means the window is wider in relation relation to its height than before
+        ==> the height needs to be stretched by correction factor
+        (E.g. starts out at 1000:1000 == Stretched to 2000:1000 ==> currentRatio = 2,
+        startingscale = 1 ==> correction factor = 0.5
+        Analog for greater than 1
+         */
 
-            GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
-            double x = calcXFromRelative(width, vert.getPosition().getPosition()[0]);
-            double y = calcYFromRelative(height, vert.getPosition().getPosition()[1]);
+        double correctionFactor = currentRatio / startingRatio;
 
-            vertex.setPosition(x, y);
+        if (correctionFactor == 1) {
+
+            for (SmartGraphVertex<V> vertex : vertices) {
+
+                GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+                double x = calcFromRelative(width, vert.getPosition().getPosition()[0]);
+                double y = calcFromRelative(height, vert.getPosition().getPosition()[1]);
+
+                vertex.setPosition(x, y);
+
+            }
+        } else if (correctionFactor > 1) {
+            for (SmartGraphVertex<V> vertex : vertices) {
+
+                GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+                double x = calcFromRelative(width, vert.getPosition().getPosition()[0]);
+                double y = calcFromRelative(height ,vert.getPosition().getPosition()[1]) * correctionFactor;
+
+                vertex.setPosition(x, y);
+            }
+
+        } else if (correctionFactor < 1) {
+            for (SmartGraphVertex<V> vertex : vertices) {
+
+                GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+
+                // if the width has relatively grown more than the height the correctionFactor is less tha zero
+                // ==> the x coordinates need to be stretched. The factor would be
+                // (startingHeight / startingWidth) / ( currentHeight/ currentWidth) == (1 / coorectionFactor)
+                double x = calcFromRelative(width, vert.getPosition().getPosition()[0]) * (1 / correctionFactor);
+                double y = calcFromRelative(height ,vert.getPosition().getPosition()[1]);
+
+                vertex.setPosition(x, y);
+            }
         }
+
     }
 
-    private double calcXFromRelative(double width, int x) {
+    private double calcFromRelative(double width, int x) {
         return (x / 1000.) * width;
-    }
-
-    private double calcYFromRelative(double height, int y) {
-        return (y / 1000.) * height;
     }
 
 }
