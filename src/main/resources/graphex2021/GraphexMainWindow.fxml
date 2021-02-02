@@ -17,7 +17,12 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Vorlagen">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" onAction="#onStandardGraph" text="Standard Graph" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph1" text="Graph 1" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph2" text="Graph 2" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph3" text="Graph 3" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph4" text="Graph 4" />
+                        <MenuItem mnemonicParsing="false" onAction="#onGraph5" text="Graph 5" />
                         <MenuItem mnemonicParsing="false" onAction="#onGenerateRandom" text="zufälliger Graph" />
                         <MenuItem mnemonicParsing="false" onAction="#onLoadGraph" text="Graph importieren..." />
                     </items>

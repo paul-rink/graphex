@@ -22,6 +22,7 @@ import javafx.scene.layout.BorderPane;
 import javax.tools.Tool;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Optional;
 
 public class Controller {
@@ -235,49 +236,81 @@ public class Controller {
         else {
             //unregistering the graphView and table from the Displaymodel, since they will not be needed.
             //Also so they won't updated everytime
-            displayModel.unregister(graphView);
-            displayModel.unregister(gxTable);
-
-            // New Displaymodel created from the chosen file
-            try {
-                this.displayModel = new DisplayModel(file);
-            } catch (WrongFileFormatException e) {
-                e.printStackTrace();//TODO handle this
-            }
-
-            // The Pane that graphView is part of (In this case boder pane)
-            Pane parent = (Pane) graphView.getParent();
-
-            // Removing the graphView so that later a graphView with other properties can be added.
-            parent.getChildren().remove(graphView);
-
-            // TODO check how height is set
-            double height = graphView.getHeight();
-            double width = graphView.getWidth();
-
-            try {
-                // TODO propably needs to be done like this, so that properties can be changed as well.
-                this.graphView = new GraphView();
-
-                //TODO Check what needs to happen for this to work correctly
-                graphView.setPrefSize(width, height);
-                // Adding the new graphView to the pane
-                parent.getChildren().add(graphView);
-                parent.setPrefSize(1000, 100);
-                parent.layout();
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            // new Tableview
-            this.gxTable = new GXTableView();
-
-            displayModel.register(graphView);
-            //Reinitializing all the views
-            init();
-            displayModel.notifyObservers();
+            initNewGraph(file);
         }
+    }
+
+    public void onStandardGraph() {
+        File file = new File("src/main/resources/graphex2021/GraphData/exampleGraph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph1() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph2() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-3-node-graph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph3() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph4() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
+        initNewGraph(file);
+    }
+
+    public void onGraph5() {
+        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
+        initNewGraph(file);
+    }
+
+    private void initNewGraph(File file) {
+        displayModel.unregister(graphView);
+        displayModel.unregister(gxTable);
+        try {
+            this.displayModel = new DisplayModel(file);
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();//TODO handle this
+        }
+
+        // The Pane that graphView is part of (In this case boder pane)
+        Pane parent = (Pane) graphView.getParent();
+
+        // Removing the graphView so that later a graphView with other properties can be added.
+        parent.getChildren().remove(graphView);
+
+        // TODO check how height is set
+        double height = graphView.getHeight();
+        double width = graphView.getWidth();
+
+        try {
+            // TODO propably needs to be done like this, so that properties can be changed as well.
+            this.graphView = new GraphView();
+
+            //TODO Check what needs to happen for this to work correctly
+            graphView.setPrefSize(width, height);
+            // Adding the new graphView to the pane
+            parent.getChildren().add(graphView);
+            parent.setPrefSize(1000, 100);
+            parent.layout();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // new Tableview
+        this.gxTable = new GXTableView();
+
+        displayModel.register(graphView);
+        //Reinitializing all the views
+        init();
+        displayModel.notifyObservers();
     }
 
     /**
