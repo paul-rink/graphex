@@ -15,7 +15,7 @@
     <top>
         <MenuBar>
             <menus>
-                <Menu mnemonicParsing="false" text="Vorlagen">GraphView?
+                <Menu mnemonicParsing="false" text="Vorlagen">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Close" />
                         <MenuItem mnemonicParsing="false" onAction="#onGenerateRandom" text="zufälliger Graph" />
@@ -50,7 +50,7 @@
     </top>
     <center>
         <Pane prefHeight="1538" prefWidth="960" style="-fx-background-image: url('graphex2021/bg-map-1.jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
-            <GraphView fx:id="graphView" prefHeight="Infinity" prefWidth="Infinity">
+            <GraphView fx:id="graphView" prefHeight="720" prefWidth="1290">
             </GraphView>
         </Pane>
     </center>
