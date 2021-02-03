@@ -18,7 +18,19 @@ public class GXGraphRandomTest {
 
     @Test
     public void testGenerateVertices() {
-        GXGraph graph = new GXGraphRandom(5, 0);
+        GXGraph graph = new GXGraphRandom(5, 10, 0, true);
         Assert.assertEquals(5, graph.vertices().size());
+    }
+
+    @Test
+    public void testGenerateEdges1() {
+        GXGraph graph = new GXGraphRandom(2, 10, 100, true);
+        Assert.assertEquals(1, graph.edges().size());
+    }
+
+    @Test
+    public void testGenerateEdges2() {
+        GXGraph graph = new GXGraphRandom(4, 10, 60, true);
+        Assert.assertEquals(4, graph.vertices());
     }
 }
