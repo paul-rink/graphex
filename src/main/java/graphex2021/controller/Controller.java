@@ -22,9 +22,10 @@ import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
 
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+import javax.swing.*;
+import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -292,7 +293,7 @@ public class Controller {
         } catch (WrongFileFormatException e) {
             e.printStackTrace();//TODO handle this
         }
-
+        File background = this.loadBackgroundImage(file);
         // The Pane that graphView is part of (In this case boder pane)
         Pane parent = (Pane) graphView.getParent();
 
@@ -438,23 +439,40 @@ public class Controller {
             allowedPictures[i] = name + IMAGE_FILE_ENDINGS;
         }
         if (Files.isDirectory(pathToDir)) {
+            Path pathToFile = null;
             try {
                 DirectoryStream dirStream = Files.newDirectoryStream(pathToDir);
                 Iterator<Path> fileIterator = dirStream.iterator();
-                Path pathToFile = null;
                 while (fileIterator.hasNext()) {
                     pathToFile = fileIterator.next();
                     for (String allowedName : IMAGE_FILE_ENDINGS) {
                         if (pathToFile.endsWith(Path.of(allowedName))) {
                             dirStream.close();
-                            return new File(String.valueOf(pathToFile));
+                            break;
                         }
                     }
                 }
+                dirStream.close();
             } catch (IOException e) {
                 //TODO
                 e.printStackTrace();
             }
+
+            // Check whether it isn't just an image by name but also an image file
+            File imageFile = new File(pathToFile.toString());
+            // Try with resources so that the stream is correctly closed if something goes wrong
+            try (InputStream inputStream = new FileInputStream(imageFile)) {
+                try {
+                    if (ImageIO.read(inputStream) == null) {
+                        return null;
+                    }
+                } catch (IOException ioe) {
+                    return null;
+                }
+            } catch (IOException e) {
+                return null;
+            }
+            return imageFile;
         }
         return null;
     }
