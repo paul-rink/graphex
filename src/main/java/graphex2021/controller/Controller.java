@@ -3,6 +3,7 @@ package graphex2021.controller;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
+import com.brunomnsilva.smartgraph.graphview.SmartRandomPlacementStrategy;
 import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
@@ -25,6 +26,7 @@ import javafx.scene.layout.BorderPane;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Optional;
+import java.util.Random;
 
 public class Controller {
 
@@ -321,11 +323,58 @@ public class Controller {
         displayModel.notifyObservers();
     }
 
+    //TODO better way to compromise this
+    private void initNewGraph(GXGraph graph) {
+        displayModel.unregister(graphView);
+        displayModel.unregister(gxTable);
+        graphView.removeListener();
+        this.displayModel = new DisplayModel(graph);
+
+        // The Pane that graphView is part of (In this case boder pane)
+        Pane parent = (Pane) graphView.getParent();
+
+        // Removing the graphView so that later a graphView with other properties can be added.
+        parent.getChildren().remove(graphView);
+        finish.setText("Start");
+        finish.setDisable(false);
+
+        // TODO check how height is set
+        double height = graphView.getHeight();
+        double width = graphView.getWidth();
+
+        try {
+            // TODO propably needs to be done like this, so that properties can be changed as well.
+            this.graphView = new GraphView();
+
+            //TODO Check what needs to happen for this to work correctly
+            graphView.setPrefSize(width, height);
+            // Adding the new graphView to the pane
+            parent.getChildren().add(graphView);
+            graphView.getParent();
+            parent.layout();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // new Tableview
+        this.gxTable = new GXTableView();
+
+        //Reinitializing all the views
+        init();
+        displayModel.notifyObservers();
+    }
+
     /**
      * When this is called, a random Graph will be created an load in the view.
      */
     public void onGenerateRandom() {
-
+        //TODO maybe give user the options
+        int numVertices = new Random().nextInt(GXGraphRandom.MAX_NUMBER_VERTICES) + 1;
+        int maxWeight = new Random().nextInt(10);
+        //just for example p 20..60
+        int p = new Random().nextInt(41) +20;
+        GXGraph rndGraph = new GXGraphRandom(numVertices, maxWeight, p, true);
+        initNewGraph(rndGraph);
     }
 
     /**
