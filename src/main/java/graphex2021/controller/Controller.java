@@ -25,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -102,7 +103,7 @@ public class Controller {
      */
     public void onStartPressed() {
         setActions();
-        if(finish.getText().equals("Start")) {
+        if (finish.getText().equals("Start")) {
             finish.setText("Beenden");
             finish.setDisable(true);
         } else {
@@ -162,7 +163,7 @@ public class Controller {
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
 
         //TODO WIP
-        for (Node vertexNode : graphView.getChildren())  {
+        for (Node vertexNode : graphView.getChildren()) {
             if (vertexNode.toString().contains("Circle")) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
@@ -174,11 +175,11 @@ public class Controller {
         }
 
         for (Node node : graphView.getChildren()) {
-           if (node instanceof SmartGraphVertexNode) {
-               SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
-               vert.setOnMouseEntered(s-> onHoverEdge((SmartGraphVertexNode) s.getSource()));
-               vert.setOnMouseExited(s -> onLeaveEdge((SmartGraphVertexNode) s.getSource()));
-           }
+            if (node instanceof SmartGraphVertexNode) {
+                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
+                vert.setOnMouseEntered(s -> onHoverEdge((SmartGraphVertexNode) s.getSource()));
+                vert.setOnMouseExited(s -> onLeaveEdge((SmartGraphVertexNode) s.getSource()));
+            }
         }
     }
 
@@ -192,6 +193,7 @@ public class Controller {
 
     /**
      * Is called when an edge is selected.
+     *
      * @param e is the edge the user selected.
      */
     public void onSelectEdge(SmartGraphEdge e) {
@@ -207,6 +209,7 @@ public class Controller {
 
     /**
      * Is called when the user selects a vertex.
+     *
      * @param v is the selected vertex.
      */
     public void onSelectVertex(SmartGraphVertex v) {
@@ -235,7 +238,6 @@ public class Controller {
     }
 
 
-
     /**
      * Will give the user the ability to load a new graph via a json file.
      */
@@ -245,7 +247,7 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Graph auswaehlen");
         FileChooser.ExtensionFilter jsonFilter
-                 = new FileChooser.ExtensionFilter("JSON filter (*.json)", "*.json");
+                = new FileChooser.ExtensionFilter("JSON filter (*.json)", "*.json");
         fileChooser.getExtensionFilters().add(jsonFilter);
         File file = fileChooser.showOpenDialog(browserStage);
         if (!(file == null)) {
@@ -293,7 +295,20 @@ public class Controller {
         } catch (WrongFileFormatException e) {
             e.printStackTrace();//TODO handle this
         }
-        File background = this.loadBackgroundImage(file);
+
+        // TODO check how height is set
+        double height = graphView.getHeight();
+        double width = graphView.getWidth();
+
+        File image = findBackgroundImage(file);
+        /*
+        BufferedImage image =
+        if (image != null) {
+            height = image.getHeight();
+            width = image.getWidth();
+            image.f
+        }
+        */
         // The Pane that graphView is part of (In this case boder pane)
         Pane parent = (Pane) graphView.getParent();
 
@@ -304,10 +319,6 @@ public class Controller {
         finish.setText("Start");
         finish.setDisable(false);
 
-
-        // TODO check how height is set
-        double height = graphView.getHeight();
-        double width = graphView.getWidth();
 
         try {
             // TODO propably needs to be done like this, so that properties can be changed as well.
@@ -339,8 +350,9 @@ public class Controller {
     }
 
     /**
-     *When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
+     * When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
      * selected edges by the user.
+     *
      * @param v
      */
     public void onVertexClicked(SmartGraphVertexNode v) {
@@ -362,6 +374,7 @@ public class Controller {
 
     /**
      * Will update the model for the specific algorithm that is selected.
+     *
      * @param algo is the algorithm that is selected to be performed at the graph in the view.
      */
     public void onAlgorithmSelect(Algorithm algo) {
@@ -409,14 +422,15 @@ public class Controller {
     }
 
     private void displayCoordinates() {
-        for (Node vertex : graphView.getChildren())  {
+        for (Node vertex : graphView.getChildren()) {
             if (vertex.toString().contains("Circle")) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
                         double x = vert.getPositionCenterX() / graphView.getSceneWidth();
                         double y = vert.getPositionCenterY() / graphView.getSceneHeight();
-                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = " + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
+                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = "
+                                + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
 
                     }
                 });
@@ -431,24 +445,23 @@ public class Controller {
      * @param graph the json file that the graph was saved in
      * @return the {@link File} of the matching background. If there is no {@link File} with this name null is returned.
      */
-    private File loadBackgroundImage(File graph) {
+    private File findBackgroundImage(File graph) {
         String name = graph.getName();
         Path pathToDir = Path.of(graph.getParentFile().getAbsolutePath());
         String[] allowedPictures = new String[IMAGE_FILE_ENDINGS.length];
         for (int i = 0; i < IMAGE_FILE_ENDINGS.length; i++) {
             allowedPictures[i] = name + IMAGE_FILE_ENDINGS;
         }
+        Path pathToFile = null;
         if (Files.isDirectory(pathToDir)) {
-            Path pathToFile = null;
             try {
                 DirectoryStream dirStream = Files.newDirectoryStream(pathToDir);
-                Iterator<Path> fileIterator = dirStream.iterator();
-                while (fileIterator.hasNext()) {
-                    pathToFile = fileIterator.next();
+                for (Path path : (Iterable<Path>) dirStream) {
+                    pathToFile = path;
                     for (String allowedName : IMAGE_FILE_ENDINGS) {
                         if (pathToFile.endsWith(Path.of(allowedName))) {
                             dirStream.close();
-                            break;
+                            return new File(String.valueOf(pathToFile));
                         }
                     }
                 }
@@ -457,23 +470,25 @@ public class Controller {
                 //TODO
                 e.printStackTrace();
             }
-
-            // Check whether it isn't just an image by name but also an image file
-            File imageFile = new File(pathToFile.toString());
-            // Try with resources so that the stream is correctly closed if something goes wrong
-            try (InputStream inputStream = new FileInputStream(imageFile)) {
-                try {
-                    if (ImageIO.read(inputStream) == null) {
-                        return null;
-                    }
-                } catch (IOException ioe) {
-                    return null;
-                }
-            } catch (IOException e) {
-                return null;
-            }
-            return imageFile;
         }
         return null;
+    }
+
+    private BufferedImage checkIfActuallyImage(File imageFile) {
+        // Check whether it isn't just an image by name but also an image file
+        // Try with resources so that the stream is correctly closed if something goes wrong
+        try (InputStream inputStream = new FileInputStream(imageFile)) {
+            try {
+                BufferedImage image = ImageIO.read(inputStream);
+                if (image != null) {
+                    return image;
+                }
+            } catch (IOException ioe) {
+                return null;
+            }
+        } catch (IOException e) {
+            return null;
+        }
+
     }
 }
