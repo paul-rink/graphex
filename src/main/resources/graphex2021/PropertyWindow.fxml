@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="227.0" prefWidth="297.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.ControllerProp">
+   <children>
+      <TextField layoutX="196.0" layoutY="54.0" prefHeight="26.0" prefWidth="59.0" text="e.g. 10" />
+      <TitledPane animated="false" prefHeight="29.0" prefWidth="321.0" text="Choose properties for your random graph.">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+        </content>
+      </TitledPane>
+      <Text layoutX="14.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number of vertices (n=1-26)" wrappingWidth="181.6417694091797" />
+      <Text layoutX="14.0" layoutY="110.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edge density (1-100)" wrappingWidth="181.6417694091797" />
+      <TextField layoutX="196.0" layoutY="92.0" prefHeight="26.0" prefWidth="59.0" text="e.g. 40" />
+      <CheckBox layoutX="14.0" layoutY="138.0" mnemonicParsing="false" text="Allow isolates" />
+      <Button layoutX="196.0" layoutY="163.0" mnemonicParsing="false" text="Generate" />
+   </children>
+</AnchorPane>
