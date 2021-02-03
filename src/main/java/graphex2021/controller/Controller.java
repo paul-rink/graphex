@@ -13,24 +13,24 @@ import javafx.scene.Node;
 
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.layout.BorderPane;
 
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
 import java.util.Optional;
 
 public class Controller {
@@ -293,22 +293,24 @@ public class Controller {
         try {
             this.displayModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
-            e.printStackTrace();//TODO handle this
+            e.printStackTrace(); //TODO handle this
         }
 
-        // TODO check how height is set
+        // The height fo the pane in case there is background image is set to
         double height = graphView.getHeight();
         double width = graphView.getWidth();
 
-        File image = findBackgroundImage(file);
-        /*
-        BufferedImage image =
-        if (image != null) {
-            height = image.getHeight();
-            width = image.getWidth();
-            image.f
+
+        File imageFile = findBackgroundImage(file);
+        BufferedImage image = null;
+        if (imageFile != null) {
+            image = checkIfImage(imageFile);
+            if (image != null) {
+                height = image.getHeight();
+                width = image.getWidth();
+            }
         }
-        */
+
         // The Pane that graphView is part of (In this case boder pane)
         Pane parent = (Pane) graphView.getParent();
 
@@ -328,11 +330,23 @@ public class Controller {
             graphView.setPrefSize(width, height);
             // Adding the new graphView to the pane
             parent.getChildren().add(graphView);
-            graphView.getParent();
-            parent.layout();
+            if (image != null) {
+                Image background = new Image(imageFile.toURI().toString());
+                BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
+                        , false, false, false, true);
+                parent.setBackground(new Background(
+                        new BackgroundImage(background,
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundPosition.DEFAULT,
+                               size)));
+            }
+            parent.setPrefSize(width, height);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
+        parent.layout();
 
         // new Tableview
         this.gxTable = new GXTableView();
@@ -447,10 +461,11 @@ public class Controller {
      */
     private File findBackgroundImage(File graph) {
         String name = graph.getName();
+        name = name.substring(0, name.length() - "json".length());
         Path pathToDir = Path.of(graph.getParentFile().getAbsolutePath());
         String[] allowedPictures = new String[IMAGE_FILE_ENDINGS.length];
         for (int i = 0; i < IMAGE_FILE_ENDINGS.length; i++) {
-            allowedPictures[i] = name + IMAGE_FILE_ENDINGS;
+            allowedPictures[i] = name + IMAGE_FILE_ENDINGS[i];
         }
         Path pathToFile = null;
         if (Files.isDirectory(pathToDir)) {
@@ -458,9 +473,13 @@ public class Controller {
                 DirectoryStream dirStream = Files.newDirectoryStream(pathToDir);
                 for (Path path : (Iterable<Path>) dirStream) {
                     pathToFile = path;
-                    for (String allowedName : IMAGE_FILE_ENDINGS) {
+                    System.out.println(pathToFile);
+                    for (String allowedName : allowedPictures) {
+
+                        System.out.println(allowedName);
                         if (pathToFile.endsWith(Path.of(allowedName))) {
                             dirStream.close();
+                            System.out.println("Ein Bild?");
                             return new File(String.valueOf(pathToFile));
                         }
                     }
@@ -474,13 +493,14 @@ public class Controller {
         return null;
     }
 
-    private BufferedImage checkIfActuallyImage(File imageFile) {
+    private BufferedImage checkIfImage(File imageFile) {
         // Check whether it isn't just an image by name but also an image file
         // Try with resources so that the stream is correctly closed if something goes wrong
         try (InputStream inputStream = new FileInputStream(imageFile)) {
             try {
                 BufferedImage image = ImageIO.read(inputStream);
                 if (image != null) {
+                    System.out.println("Ein Bild");
                     return image;
                 }
             } catch (IOException ioe) {
@@ -489,6 +509,6 @@ public class Controller {
         } catch (IOException e) {
             return null;
         }
-
+        return null;
     }
 }
