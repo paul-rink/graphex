@@ -10,6 +10,11 @@ package graphex2021.model;
 public class GXPosition {
 
     /**
+     * is the range coordinates of a GXPosition should be chosen. Range: 0 to {@link GXPosition#POSITION_RANGE}
+     */
+    public static final int POSITION_RANGE = 1000;
+
+    /**
      * x and y coordinates of the position
      */
     private int xPosition;
