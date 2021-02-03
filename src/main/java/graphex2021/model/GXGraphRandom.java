@@ -25,7 +25,10 @@ public class GXGraphRandom extends GXGraph {
      */
     private int edgeIdCounter = 0;
 
-    private Set<GXEdge> edgesInGraph = new HashSet<>();
+    /**
+     * contains all edges that have been added by the rndTreeGenerator already
+     */
+    private Set<GXEdge> edgesFromTree = new HashSet<>();
 
     /**
      * Generates a random {@link GXGraph}.
@@ -87,7 +90,8 @@ public class GXGraphRandom extends GXGraph {
     }
 
     /**
-     * Generates pseudo random edges. with probability p (in %) an edge between two vertices is chosen.
+     * Generates pseudo random edges. with probability p (in %) an edge between two vertices is chosen. The edges
+     * are chosen the way, that no duplicates are generated. Only edges from tree have to be checked.
      * @param maxWeight is maximum weight for an edge
      * @param p probability to choose an edge (in %) 0-100
      */
@@ -104,8 +108,8 @@ public class GXGraphRandom extends GXGraph {
                 if (rnd <= p) {
                     int weight = new Random().nextInt(maxWeight + 1);
                     GXEdge edge = new GXEdge(current, vertex, Integer.toString(weight), weight, edgeIdCounter);
-                    //check that edge is not already part of graph
-                    if (!edgesInGraph.contains(edge)) {
+                    //check that edge is not already part of tree, by
+                    if (!treeContains(edge)) {
                         try {
                             insertEdge(edge);
                             edgeIdCounter++;
@@ -149,13 +153,26 @@ public class GXGraphRandom extends GXGraph {
             //insert edge and add "next" vertex to connected
             try {
                 insertEdge(newEdge);
-                edgesInGraph.add(newEdge);
+                edgesFromTree.add(newEdge);
                 //shouldn't happen
             } catch (ElementNotInGraphException e) {
                 e.printStackTrace();
             }
             connected.add(next);
         }
+    }
+
+    /**
+     * Checks if an edge was already part if the tree.
+     * @param newEdge is the edge you want to check if its already part of the tree
+     * @return {@code true} if edge is already part if tree, {@code false} otherwise.
+     */
+    private boolean treeContains(GXEdge newEdge) {
+        if (edgesFromTree.isEmpty()) return false;
+        for (GXEdge edge : edgesFromTree) {
+            if (newEdge.equals(edge)) return true;
+        }
+        return false;
     }
 
 

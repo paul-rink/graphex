@@ -37,6 +37,6 @@ public class GXGraphRandomTest {
     @Test
     public void testGenerateEdges3() {
         GXGraph graph = new GXGraphRandom(2, 10, 100, true);
-        Assert.assertEquals(2, graph.vertices());
+        Assert.assertEquals(2, graph.vertices().size());
     }
 }
