@@ -40,6 +40,7 @@ public class DisplayModel extends Subject {
 
     public DisplayModel(GXGraph graph) {
         this.graph = graph;
+        loadGraph();
     }
 
     private void loadGraph() {
