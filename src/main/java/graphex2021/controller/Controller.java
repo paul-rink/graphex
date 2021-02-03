@@ -257,37 +257,7 @@ public class Controller {
             initNewGraph(file);
         }
     }
-
-    public void onStandardGraph() {
-        File file = new File("src/main/resources/graphex2021/GraphData/exampleGraph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph1() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph2() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-3-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph3() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph4() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph5() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
+    
     private void initNewGraph(File file) {
         displayModel.unregister(graphView);
         displayModel.unregister(gxTable);
