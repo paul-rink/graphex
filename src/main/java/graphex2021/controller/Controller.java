@@ -38,6 +38,7 @@ public class Controller {
     private static final String UNLOCKPASSWORD = "Algorithmus";
     private static final String PATTERN_FIN_TEXT = "[0-9]+";
     private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
+    private static final int MIN_PANE_SIZE = 1000;
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -321,7 +322,6 @@ public class Controller {
         finish.setText("Start");
         finish.setDisable(false);
 
-
         try {
             // TODO propably needs to be done like this, so that properties can be changed as well.
             this.graphView = new GraphView();
@@ -331,6 +331,7 @@ public class Controller {
             // Adding the new graphView to the pane
             parent.getChildren().add(graphView);
             if (image != null) {
+                //Creates ne BackgroundImage if there was an image found.
                 Image background = new Image(imageFile.toURI().toString());
                 BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
                         , false, false, false, true);
@@ -340,6 +341,10 @@ public class Controller {
                                 BackgroundRepeat.NO_REPEAT,
                                 BackgroundPosition.DEFAULT,
                                size)));
+                parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
+            } else {
+                //No Image found empty Background
+                parent.setBackground(Background.EMPTY);
             }
             parent.setPrefSize(width, height);
         } catch (FileNotFoundException e) {
@@ -473,13 +478,9 @@ public class Controller {
                 DirectoryStream dirStream = Files.newDirectoryStream(pathToDir);
                 for (Path path : (Iterable<Path>) dirStream) {
                     pathToFile = path;
-                    System.out.println(pathToFile);
                     for (String allowedName : allowedPictures) {
-
-                        System.out.println(allowedName);
                         if (pathToFile.endsWith(Path.of(allowedName))) {
                             dirStream.close();
-                            System.out.println("Ein Bild?");
                             return new File(String.valueOf(pathToFile));
                         }
                     }
@@ -500,7 +501,6 @@ public class Controller {
             try {
                 BufferedImage image = ImageIO.read(inputStream);
                 if (image != null) {
-                    System.out.println("Ein Bild");
                     return image;
                 }
             } catch (IOException ioe) {
@@ -510,5 +510,18 @@ public class Controller {
             return null;
         }
         return null;
+    }
+
+    /**
+     * Calcs a min Height for the pane after an new graph was loaded. Uses the background images' side to side ratio to
+     * calculate. As starting point for this it takes minWidth MIN_PANE_SIZE set to 1000.
+     *
+     * @param width the width of the background image
+     * @param height the height of the background image
+     * @return the calc minHeight with width set to 1000, while maintaining aspect ratio
+     */
+    private int calcMinHeight(double width, double height) {
+        double ratio = height / width;
+        return (int) (MIN_PANE_SIZE * ratio);
     }
 }
