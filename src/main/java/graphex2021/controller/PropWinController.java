@@ -40,7 +40,7 @@ public class PropWinController {
 
         if (!numVerticesText.getText().matches(PATTERN_INTEGER) || !densityText.getText().matches(PATTERN_INTEGER)
                 || !maxWeightText.getText().matches(PATTERN_INTEGER)) {
-            new WrongInputFormatAlert();
+            new WrongInputFormatAlert().show();
         } else {
             int numVertices = Integer.parseInt(numVerticesText.getText());
             int maxWeight = Integer.parseInt(maxWeightText.getText());
@@ -48,7 +48,7 @@ public class PropWinController {
             if (numVertices < GXGraphRandom.MIN_NUMBER_VERTICES || numVertices > GXGraphRandom.MAX_NUMBER_VERTICES
                     || maxWeight <GXGraphRandom.MIN_EDGE_WEIGHT || density < GXGraphRandom.MIN_EDGE_PROBABILITY
                     || density > GXGraphRandom.MAX_EDGE_PROBABILITY) {
-                new WrongInputFormatAlert();
+                new WrongInputFormatAlert().show();
             } else {
                 boolean isolates = allowIsolates.isSelected();
                 rndGraph = new GXGraphRandom(numVertices, maxWeight, density, isolates);
