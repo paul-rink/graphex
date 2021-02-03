@@ -257,7 +257,7 @@ public class Controller {
             initNewGraph(file);
         }
     }
-    
+
     private void initNewGraph(File file) {
         displayModel.unregister(graphView);
         displayModel.unregister(gxTable);
@@ -517,6 +517,7 @@ public class Controller {
                     name = name.substring(0, name.length() - ".json".length());
                     MenuItem item = new MenuItem(name);
                     templates.getItems().add(item);
+                    item.setOnAction(e -> initNewGraph(graphTemplate));
                 }
             }
         } catch (IOException e) {
