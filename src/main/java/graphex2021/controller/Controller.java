@@ -374,14 +374,14 @@ public class Controller {
     /**
      * When this is called, a random Graph will be created an load in the view.
      */
-    public void onGenerateRandom() {
+    public void onGenerateRandom() throws IOException {
         Window primaryStage = graphView.getScene().getWindow();
-        //FXMLLoader loader = new FXMLLoader(Controller.class.getResource("PropWin.fxml"));
-        Scene newScene;
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("PropWin.fxml"));
+        Scene newScene = new Scene(loader.load());
         Stage propertyWindow = new Stage();
         propertyWindow.setTitle("Random Graph Generator");
         propertyWindow.initOwner(primaryStage);
-        propertyWindow.setScene(Main.GRAPH_PROPERTY_SCENE);
+        propertyWindow.setScene(newScene);
         propertyWindow.showAndWait();
         if (PropWinController.lastGenerationSuccessful()) {
             initNewGraph(PropWinController.getLastGeneratedGraph());
