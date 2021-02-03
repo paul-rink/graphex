@@ -1,5 +1,6 @@
 package graphex2021.model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -33,6 +34,7 @@ public class GXGraphRandom extends GXGraph {
             throw new IllegalArgumentException("Maximum amount of vertices = " + MAX_NUMBER_VERTICES);
         }
         generateVertices(numVertices);
+        setStartingAndEndingVertex();
         generateEdges(maxWeight, p);
     }
 
@@ -58,6 +60,29 @@ public class GXGraphRandom extends GXGraph {
         }
     }
 
+    /**
+     * sets starting and ending vertex random
+     */
+    private void setStartingAndEndingVertex() {
+        ArrayList<GXVertex> vertices = new ArrayList<>();
+        vertices.addAll(vertices());
+        int max = vertices.size();
+        int s= 0;
+        int z = 0;
+        //choose starting and ending vertex random and check that they are not the same
+        while(s == z) {
+            s = new Random().nextInt(max);
+            z = new Random().nextInt(max);
+        }
+        setStartingVertex(vertices.get(s));
+        setEndingVertex(vertices.get(z));
+    }
+
+    /**
+     * Generates pseudo random edges. with probability p (in %) an edge between two vertices is chosen.
+     * @param maxWeight is maximum weight for an edge
+     * @param p probability to choose an edge (in %) 0-100
+     */
     private void generateEdges(int maxWeight, int p) {
         LinkedList<GXVertex> uncheckedVertices = new LinkedList<>();
         uncheckedVertices.addAll(vertices());
