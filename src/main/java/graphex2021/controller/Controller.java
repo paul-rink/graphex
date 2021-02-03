@@ -298,16 +298,17 @@ public class Controller {
             formatError.showAndWait();
         }
 
-        // The height fo the pane in case there is background image is set to
+        // The height of the pane in case there is no background image is set to.
         double height = graphView.getHeight();
         double width = graphView.getWidth();
 
-
+        // Loading the new BackgroundImage if there is a file with the same name as
         File imageFile = findBackgroundImage(file);
         BufferedImage image = null;
         if (imageFile != null) {
             image = checkIfImage(imageFile);
             if (image != null) {
+                // If a background image exists these values should be used to set the params for the new Window
                 height = image.getHeight();
                 width = image.getWidth();
             }
@@ -324,10 +325,7 @@ public class Controller {
         finish.setDisable(false);
 
         try {
-            // TODO propably needs to be done like this, so that properties can be changed as well.
             this.graphView = new GraphView();
-
-            //TODO Check what needs to happen for this to work correctly
             graphView.setPrefSize(width, height);
             // Adding the new graphView to the pane
             parent.getChildren().add(graphView);
@@ -345,6 +343,7 @@ public class Controller {
                 parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
             } else {
                 //No Image found empty Background
+                new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
                 parent.setBackground(Background.EMPTY);
             }
             parent.setPrefSize(width, height);
