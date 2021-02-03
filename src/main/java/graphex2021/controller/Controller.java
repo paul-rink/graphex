@@ -379,16 +379,13 @@ public class Controller {
         //FXMLLoader loader = new FXMLLoader(Controller.class.getResource("PropWin.fxml"));
         Scene newScene;
         Stage propertyWindow = new Stage();
+        propertyWindow.setTitle("Random Graph Generator");
         propertyWindow.initOwner(primaryStage);
         propertyWindow.setScene(Main.GRAPH_PROPERTY_SCENE);
         propertyWindow.showAndWait();
-        //TODO maybe give user the options
-        int numVertices = new Random().nextInt(GXGraphRandom.MAX_NUMBER_VERTICES) + 1;
-        int maxWeight = new Random().nextInt(10);
-        //just for example p 20..60
-        int p = new Random().nextInt(41) +20;
-        GXGraph rndGraph = new GXGraphRandom(numVertices, maxWeight, 10, true);
-        initNewGraph(rndGraph);
+        if (PropWinController.lastGenerationSuccessful()) {
+            initNewGraph(PropWinController.getLastGeneratedGraph());
+        }
     }
 
     /**
