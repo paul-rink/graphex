@@ -294,7 +294,8 @@ public class Controller {
         try {
             this.displayModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
-            e.printStackTrace(); //TODO handle this
+            Alert formatError = new FileFormatError(e);
+            formatError.showAndWait();
         }
 
         // The height fo the pane in case there is background image is set to
@@ -475,8 +476,8 @@ public class Controller {
         Path pathToFile = null;
         if (Files.isDirectory(pathToDir)) {
             try {
-                DirectoryStream dirStream = Files.newDirectoryStream(pathToDir);
-                for (Path path : (Iterable<Path>) dirStream) {
+                DirectoryStream<Path> dirStream = Files.newDirectoryStream(pathToDir);
+                for (Path path : dirStream) {
                     pathToFile = path;
                     for (String allowedName : allowedPictures) {
                         if (pathToFile.endsWith(Path.of(allowedName))) {
