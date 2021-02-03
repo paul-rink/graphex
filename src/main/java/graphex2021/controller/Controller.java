@@ -25,7 +25,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.DirectoryStream;
@@ -50,7 +49,7 @@ public class Controller {
     private GXTableView gxTable;
 
     @FXML
-    private BorderPane borderPane;
+    private Menu templates;
 
     @FXML
     private GraphView graphView;
@@ -83,6 +82,7 @@ public class Controller {
     }
 
     public void init() {
+        loadTemplates();
         initGraphView();
         initTableView();
         displayModel.notifyObservers();
@@ -541,8 +541,12 @@ public class Controller {
 
         try (DirectoryStream<Path> folderStream = Files.newDirectoryStream(templateFolder.toPath())) {
             for (Path template : folderStream) {
-                if (template.endsWith(".json")) {
+                if (template.toString().endsWith(".json")) {
                     File graphTemplate = new File(String.valueOf(template));
+                    String name = graphTemplate.getName();
+                    name = name.substring(0, name.length() - ".json".length());
+                    MenuItem item = new MenuItem(name);
+                    templates.getItems().add(item);
                 }
             }
         } catch (IOException e) {
