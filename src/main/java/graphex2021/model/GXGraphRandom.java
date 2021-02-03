@@ -106,7 +106,7 @@ public class GXGraphRandom extends GXGraph {
                 int rnd = new Random().nextInt(MAX_EDGE_PROBABILITY + 1);
                 //example: p=60 (%) then "roll a dice" between 0..100, if value <=60 accept it
                 if (rnd <= p) {
-                    int weight = new Random().nextInt(maxWeight + 1);
+                    int weight = new Random().nextInt(maxWeight) + 1;
                     GXEdge edge = new GXEdge(current, vertex, Integer.toString(weight), weight, edgeIdCounter);
                     //check that edge is not already part of tree, by
                     if (!treeContains(edge)) {
@@ -146,7 +146,7 @@ public class GXGraphRandom extends GXGraph {
             int con = new Random().nextInt(isolates.size());
             GXVertex next = isolates.remove(con);
             //choose a weight
-            int weight = new Random().nextInt(maxWeight + 1);
+            int weight = new Random().nextInt(maxWeight) + 1;
             //create new edge
             GXEdge newEdge = new GXEdge(current, next, Integer.toString(weight), weight, edgeIdCounter);
             edgeIdCounter++;
