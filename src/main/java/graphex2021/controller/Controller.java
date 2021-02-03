@@ -24,7 +24,7 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -39,6 +39,8 @@ public class Controller {
     private static final String PATTERN_FIN_TEXT = "[0-9]+";
     private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
     private static final int MIN_PANE_SIZE = 1000;
+    private static final URL PATH_TO_TEMPLATES = Controller.class.getResource(File.separator + "graphex2021"
+            + File.separator + "GraphData");
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -523,5 +525,30 @@ public class Controller {
     private int calcMinHeight(double width, double height) {
         double ratio = height / width;
         return (int) (MIN_PANE_SIZE * ratio);
+    }
+
+    private void loadTemplates() {
+        File templateFolder = null;
+        try {
+            templateFolder = new File(PATH_TO_TEMPLATES.toURI());
+            if (!templateFolder.isDirectory()) {
+                //TODO Generic Error
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace(); //TODO Generic error
+            return;
+        }
+
+        try (DirectoryStream<Path> folderStream = Files.newDirectoryStream(templateFolder.toPath())) {
+            for (Path template : folderStream) {
+                if (template.endsWith(".json")) {
+                    File graphTemplate = new File(String.valueOf(template));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); //TODO Generic error
+        }
+
+
     }
 }
