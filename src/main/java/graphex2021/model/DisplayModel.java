@@ -30,18 +30,21 @@ public class DisplayModel extends Subject {
     }
 
     public DisplayModel(File inputFile) throws WrongFileFormatException {
-        loadGraph(inputFile);
-    }
-
-    private void loadGraph(File inputFile) throws WrongFileFormatException {
         try {
             this.graph = new GXGraph(inputFile);
         } catch (ElementNotInGraphException eni) {
             //TODO better way to handle this. Wrong exception here
         }
+        loadGraph();
+    }
+
+    public DisplayModel(GXGraph graph) {
+        this.graph = graph;
+    }
+
+    private void loadGraph() {
         this.visibleGraph = new GXGraph();
         initialVisibleGraph();
-
         this.algo = new Dijkstra();
         algoSteps = algo.getSequence(graph);
         //mark starting vertex from the beginning and update distances for incidents, if algo request a starting vertex
