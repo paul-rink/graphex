@@ -20,6 +20,13 @@ public class GXGraphRandom extends GXGraph {
      */
     public static final int MAX_EDGE_PROBABILITY = 100;
 
+    public static final int MIN_EDGE_WEIGHT = 1;
+
+    /**
+     * Choose p between {@link GXGraphRandom#MIN_EDGE_PROBABILITY} and {@link GXGraphRandom#MAX_EDGE_PROBABILITY}
+     */
+    public static final int MIN_EDGE_PROBABILITY = 1;
+
     /**
      * Counter for edge ids
      */
