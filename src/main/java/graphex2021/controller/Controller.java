@@ -4,14 +4,17 @@ import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import com.brunomnsilva.smartgraph.graphview.SmartRandomPlacementStrategy;
+import graphex2021.Main;
 import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
@@ -21,10 +24,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Window;
 
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Optional;
 import java.util.Random;
 
@@ -344,7 +351,7 @@ public class Controller {
 
         try {
             // TODO propably needs to be done like this, so that properties can be changed as well.
-            this.graphView = new GraphView();
+            this.graphView = new GraphView(new SmartRandomPlacementStrategy());
 
             //TODO Check what needs to happen for this to work correctly
             graphView.setPrefSize(width, height);
@@ -368,12 +375,19 @@ public class Controller {
      * When this is called, a random Graph will be created an load in the view.
      */
     public void onGenerateRandom() {
+        Window primaryStage = graphView.getScene().getWindow();
+        //FXMLLoader loader = new FXMLLoader(Controller.class.getResource("PropWin.fxml"));
+        Scene newScene;
+        Stage propertyWindow = new Stage();
+        propertyWindow.initOwner(primaryStage);
+        propertyWindow.setScene(Main.GRAPH_PROPERTY_SCENE);
+        propertyWindow.showAndWait();
         //TODO maybe give user the options
         int numVertices = new Random().nextInt(GXGraphRandom.MAX_NUMBER_VERTICES) + 1;
         int maxWeight = new Random().nextInt(10);
         //just for example p 20..60
         int p = new Random().nextInt(41) +20;
-        GXGraph rndGraph = new GXGraphRandom(numVertices, maxWeight, p, true);
+        GXGraph rndGraph = new GXGraphRandom(numVertices, maxWeight, 10, true);
         initNewGraph(rndGraph);
     }
 
