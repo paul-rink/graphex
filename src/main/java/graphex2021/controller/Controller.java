@@ -25,8 +25,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,8 +36,8 @@ public class Controller {
     private static final String PATTERN_FIN_TEXT = "[0-9]+";
     private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
     private static final int MIN_PANE_SIZE = 1000;
-    private static final URL PATH_TO_TEMPLATES = Controller.class.getResource(File.separator + "graphex2021"
-            + File.separator + "GraphData");
+    private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
+            + File.separator + "GraphData" + File.separator + "Templates";
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -82,6 +80,7 @@ public class Controller {
     }
 
     public void init() {
+
         loadTemplates();
         initGraphView();
         initTableView();
@@ -219,7 +218,7 @@ public class Controller {
         new VertexDoubleClickAlert().show();
     }
 
-    /**
+    /**()
      * When the user requests a hint, the next step according to the selected algorithm should be shown.
      */
     public void hintRequest() {
@@ -499,25 +498,28 @@ public class Controller {
 
     private void loadTemplates() {
         File templateFolder = null;
-        try {
-            templateFolder = new File(PATH_TO_TEMPLATES.toURI());
-            if (!templateFolder.isDirectory()) {
-                //TODO Generic Error
-            }
-        } catch (URISyntaxException e) {
-            e.printStackTrace(); //TODO Generic error
-            return;
+
+        templateFolder = new File(PATH_TO_TEMPLATES);
+        if (!templateFolder.isDirectory()) {
+            //TODO Generic Error
         }
+
 
         try (DirectoryStream<Path> folderStream = Files.newDirectoryStream(templateFolder.toPath())) {
             for (Path template : folderStream) {
                 if (template.toString().endsWith(".json")) {
+                    System.out.println("gere");
                     File graphTemplate = new File(String.valueOf(template));
                     String name = graphTemplate.getName();
                     name = name.substring(0, name.length() - ".json".length());
+                    name = name.replace("_", " ");
                     MenuItem item = new MenuItem(name);
-                    templates.getItems().add(item);
-                    item.setOnAction(e -> initNewGraph(graphTemplate));
+                    String finalName = name;
+                    if (templates.getItems().isEmpty()
+                            || templates.getItems().stream().noneMatch(menuItem -> menuItem.getText().equals(finalName))) {
+                        templates.getItems().add(item);
+                        item.setOnAction(e -> initNewGraph(graphTemplate));
+                    }
                 }
             }
         } catch (IOException e) {

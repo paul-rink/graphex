@@ -17,7 +17,8 @@ public class DisplayModel extends Subject {
     //TODO best way to use File.Separator
     private static final File EXAMPLEGRAPH = new File(
             "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
-                    + File.separator + "GraphData" + File.separator + "exampleGraph.json");
+                    + File.separator + "GraphData" + File.separator + "Templates" + File.separator
+                    + "Vorlage_(Karlsruhe).json");
 
     private LinkedList<Step> userSteps;
     private LinkedList<Step> algoSteps;
