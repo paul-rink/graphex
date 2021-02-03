@@ -1,8 +1,6 @@
 package graphex2021.model;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author D. Flohs, K. Marquardt, P. Rink
@@ -23,18 +21,28 @@ public class GXGraphRandom extends GXGraph {
     public static final int MAX_EDGE_PROBABILITY = 100;
 
     /**
+     * Counter for edge ids
+     */
+    private int edgeIdCounter = 0;
+
+    private Set<GXEdge> edgesInGraph = new HashSet<>();
+
+    /**
      * Generates a random {@link GXGraph}.
      * @param numVertices is the number of vertices the graph should have. Max {@link GXGraphRandom#MAX_NUMBER_VERTICES}
      * @param maxWeight is the maximum weight an edge can have. Range is always 0...maxWeight
      * @param p is the probability in % an edge will be chosen for the graph
+     * @param noIsolated if {@code true} isolated are not allowed and will be randomly connected to the rest of the
+     *                   graph, if {@code false} isolated vertices are allowed
      */
-    public GXGraphRandom(int numVertices, int maxWeight, int p) {
+    public GXGraphRandom(int numVertices, int maxWeight, int p, boolean noIsolated) {
         super();
         if (numVertices > MAX_NUMBER_VERTICES || numVertices < MIN_NUMBER_VERTICES) {
             throw new IllegalArgumentException("Maximum amount of vertices = " + MAX_NUMBER_VERTICES);
         }
         generateVertices(numVertices);
         setStartingAndEndingVertex();
+        if (noIsolated) generateRndTree(maxWeight);
         generateEdges(maxWeight, p);
     }
 
@@ -87,7 +95,6 @@ public class GXGraphRandom extends GXGraph {
         LinkedList<GXVertex> uncheckedVertices = new LinkedList<>();
         uncheckedVertices.addAll(vertices());
         GXVertex current = uncheckedVertices.removeFirst();
-        int idCounter = 0;
         //because non-directed graph, 1st vertex to all other, then 2nd vertex to all other etc
         while (!uncheckedVertices.isEmpty()) {
             for (GXVertex vertex : uncheckedVertices) {
@@ -96,18 +103,58 @@ public class GXGraphRandom extends GXGraph {
                 //example: p=60 (%) then "roll a dice" between 0..100, if value <=60 accept it
                 if (rnd <= p) {
                     int weight = new Random().nextInt(maxWeight + 1);
-                    GXEdge edge = new GXEdge(current, vertex, Integer.toString(weight), weight, idCounter);
-                    try {
-                        insertEdge(edge);
-                        //shouldn't happen
-                    } catch (ElementNotInGraphException e) {
-                        e.printStackTrace();
+                    GXEdge edge = new GXEdge(current, vertex, Integer.toString(weight), weight, edgeIdCounter);
+                    //check that edge is not already part of graph
+                    if (!edgesInGraph.contains(edge)) {
+                        try {
+                            insertEdge(edge);
+                            edgeIdCounter++;
+                            //shouldn't happen
+                        } catch (ElementNotInGraphException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    idCounter++;
                 }
             }
             //go to next vertex
             current = uncheckedVertices.removeFirst();
+        }
+    }
+
+    /**
+     * Generates a random tree for given vertices. This makes sure that resulting graph is connected.
+     * @param maxWeight is the maximum weight of an edge.
+     */
+    private void generateRndTree(int maxWeight) {
+        //list of remaining isolates
+        ArrayList<GXVertex> isolates = new ArrayList<>();
+        isolates.addAll(vertices());
+        //list of all vertices that are connected with each other
+        ArrayList<GXVertex> connected = new ArrayList<>();
+        //choose a random first vertex
+        GXVertex first = isolates.remove(new Random().nextInt(isolates.size()));
+        connected.add(first);
+        while (!isolates.isEmpty()) {
+            //choose a random vertex from already connected vertices
+            int cur = new Random().nextInt(connected.size());
+            GXVertex current = connected.get(cur);
+            //choose a random vertex from isolates and connect it to current
+            int con = new Random().nextInt(isolates.size());
+            GXVertex next = isolates.remove(con);
+            //choose a weight
+            int weight = new Random().nextInt(maxWeight + 1);
+            //create new edge
+            GXEdge newEdge = new GXEdge(current, next, Integer.toString(weight), weight, edgeIdCounter);
+            edgeIdCounter++;
+            //insert edge and add "next" vertex to connected
+            try {
+                insertEdge(newEdge);
+                edgesInGraph.add(newEdge);
+                //shouldn't happen
+            } catch (ElementNotInGraphException e) {
+                e.printStackTrace();
+            }
+            connected.add(next);
         }
     }
 
