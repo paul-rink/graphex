@@ -26,26 +26,24 @@ public class GXGraphRandom extends GXGraph {
     }
 
     /**
-     * Generates random vertices.
+     * Generates random vertices and inserts them to the graph.
      * @param num number if vertices
      * @return list of generated vertices
      */
-    private LinkedList<GXVertex> generateVertices(int num) {
+    private void generateVertices(int num) {
         //array of all possible vertex labels, that are accessed via counter
         VertexLabel[] labels = VertexLabel.values();
         //list of all created vertices
         LinkedList<GXVertex> newVertices = new LinkedList<>();
-        //used to generate random positions
-        Random r = new Random();
         //counter that will represent id of a vertex
         int counter = 0;
         while (counter < num) {
-            int rndX = r.nextInt(GXPosition.POSITION_RANGE);
-            int rndY = r.nextInt(GXPosition.POSITION_RANGE);
+            int rndX = new Random().nextInt(GXPosition.POSITION_RANGE);
+            int rndY = new Random().nextInt(GXPosition.POSITION_RANGE);
             GXPosition rndPosition = new GXPosition(rndX, rndY);
             GXVertex newVertex = new GXVertex(labels[counter].toString(), counter, rndPosition);
+            insertVertex(newVertex);
             counter++;
         }
-        return newVertices;
     }
 }
