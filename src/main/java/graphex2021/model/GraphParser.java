@@ -144,7 +144,7 @@ public class GraphParser {
         try {
             object = new JSONObject(inputFile);
         } catch (JSONException e) {
-            throw new WrongFileFormatException("Diese Datei ist keine gültige JSON Datei.");
+            throw new WrongFileFormatException(e.getMessage());
         }
         try {
             checkFileFormat(object);
