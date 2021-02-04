@@ -82,8 +82,11 @@ public class Controller {
         try {
             this.displayModel = new DisplayModel();
         } catch (WrongFileFormatException e) {
-            //TODO handle this error by displaying a message box
+
+            Alert genericError = new Alert(Alert.AlertType.ERROR, "Der Standardgraph konnte nicht geladen werden.");
+            genericError.showAndWait();
             e.printStackTrace();
+            return;
         }
 
         this.gxTable = new GXTableView();
