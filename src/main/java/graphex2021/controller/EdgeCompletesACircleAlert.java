@@ -12,6 +12,6 @@ public class EdgeCompletesACircleAlert extends Alert {
         super(AlertType.INFORMATION);
         setTitle("Information");
         setHeaderText("Diese Kante kann nicht mehr ausgewählt werden.");
-        setContentText("Hier warst du schonmal. Versuche einen anderen Weg.");
+        setContentText("");//Hier warst du schonmal. Versuche einen anderen Weg.
     }
 }
