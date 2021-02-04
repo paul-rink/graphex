@@ -1,5 +1,8 @@
 package graphex2021.model;
 
+/**
+ * Attribute that contains whether a vertex is the start or the finish vertex. If it is neither can be null.
+ */
 public enum GXVertexType {
 
     /**

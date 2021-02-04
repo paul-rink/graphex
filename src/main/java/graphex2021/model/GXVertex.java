@@ -202,10 +202,20 @@ public class GXVertex implements Vertex<String> {
         return isGXVertex && hasSameID;
     }
 
+    /**
+     * Sets the type the wvertex is.
+     *
+     * @param type Starting if start, Ending if end, null if neither
+     */
     public void setStartOrEnd(GXVertexType type) {
         this.startOrEnd = type;
     }
 
+    /**
+     * Gets the type of the vertex. If it is either starting or ending vertex. If neither is null
+     *
+     * @return the type of the vertex. If neither {code null}
+     */
     public GXVertexType getStartOrEnd() {
         return this.startOrEnd;
     }
