@@ -307,7 +307,8 @@ public class Controller {
     private void setSizes(Pane parent, double prefWidth, double prefHeight, double minWidth, double minHeight) {
         parent.setPrefSize(prefWidth, prefHeight);
         parent.setMinSize(minWidth, minHeight);
-        graphView.setPrefSize(minWidth, minHeight);
+        graphView.setPrefSize(prefWidth, prefHeight);
+        graphView.setMinSize(prefWidth, prefHeight);
     }
 
     /**
@@ -321,93 +322,36 @@ public class Controller {
     private Background loadBackground(File file) {
 
         File imageFile = findBackgroundImage(file);
-        BufferedImage image = null;
+        BufferedImage image;
         if (imageFile != null) {
             image = checkIfImage(imageFile);
             if (image == null) {
                 new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
                 return Background.EMPTY;
+            } else {
+
+                //Creates ne BackgroundImage if there was an image found.
+                Image back = new Image(imageFile.toURI().toString());
+                //Creating the new background with all its parameters
+                BackgroundSize size = new BackgroundSize(back.getWidth(), back.getHeight()
+                        , false, false, false, true);
+                BackgroundImage backgroundImage = new BackgroundImage(back, BackgroundRepeat.NO_REPEAT,
+                        BackgroundRepeat.NO_REPEAT,
+                        BackgroundPosition.DEFAULT,
+                        size);
+                return new Background(backgroundImage);
             }
         }
-        //Creates ne BackgroundImage if there was an image found.
-        Image back = new Image(imageFile.toURI().toString());
-        //Creating the new background with all its parameters
-        BackgroundSize size = new BackgroundSize(back.getWidth(), back.getHeight()
-                , false, false, false, true);
-        BackgroundImage backgroundImage = new BackgroundImage(back, BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                size);
-        return new Background(backgroundImage);
+        return Background.EMPTY;
     }
 
-    private void loadNewGraphView(File file) {
-        displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
-        graphView.removeListener();
-
-        try {
-            this.displayModel = new DisplayModel(file);
-        } catch (WrongFileFormatException e) {
-            Alert formatError = new FileFormatError(e);
-            formatError.showAndWait();
-        }
-
-        // The height of the pane in case there is no background image is set to.
-        double height = graphView.getHeight();
-        double width = graphView.getWidth();
-
-        // Loading the new BackgroundImage if there is a file with the same name as
-        File imageFile = findBackgroundImage(file);
-        BufferedImage image = null;
-        if (imageFile != null) {
-            image = checkIfImage(imageFile);
-            if (image != null) {
-                // If a background image exists these values should be used to set the params for the new Window
-                height = image.getHeight();
-                width = image.getWidth();
-            }
-        }
-
-        // The Pane that graphView is part of (In this case boder pane)
-        Pane parent = (Pane) graphView.getParent();
-
-        // Removing the graphView so that later a graphView with other properties can be added.
-        parent.getChildren().remove(graphView);
-
-        //TODO maybe add reset buttons method to reset the button state for all since it is needed more tha once.
-        finish.setText("Start");
-        finish.setDisable(false);
-
-        try {
-            this.graphView = new GraphView();
-            graphView.setPrefSize(width, height);
-            // Adding the new graphView to the pane
-            parent.getChildren().add(graphView);
-            if (image != null) {
-                //Creates ne BackgroundImage if there was an image found.
-                Image background = new Image(imageFile.toURI().toString());
-                BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
-                        , false, false, false, true);
-                parent.setBackground(new Background(
-                        new BackgroundImage(background,
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundPosition.DEFAULT,
-                               size)));
-                parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
-                parent.setPrefSize(width, height);
-            } else {
-                //No Image found empty Background
-                new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
-                parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
-                parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
-                parent.setBackground(Background.EMPTY);
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Adds the {@link GraphView} to the pane and initializes the {@link GXTableView}. Then correctly initializes
+     * all the features of the Graphex window
+     *
+     * @param parent the parent pane that the graphView needs to be added to.
+     */
+    private void initNewView(Pane parent) {
         // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
         parent.layout();
 
@@ -418,6 +362,58 @@ public class Controller {
         init();
         displayModel.notifyObservers();
     }
+
+    /**
+     * Creates and adds a new {@link GraphView} to the pane.
+     *
+     * @param parent parent the {@link GraphView} should be added to.
+     */
+    private void addNewGraphView(Pane parent) {
+        try {
+            this.graphView = new GraphView();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        parent.getChildren().add(graphView);
+    }
+
+    private void loadNewGraphView(File file) {
+        final Pane parent = (Pane) graphView.getParent();
+        try {
+            this.displayModel = new DisplayModel(file);
+        } catch (WrongFileFormatException e) {
+            Alert formatError = new FileFormatError(e);
+            formatError.showAndWait();
+            e.printStackTrace();
+        }
+        unregisterOldView(parent);
+
+        // Creating a new graphView and adding it to the pane
+        addNewGraphView(parent);
+
+        // creating the background if one is in the same folder as the json
+        Background background = loadBackground(file);
+        parent.setBackground(background);
+        // Setting the sizes to either standard if there was no background image or to the size of the background image.
+        if (!background.isEmpty()) {
+            if (!background.getImages().isEmpty()) {
+                Image backgroundImage = background.getImages().get(0).getImage();
+                double width = backgroundImage.getWidth();
+                double height = backgroundImage.getHeight();
+                setSizes(parent, width, height, MIN_PANE_SIZE, calcMinHeight(width, height));
+            }
+        } else {
+            setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT
+                    , STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        }
+
+        // initialising the window again with the new graph view and updating once to display the graph
+        initNewView(parent);
+
+
+
+    }
+    
 
     //TODO better way to compromise this
     private void initNewGraph(GXGraph graph) {
