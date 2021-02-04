@@ -279,6 +279,12 @@ public class Controller {
         }
     }
 
+    /**
+     * When loading a new graph view the old graph view needs to be correctly unlinked from the window and listeners.
+     * Also the {@link GraphView} needs to be removed from the parent pane it was part of.
+     *
+     * @param parent parent of the old {@link GraphView} that it should be removed from
+     */
     private void unregisterOldView(Parent parent) {
         //uncoupling the old views from listeners and the observer.
         displayModel.unregister(graphView);
@@ -290,6 +296,14 @@ public class Controller {
         pane.getChildren().remove(graphView);
     }
 
+    /**
+     * Will set the passed sizes for the parent and graphView.
+     * @param parent the parent pane you want to set the size for
+     * @param prefWidth preferred Width
+     * @param prefHeight preferred Height
+     * @param minWidth minimum Width
+     * @param minHeight minimum Height
+     */
     private void setSizes(Pane parent, double prefWidth, double prefHeight, double minWidth, double minHeight) {
         parent.setPrefSize(prefWidth, prefHeight);
         parent.setMinSize(minWidth, minHeight);
