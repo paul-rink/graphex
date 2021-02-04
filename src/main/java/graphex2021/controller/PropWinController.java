@@ -29,6 +29,9 @@ public class PropWinController {
     private CheckBox allowIsolates;
 
     @FXML
+    private CheckBox avoidClustering;
+
+    @FXML
     private Button generateButton;
 
     private static GXGraph rndGraph = null;
@@ -51,7 +54,8 @@ public class PropWinController {
                 new WrongInputFormatAlert().show();
             } else {
                 boolean isolates = allowIsolates.isSelected();
-                rndGraph = new GXGraphRandom(numVertices, maxWeight, density, isolates);
+                boolean clustering = avoidClustering.isSelected();
+                rndGraph = new GXGraphRandom(numVertices, maxWeight, density, isolates, clustering);
                 ready = true;
             }
         }

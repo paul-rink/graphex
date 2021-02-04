@@ -28,6 +28,18 @@ public class GXGraphRandom extends GXGraph {
     public static final int MIN_EDGE_PROBABILITY = 1;
 
     /**
+     * maximum tries for searching for a position
+     */
+    private static final int MAX_TRIES = 10000;
+
+    private static int radius;
+
+    /**
+     * Holds all generated positions.
+     */
+    private static LinkedList<GXPosition> positionSet = new LinkedList<>();
+
+    /**
      * Counter for edge ids
      */
     private int edgeIdCounter = 0;
@@ -45,12 +57,13 @@ public class GXGraphRandom extends GXGraph {
      * @param isolatedAllowed if {@code false} isolated are not allowed and will be randomly connected
      *                        to the rest of the graph, if {@code true} isolated vertices are allowed.
      */
-    public GXGraphRandom(int numVertices, int maxWeight, int p, boolean isolatedAllowed) {
+    public GXGraphRandom(int numVertices, int maxWeight, int p, boolean isolatedAllowed, boolean avoidClustering) {
         super();
         if (numVertices > MAX_NUMBER_VERTICES || numVertices < MIN_NUMBER_VERTICES) {
             throw new IllegalArgumentException("Maximum amount of vertices = " + MAX_NUMBER_VERTICES);
         }
-        generateVertices(numVertices);
+        radius = GXPosition.POSITION_RANGE / numVertices / 2;
+        generateVertices(numVertices, avoidClustering);
         setStartingAndEndingVertex();
         if (!isolatedAllowed) generateRndTree(maxWeight);
         generateEdges(maxWeight, p);
@@ -61,7 +74,7 @@ public class GXGraphRandom extends GXGraph {
      * @param num number if vertices
      * @return list of generated vertices
      */
-    private void generateVertices(int num) {
+    private void generateVertices(int num, boolean avoidClustering) {
         //array of all possible vertex labels, that are accessed via counter
         VertexLabel[] labels = VertexLabel.values();
         //list of all created vertices
@@ -69,9 +82,15 @@ public class GXGraphRandom extends GXGraph {
         //counter that will represent id of a vertex
         int counter = 0;
         while (counter < num) {
-            int rndX = new Random().nextInt(GXPosition.POSITION_RANGE);
-            int rndY = new Random().nextInt(GXPosition.POSITION_RANGE);
-            GXPosition rndPosition = new GXPosition(rndX, rndY);
+            GXPosition rndPosition = null;
+            if (avoidClustering) {
+                rndPosition = generatePushingPositions(radius, MAX_TRIES);
+                //if not avoid clustering is chosen, or if generatePushingPositions still didn't found fitting position
+            } if (rndPosition == null) {
+                int x = new Random().nextInt(GXPosition.POSITION_RANGE);
+                int y = new Random().nextInt(GXPosition.POSITION_RANGE);
+                rndPosition = new GXPosition(x, y);
+            }
             GXVertex newVertex = new GXVertex(labels[counter].toString(), counter, rndPosition);
             insertVertex(newVertex);
             counter++;
@@ -180,6 +199,62 @@ public class GXGraphRandom extends GXGraph {
             if (newEdge.equals(edge)) return true;
         }
         return false;
+    }
+
+    /**
+     * Generates a position that is at least {@code radius} away from any other position in
+     * {@link GXGraphRandom#positionSet}.
+     * @param radius is radius scaled for {@link GXPosition#POSITION_RANGE}
+     * @param maxTries is maximum tries for finding such a posuition
+     * @return new random position or {@code null} if no position could be found within given tries.
+     */
+    private GXPosition generatePushingPositions(int radius, int maxTries) {
+        int n = maxTries;
+        GXPosition rndPosition;
+        do {
+            int rndX = randomCoordinateGenerator();
+            int rndY = randomCoordinateGenerator();
+            rndPosition = new GXPosition(rndX, rndY);
+            n--;
+        } while (conflicts(rndPosition, radius) && n > 0);
+        positionSet.add(rndPosition);
+        return rndPosition;
+    }
+
+    /**
+     * Checks if the given position is within the radius of another already existing position.
+     * @param rndPosition is the position to check
+     * @param radius is the min distance the position should have to all other positons
+     * @return {@code true} if the condition works, {@code false} otherwise
+     */
+    private boolean conflicts(GXPosition rndPosition, int radius) {
+        int r = radius * radius;
+        for (GXPosition pos : positionSet) {
+            if (calcSquDistance(rndPosition, pos) < r) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Calculates the distance of two positions via squared euclidean distance.
+     * @param p1 pos1
+     * @param p2 pos2
+     * @return squared euclidean distance
+     */
+    private int calcSquDistance(GXPosition p1, GXPosition p2) {
+        int x1 = p1.getPosition()[0];
+        int y1 = p1.getPosition()[1];
+        int x2 = p2.getPosition()[0];
+        int y2 = p2.getPosition()[1];
+        return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 -y1);
+    }
+
+    private int randomCoordinateGenerator() {
+        // margin to border of window 1% of total window
+        int margin = GXPosition.POSITION_RANGE / 100;
+        return new Random().nextInt(GXPosition.POSITION_RANGE - 2 * margin) + margin;
     }
 
 
