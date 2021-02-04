@@ -99,12 +99,33 @@
     -fx-opacity: 0.8;
 }
 
-
-.testClass {
+.hoverVertex{
     -fx-stroke-width: 15;
-    -fx-stroke: yellow;
-    -fx-opacity: 0.3;
+    -fx-opacity: 50;
+    -fx-stroke: #61B5F1;
+    -fx-stroke-type: inside; /* you should keep this for vertex.radius to hold */
+    -fx-fill: #B1DFF7;
 }
+
+.startingVertex{
+    -fx-stroke-width: 1;
+    -fx-opacity: 50;
+    -fx-stroke: Black;
+    -fx-stroke-type: inside; /* you should keep this for vertex.radius to hold */
+    -fx-fill: Black;
+}
+
+.endingVertex{
+    -fx-stroke-width: 1;
+    -fx-opacity: 50;
+    -fx-stroke: #ff0000;
+    -fx-stroke-type: inside; /* you should keep this for vertex.radius to hold */
+    -fx-fill: #ff0000;
+
+}
+
+
+
 
 
 
