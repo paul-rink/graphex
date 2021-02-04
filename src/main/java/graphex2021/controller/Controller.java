@@ -541,7 +541,10 @@ public class Controller {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace(); //TODO Generic error
+            Alert genericError = new Alert(Alert.AlertType.ERROR, "Es gab ein Problem beim Auslesen der Templates aus dem Ordner.");
+            genericError.showAndWait();
+            e.printStackTrace();
+            return;
         }
 
 
