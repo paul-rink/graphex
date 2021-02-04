@@ -268,16 +268,18 @@ public class Controller {
     }
 
     private void initNewGraph(File file) {
-        displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
-        graphView.removeListener();
-
+        DisplayModel newModel = null;
         try {
-            this.displayModel = new DisplayModel(file);
+            newModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
             Alert formatError = new FileFormatError(e);
             formatError.showAndWait();
+            return;
         }
+        displayModel.unregister(graphView);
+        displayModel.unregister(gxTable);
+        graphView.removeListener();
+        this.displayModel = newModel;
 
         // The height of the pane in case there is no background image is set to.
         double height = graphView.getHeight();
