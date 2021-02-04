@@ -475,8 +475,10 @@ public class Controller {
                 }
                 dirStream.close();
             } catch (IOException e) {
-                //TODO
+                Alert genericError = new Alert(Alert.AlertType.ERROR, "Es gab ein Problem beim Auslesen der Hintergrundbilder.");
+                genericError.showAndWait();
                 e.printStackTrace();
+                return null;
             }
         }
         return null;
