@@ -3,7 +3,6 @@ package graphex2021.controller;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
-import com.brunomnsilva.smartgraph.graphview.SmartRandomPlacementStrategy;
 import graphex2021.Main;
 import graphex2021.model.*;
 import graphex2021.view.GXTableView;
@@ -285,7 +284,7 @@ public class Controller {
      *
      * @param parent parent of the old {@link GraphView} that it should be removed from
      */
-    private void unregisterOldView(Parent parent) {
+    private void remove(Parent parent) {
         //uncoupling the old views from listeners and the observer.
         displayModel.unregister(graphView);
         displayModel.unregister(gxTable);
@@ -351,7 +350,7 @@ public class Controller {
      *
      * @param parent the parent pane that the graphView needs to be added to.
      */
-    private void initNewView(Pane parent) {
+    private void initializeUpdatedView(Pane parent) {
         // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
         parent.layout();
 
@@ -368,7 +367,7 @@ public class Controller {
      *
      * @param parent parent the {@link GraphView} should be added to.
      */
-    private void addNewGraphView(Pane parent) {
+    private void addToParent(Pane parent) {
         try {
             this.graphView = new GraphView();
         } catch (FileNotFoundException e) {
@@ -379,6 +378,7 @@ public class Controller {
 
     private void loadNewGraphView(File file) {
         final Pane parent = (Pane) graphView.getParent();
+        remove(parent);
         try {
             this.displayModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
@@ -386,10 +386,8 @@ public class Controller {
             formatError.showAndWait();
             e.printStackTrace();
         }
-        unregisterOldView(parent);
-
         // Creating a new graphView and adding it to the pane
-        addNewGraphView(parent);
+        addToParent(parent);
 
         // creating the background if one is in the same folder as the json
         Background background = loadBackground(file);
@@ -408,52 +406,17 @@ public class Controller {
         }
 
         // initialising the window again with the new graph view and updating once to display the graph
-        initNewView(parent);
-
-
-
+        initializeUpdatedView(parent);
     }
-    
 
-    //TODO better way to compromise this
-    private void initNewGraph(GXGraph graph) {
-        displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
-        graphView.removeListener();
+    private void loadNewGraphView(GXGraph graph) {
+        final Pane parent = (Pane) graphView.getParent();
+        remove(parent);
         this.displayModel = new DisplayModel(graph);
-
-        // The Pane that graphView is part of (In this case boder pane)
-        Pane parent = (Pane) graphView.getParent();
-
-        // Removing the graphView so that later a graphView with other properties can be added.
-        parent.getChildren().remove(graphView);
-        finish.setText("Start");
-        finish.setDisable(false);
-
-        // TODO check how height is set
-        double height = graphView.getHeight();
-        double width = graphView.getWidth();
-
-        try {
-            // TODO propably needs to be done like this, so that properties can be changed as well.
-            this.graphView = new GraphView(new SmartRandomPlacementStrategy());
-
-            //TODO Check what needs to happen for this to work correctly
-            graphView.setPrefSize(width, height);
-            // Adding the new graphView to the pane
-            parent.getChildren().add(graphView);
-            graphView.getParent();
-            parent.layout();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        // new Tableview
-        this.gxTable = new GXTableView();
-
-        //Reinitializing all the views
-        init();
-        displayModel.notifyObservers();
+        addToParent(parent);
+        parent.setBackground(Background.EMPTY);
+        setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT,STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        initializeUpdatedView(parent);
     }
 
     /**
@@ -469,7 +432,7 @@ public class Controller {
         propertyWindow.setScene(newScene);
         propertyWindow.showAndWait();
         if (PropWinController.lastGenerationSuccessful()) {
-            initNewGraph(PropWinController.getLastGeneratedGraph());
+            loadNewGraphView(PropWinController.getLastGeneratedGraph());
         }
     }
 
