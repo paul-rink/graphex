@@ -337,8 +337,10 @@ public class Controller {
             }
 
         } catch (FileNotFoundException e) {
-            Alert genericError = new Alert(Alert.AlertType.ERROR, "Es gab ein Problem beim erstellen der Graph View. Die FXML konnte nicht gefunden werden.");
-            genericError.showAndWait();
+            //TODO correct?? Alert genericError = new Alert(Alert.AlertType.ERROR, "Es gab ein Problem beim erstellen der Graph View. Die FXML konnte nicht gefunden werden.");
+            Alert fileAlert = new FileAlert(e.getMessage()+ "\n Die FXML wurde nicht gefunden");
+            fileAlert.showAndWait();
+            e.printStackTrace();
             e.printStackTrace();
             return;
         }
@@ -379,6 +381,8 @@ public class Controller {
         try {
             displayModel.undo();
         } catch (ElementNotInGraphException e) {
+            Alert a = new ElementNotInGraphAlert();
+            a.showAndWait();
             e.printStackTrace();
         }
     }
@@ -479,8 +483,8 @@ public class Controller {
                 }
                 dirStream.close();
             } catch (IOException e) {
-                Alert genericError = new Alert(Alert.AlertType.ERROR, "Es gab ein Problem beim Auslesen der Hintergrundbilder.");
-                genericError.showAndWait();
+                Alert fileAlert = new FileAlert(pathToDir.toString() + e.getMessage());
+                fileAlert.showAndWait();
                 e.printStackTrace();
                 return null;
             }
@@ -498,9 +502,15 @@ public class Controller {
                     return image;
                 }
             } catch (IOException ioe) {
+                Alert fileAlert = new FileAlert(imageFile.getAbsolutePath() + ioe.getMessage());
+                fileAlert.showAndWait();
+                ioe.printStackTrace();
                 return null;
             }
         } catch (IOException e) {
+            Alert fileAlert = new FileAlert(imageFile.getAbsolutePath() + e.getMessage());
+            fileAlert.showAndWait();
+            e.printStackTrace();
             return null;
         }
         return null;
@@ -524,8 +534,8 @@ public class Controller {
 
         templateFolder = new File(PATH_TO_TEMPLATES);
         if (!templateFolder.isDirectory()) {
-            Alert genericError = new Alert(Alert.AlertType.ERROR, "Der Ordner in dem die Templates sind wurde nicht gefunden oder existiert nicht.");
-            genericError.showAndWait();
+            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath()+ "\n An diesem Pfad ist kein Ordner.");
+            fileAlert.showAndWait();
             return;
         }
 
@@ -547,8 +557,8 @@ public class Controller {
                 }
             }
         } catch (IOException e) {
-            Alert genericError = new Alert(Alert.AlertType.ERROR, "Es gab ein Problem beim Auslesen der Templates aus dem Ordner.");
-            genericError.showAndWait();
+            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath());
+            fileAlert.showAndWait();
             e.printStackTrace();
             return;
         }
