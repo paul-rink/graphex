@@ -179,7 +179,7 @@ public class Controller {
         graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
 
-        //TODO WIPauf de
+
         for (Node vertexNode : graphView.getChildren()) {
             if (vertexNode.toString().contains("Circle")) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
@@ -194,9 +194,17 @@ public class Controller {
         for (Node node : graphView.getChildren()) {
             if (node instanceof SmartGraphVertexNode) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
-                vert.setOnMouseEntered(s -> onHoverEdge((SmartGraphVertexNode) s.getSource()));
-                vert.setOnMouseExited(s -> onLeaveEdge((SmartGraphVertexNode) s.getSource()));
+                vert.setOnMouseEntered(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
+                vert.setOnMouseExited(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
             }
+        }
+    }
+
+    public void onHoverVertex(SmartGraphVertexNode vertex, MouseEvent mouseEvent) {
+        if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
+            vertex.setStyleClass("hoverVertex");
+        } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
+            displayModel.notifyObservers();
         }
     }
 

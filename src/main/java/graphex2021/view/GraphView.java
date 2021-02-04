@@ -96,6 +96,14 @@ public class GraphView extends SmartGraphPanel implements Observer {
         if (gxVertex.isHint()) {
             vertex.setStyleClass("hintVertex");
         }
+
+        if (gxVertex.getStartOrEnd() == GXVertexType.STARTING) {
+            vertex.setStyleClass("startingVertex");
+        } else if (gxVertex.getStartOrEnd() == GXVertexType.ENDING) {
+            vertex.setStyleClass("endingVertex");
+        }
+
+
     }
 
 
