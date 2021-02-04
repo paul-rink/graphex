@@ -17,28 +17,40 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Window;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.Random;
 
 public class Controller {
 
+    /**
+     * Used as the standard pane size in cas no background image is found.
+     */
+    private static final int STANDARD_PANE_WIDTH = 1280;
+    private static final int STANDARD_PANE_HEIGHT = 720;
+    /**
+     * Used  to set the min pane height in case no backgroundimage is found.
+     */
+    private static final int STANDARD_PANE_MIN_WIDTH = 1000;
+    private static final int STANDARD_PANE_MIN_HEIGHT = 563;
     private static final String UNLOCKPASSWORD = "Algorithmus";
     private static final String PATTERN_FIN_TEXT = "[0-9]+";
+    private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
+    private static final int MIN_PANE_SIZE = 1000;
+    private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
+            + File.separator + "GraphData" + File.separator + "Templates";
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -48,7 +60,7 @@ public class Controller {
     private GXTableView gxTable;
 
     @FXML
-    private BorderPane borderPane;
+    private Menu templates;
 
     @FXML
     private GraphView graphView;
@@ -67,7 +79,7 @@ public class Controller {
 
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
-     * by using the standard {@link graphex2021.model.GXGraph}
+     * by using the standard {@link graphex2021.model.GXGraph}690
      */
     public Controller() {
         try {
@@ -81,6 +93,8 @@ public class Controller {
     }
 
     public void init() {
+
+        loadTemplates();
         initGraphView();
         initTableView();
         displayModel.notifyObservers();
@@ -163,8 +177,8 @@ public class Controller {
         graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
 
-        //TODO WIP
-        for (Node vertexNode : graphView.getChildren())  {
+        //TODO WIPauf de
+        for (Node vertexNode : graphView.getChildren()) {
             if (vertexNode.toString().contains("Circle")) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
@@ -176,11 +190,11 @@ public class Controller {
         }
 
         for (Node node : graphView.getChildren()) {
-           if (node instanceof SmartGraphVertexNode) {
-               SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
-               vert.setOnMouseEntered(s-> onHoverEdge((SmartGraphVertexNode) s.getSource()));
-               vert.setOnMouseExited(s -> onLeaveEdge((SmartGraphVertexNode) s.getSource()));
-           }
+            if (node instanceof SmartGraphVertexNode) {
+                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
+                vert.setOnMouseEntered(s -> onHoverEdge((SmartGraphVertexNode) s.getSource()));
+                vert.setOnMouseExited(s -> onLeaveEdge((SmartGraphVertexNode) s.getSource()));
+            }
         }
     }
 
@@ -194,6 +208,7 @@ public class Controller {
 
     /**
      * Is called when an edge is selected.
+     *
      * @param e is the edge the user selected.
      */
     public void onSelectEdge(SmartGraphEdge e) {
@@ -209,13 +224,14 @@ public class Controller {
 
     /**
      * Is called when the user selects a vertex.
+     *
      * @param v is the selected vertex.
      */
     public void onSelectVertex(SmartGraphVertex v) {
         new VertexDoubleClickAlert().show();
     }
 
-    /**
+    /**()
      * When the user requests a hint, the next step according to the selected algorithm should be shown.
      */
     public void hintRequest() {
@@ -237,7 +253,6 @@ public class Controller {
     }
 
 
-
     /**
      * Will give the user the ability to load a new graph via a json file.
      */
@@ -247,42 +262,12 @@ public class Controller {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Graph auswaehlen");
         FileChooser.ExtensionFilter jsonFilter
-                 = new FileChooser.ExtensionFilter("JSON filter (*.json)", "*.json");
+                = new FileChooser.ExtensionFilter("JSON filter (*.json)", "*.json");
         fileChooser.getExtensionFilters().add(jsonFilter);
         File file = fileChooser.showOpenDialog(browserStage);
         if (!(file == null)) {
             initNewGraph(file);
         }
-    }
-
-    public void onStandardGraph() {
-        File file = new File("src/main/resources/graphex2021/GraphData/exampleGraph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph1() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph2() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-3-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph3() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph4() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph5() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
     }
 
     private void initNewGraph(File file) {
@@ -293,7 +278,24 @@ public class Controller {
         try {
             this.displayModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
-            e.printStackTrace();//TODO handle this
+            Alert formatError = new FileFormatError(e);
+            formatError.showAndWait();
+        }
+
+        // The height of the pane in case there is no background image is set to.
+        double height = graphView.getHeight();
+        double width = graphView.getWidth();
+
+        // Loading the new BackgroundImage if there is a file with the same name as
+        File imageFile = findBackgroundImage(file);
+        BufferedImage image = null;
+        if (imageFile != null) {
+            image = checkIfImage(imageFile);
+            if (image != null) {
+                // If a background image exists these values should be used to set the params for the new Window
+                height = image.getHeight();
+                width = image.getWidth();
+            }
         }
 
         // The Pane that graphView is part of (In this case boder pane)
@@ -301,26 +303,42 @@ public class Controller {
 
         // Removing the graphView so that later a graphView with other properties can be added.
         parent.getChildren().remove(graphView);
+
+        //TODO maybe add reset buttons method to reset the button state for all since it is needed more tha once.
         finish.setText("Start");
         finish.setDisable(false);
 
-        // TODO check how height is set
-        double height = graphView.getHeight();
-        double width = graphView.getWidth();
-
         try {
-            // TODO propably needs to be done like this, so that properties can be changed as well.
             this.graphView = new GraphView();
-
-            //TODO Check what needs to happen for this to work correctly
             graphView.setPrefSize(width, height);
             // Adding the new graphView to the pane
             parent.getChildren().add(graphView);
-            graphView.getParent();
-            parent.layout();
+            if (image != null) {
+                //Creates ne BackgroundImage if there was an image found.
+                Image background = new Image(imageFile.toURI().toString());
+                BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
+                        , false, false, false, true);
+                parent.setBackground(new Background(
+                        new BackgroundImage(background,
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundRepeat.NO_REPEAT,
+                                BackgroundPosition.DEFAULT,
+                               size)));
+                parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
+                parent.setPrefSize(width, height);
+            } else {
+                //No Image found empty Background
+                new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
+                parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+                parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
+                parent.setBackground(Background.EMPTY);
+            }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
+        parent.layout();
 
         // new Tableview
         this.gxTable = new GXTableView();
@@ -389,8 +407,9 @@ public class Controller {
     }
 
     /**
-     *When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
+     * When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
      * selected edges by the user.
+     *
      * @param v
      */
     public void onVertexClicked(SmartGraphVertexNode v) {
@@ -412,6 +431,7 @@ public class Controller {
 
     /**
      * Will update the model for the specific algorithm that is selected.
+     *
      * @param algo is the algorithm that is selected to be performed at the graph in the view.
      */
     public void onAlgorithmSelect(Algorithm algo) {
@@ -459,14 +479,15 @@ public class Controller {
     }
 
     private void displayCoordinates() {
-        for (Node vertex : graphView.getChildren())  {
+        for (Node vertex : graphView.getChildren()) {
             if (vertex.toString().contains("Circle")) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
                         double x = vert.getPositionCenterX() / graphView.getSceneWidth();
                         double y = vert.getPositionCenterY() / graphView.getSceneHeight();
-                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = " + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
+                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = "
+                                + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
 
                     }
                 });
@@ -474,11 +495,103 @@ public class Controller {
         }
     }
 
-    private void bindAspectRation() {
-        Stage stage = (Stage) borderPane.getScene().getWindow();
-        double ratio = stage.getWidth() / stage.getHeight();
-        stage.minWidthProperty().bind(stage.heightProperty().multiply(ratio));
-        stage.minHeightProperty().bind(stage.widthProperty().divide(ratio));
+    /**
+     * Takes a JSON file for a graph and checks if a background image with the same name is in the folder.
+     * Checks for file types like jpg, jpeg, png, bmp
+     *
+     * @param graph the json file that the graph was saved in
+     * @return the {@link File} of the matching background. If there is no {@link File} with this name null is returned.
+     */
+    private File findBackgroundImage(File graph) {
+        String name = graph.getName();
+        name = name.substring(0, name.length() - "json".length());
+        Path pathToDir = Path.of(graph.getParentFile().getAbsolutePath());
+        String[] allowedPictures = new String[IMAGE_FILE_ENDINGS.length];
+        for (int i = 0; i < IMAGE_FILE_ENDINGS.length; i++) {
+            allowedPictures[i] = name + IMAGE_FILE_ENDINGS[i];
+        }
+        Path pathToFile = null;
+        if (Files.isDirectory(pathToDir)) {
+            try {
+                DirectoryStream<Path> dirStream = Files.newDirectoryStream(pathToDir);
+                for (Path path : dirStream) {
+                    pathToFile = path;
+                    for (String allowedName : allowedPictures) {
+                        if (pathToFile.endsWith(Path.of(allowedName))) {
+                            dirStream.close();
+                            return new File(String.valueOf(pathToFile));
+                        }
+                    }
+                }
+                dirStream.close();
+            } catch (IOException e) {
+                //TODO
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    private BufferedImage checkIfImage(File imageFile) {
+        // Check whether it isn't just an image by name but also an image file
+        // Try with resources so that the stream is correctly closed if something goes wrong
+        try (InputStream inputStream = new FileInputStream(imageFile)) {
+            try {
+                BufferedImage image = ImageIO.read(inputStream);
+                if (image != null) {
+                    return image;
+                }
+            } catch (IOException ioe) {
+                return null;
+            }
+        } catch (IOException e) {
+            return null;
+        }
+        return null;
+    }
+
+    /**
+     * Calcs a min Height for the pane after an new graph was loaded. Uses the background images' side to side ratio to
+     * calculate. As starting point for this it takes minWidth MIN_PANE_SIZE set to 1000.
+     *
+     * @param width the width of the background image
+     * @param height the height of the background image
+     * @return the calc minHeight with width set to 1000, while maintaining aspect ratio
+     */
+    private int calcMinHeight(double width, double height) {
+        double ratio = height / width;
+        return (int) (MIN_PANE_SIZE * ratio);
+    }
+
+    private void loadTemplates() {
+        File templateFolder = null;
+
+        templateFolder = new File(PATH_TO_TEMPLATES);
+        if (!templateFolder.isDirectory()) {
+            //TODO Generic Error
+        }
+
+
+        try (DirectoryStream<Path> folderStream = Files.newDirectoryStream(templateFolder.toPath())) {
+            for (Path template : folderStream) {
+                if (template.toString().endsWith(".json")) {
+                    File graphTemplate = new File(String.valueOf(template));
+                    String name = graphTemplate.getName();
+                    name = name.substring(0, name.length() - ".json".length());
+                    name = name.replace("_", " ");
+                    MenuItem item = new MenuItem(name);
+                    String finalName = name;
+                    if (templates.getItems().isEmpty()
+                            || templates.getItems().stream().noneMatch(menuItem -> menuItem.getText().equals(finalName))) {
+                        templates.getItems().add(item);
+                        item.setOnAction(e -> initNewGraph(graphTemplate));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); //TODO Generic error
+        }
+
 
     }
 }
