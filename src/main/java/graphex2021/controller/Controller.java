@@ -33,7 +33,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.Random;
 
 public class Controller {
 
@@ -276,11 +275,59 @@ public class Controller {
         fileChooser.getExtensionFilters().add(jsonFilter);
         File file = fileChooser.showOpenDialog(browserStage);
         if (!(file == null)) {
-            initNewGraph(file);
+            loadNewGraphView(file);
         }
     }
 
-    private void initNewGraph(File file) {
+    private void unregisterOldView(Parent parent) {
+        //uncoupling the old views from listeners and the observer.
+        displayModel.unregister(graphView);
+        displayModel.unregister(gxTable);
+        graphView.removeListener();
+        // The Pane that graphView is part of (In this case boder pane)
+        Pane pane  = (Pane) parent;
+        // Removing the graphView so that later a graphView with other properties can be added.
+        pane.getChildren().remove(graphView);
+    }
+
+    private void setSizes(Pane parent, double prefWidth, double prefHeight, double minWidth, double minHeight) {
+        parent.setPrefSize(prefWidth, prefHeight);
+        parent.setMinSize(minWidth, minHeight);
+        graphView.setPrefSize(minWidth, minHeight);
+    }
+
+    /**
+     * Loads a background for a pane. If the file is an image the image will be used as background. If the file
+     * isn't an image an empty background will be returned. The size of the background will be the size of the passed
+     * image and it will be set to cover.
+     *
+     * @param file you want the background created from
+     * @return the background either from the image or empty
+     */
+    private Background loadBackground(File file) {
+
+        File imageFile = findBackgroundImage(file);
+        BufferedImage image = null;
+        if (imageFile != null) {
+            image = checkIfImage(imageFile);
+            if (image == null) {
+                new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
+                return Background.EMPTY;
+            }
+        }
+        //Creates ne BackgroundImage if there was an image found.
+        Image back = new Image(imageFile.toURI().toString());
+        //Creating the new background with all its parameters
+        BackgroundSize size = new BackgroundSize(back.getWidth(), back.getHeight()
+                , false, false, false, true);
+        BackgroundImage backgroundImage = new BackgroundImage(back, BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                size);
+        return new Background(backgroundImage);
+    }
+
+    private void loadNewGraphView(File file) {
         displayModel.unregister(graphView);
         displayModel.unregister(gxTable);
         graphView.removeListener();
@@ -594,7 +641,7 @@ public class Controller {
                     if (templates.getItems().isEmpty()
                             || templates.getItems().stream().noneMatch(menuItem -> menuItem.getText().equals(finalName))) {
                         templates.getItems().add(item);
-                        item.setOnAction(e -> initNewGraph(graphTemplate));
+                        item.setOnAction(e -> loadNewGraphView(graphTemplate));
                     }
                 }
             }
