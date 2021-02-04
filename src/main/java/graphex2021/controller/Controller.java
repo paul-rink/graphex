@@ -402,7 +402,8 @@ public class Controller {
     }
 
     private void reset() {
-
+        finish.setText("Start");
+        finish.setDisable(false);
     }
 
     /**
@@ -428,6 +429,8 @@ public class Controller {
         // Setting the sizes to either standard if there was no background image or to the size of the background image.
         setSizes(parent, background);
 
+        reset();
+
         // initialising the window again with the new graph view and updating once to display the graph
         initializeUpdatedView(parent);
     }
@@ -439,6 +442,7 @@ public class Controller {
         addToParent(parent);
         parent.setBackground(Background.EMPTY);
         setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        reset();
         initializeUpdatedView(parent);
     }
 
