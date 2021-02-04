@@ -3,14 +3,18 @@ package graphex2021.controller;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
+import com.brunomnsilva.smartgraph.graphview.SmartRandomPlacementStrategy;
+import graphex2021.Main;
 import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -19,8 +23,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -29,6 +31,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.Random;
 
 public class Controller {
 
@@ -345,11 +348,62 @@ public class Controller {
         displayModel.notifyObservers();
     }
 
+    //TODO better way to compromise this
+    private void initNewGraph(GXGraph graph) {
+        displayModel.unregister(graphView);
+        displayModel.unregister(gxTable);
+        graphView.removeListener();
+        this.displayModel = new DisplayModel(graph);
+
+        // The Pane that graphView is part of (In this case boder pane)
+        Pane parent = (Pane) graphView.getParent();
+
+        // Removing the graphView so that later a graphView with other properties can be added.
+        parent.getChildren().remove(graphView);
+        finish.setText("Start");
+        finish.setDisable(false);
+
+        // TODO check how height is set
+        double height = graphView.getHeight();
+        double width = graphView.getWidth();
+
+        try {
+            // TODO propably needs to be done like this, so that properties can be changed as well.
+            this.graphView = new GraphView(new SmartRandomPlacementStrategy());
+
+            //TODO Check what needs to happen for this to work correctly
+            graphView.setPrefSize(width, height);
+            // Adding the new graphView to the pane
+            parent.getChildren().add(graphView);
+            graphView.getParent();
+            parent.layout();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // new Tableview
+        this.gxTable = new GXTableView();
+
+        //Reinitializing all the views
+        init();
+        displayModel.notifyObservers();
+    }
+
     /**
      * When this is called, a random Graph will be created an load in the view.
      */
-    public void onGenerateRandom() {
-
+    public void onGenerateRandom() throws IOException {
+        Window primaryStage = graphView.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("PropWin.fxml"));
+        Scene newScene = new Scene(loader.load());
+        Stage propertyWindow = new Stage();
+        propertyWindow.setTitle("Random Graph Generator");
+        propertyWindow.initOwner(primaryStage);
+        propertyWindow.setScene(newScene);
+        propertyWindow.showAndWait();
+        if (PropWinController.lastGenerationSuccessful()) {
+            initNewGraph(PropWinController.getLastGeneratedGraph());
+        }
     }
 
     /**

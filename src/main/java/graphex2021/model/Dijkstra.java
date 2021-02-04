@@ -143,7 +143,9 @@ public class Dijkstra implements Algorithm {
             GXVertex v = unmarked.remove();     //this is the next chosen vertex
 
             //create a step with this vertex, but don't create a step for starting vertex
-            if (!v.equals(start)) { steps.add(extractStep(v)); }
+            if (!v.equals(start)) {
+                steps.add(extractStep(v));
+            }
 
             //update distances for all unmarked neighbors
             Collection<GXVertex> neighbors = g.getNeighbors(v);

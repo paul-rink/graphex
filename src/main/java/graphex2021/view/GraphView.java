@@ -34,6 +34,12 @@ public class GraphView extends SmartGraphPanel implements Observer {
                 STRAT, STYLESHEET.toURI());
     }
 
+    //TODO how to get this load
+    public GraphView(SmartPlacementStrategy strategy) throws FileNotFoundException {
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
+                strategy, STYLESHEET.toURI());
+    }
+
     @Override
     public void doUpdate(Subject s) {
         GXGraph visible = (GXGraph) s.getState();
