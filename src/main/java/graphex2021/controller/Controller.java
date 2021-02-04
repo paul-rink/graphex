@@ -24,10 +24,7 @@ import javafx.stage.Stage;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,10 +32,22 @@ import java.util.Optional;
 
 public class Controller {
 
+    /**
+     * Used as the standard pane size in cas no background image is found.
+     */
+    private static final int STANDARD_PANE_WIDTH = 1280;
+    private static final int STANDARD_PANE_HEIGHT = 720;
+    /**
+     * Used  to set the min pane height in case no backgroundimage is found.
+     */
+    private static final int STANDARD_PANE_MIN_WIDTH = 1000;
+    private static final int STANDARD_PANE_MIN_HEIGHT = 563;
     private static final String UNLOCKPASSWORD = "Algorithmus";
     private static final String PATTERN_FIN_TEXT = "[0-9]+";
     private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
     private static final int MIN_PANE_SIZE = 1000;
+    private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
+            + File.separator + "GraphData" + File.separator + "Templates";
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -48,7 +57,7 @@ public class Controller {
     private GXTableView gxTable;
 
     @FXML
-    private BorderPane borderPane;
+    private Menu templates;
 
     @FXML
     private GraphView graphView;
@@ -67,7 +76,7 @@ public class Controller {
 
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
-     * by using the standard {@link graphex2021.model.GXGraph}
+     * by using the standard {@link graphex2021.model.GXGraph}690
      */
     public Controller() {
         try {
@@ -81,6 +90,8 @@ public class Controller {
     }
 
     public void init() {
+
+        loadTemplates();
         initGraphView();
         initTableView();
         displayModel.notifyObservers();
@@ -163,7 +174,7 @@ public class Controller {
         graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
 
-        //TODO WIP
+        //TODO WIPauf de
         for (Node vertexNode : graphView.getChildren()) {
             if (vertexNode.toString().contains("Circle")) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
@@ -217,7 +228,7 @@ public class Controller {
         new VertexDoubleClickAlert().show();
     }
 
-    /**
+    /**()
      * When the user requests a hint, the next step according to the selected algorithm should be shown.
      */
     public void hintRequest() {
@@ -254,36 +265,6 @@ public class Controller {
         if (!(file == null)) {
             initNewGraph(file);
         }
-    }
-
-    public void onStandardGraph() {
-        File file = new File("src/main/resources/graphex2021/GraphData/exampleGraph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph1() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph2() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-3-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph3() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph4() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
-    }
-
-    public void onGraph5() {
-        File file = new File("src/main/resources/graphex2021/GraphData/test-2-node-graph.json");
-        initNewGraph(file);
     }
 
     private void initNewGraph(File file) {
@@ -341,12 +322,15 @@ public class Controller {
                                 BackgroundPosition.DEFAULT,
                                size)));
                 parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
+                parent.setPrefSize(width, height);
             } else {
                 //No Image found empty Background
                 new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
+                parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+                parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
                 parent.setBackground(Background.EMPTY);
             }
-            parent.setPrefSize(width, height);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -523,5 +507,37 @@ public class Controller {
     private int calcMinHeight(double width, double height) {
         double ratio = height / width;
         return (int) (MIN_PANE_SIZE * ratio);
+    }
+
+    private void loadTemplates() {
+        File templateFolder = null;
+
+        templateFolder = new File(PATH_TO_TEMPLATES);
+        if (!templateFolder.isDirectory()) {
+            //TODO Generic Error
+        }
+
+
+        try (DirectoryStream<Path> folderStream = Files.newDirectoryStream(templateFolder.toPath())) {
+            for (Path template : folderStream) {
+                if (template.toString().endsWith(".json")) {
+                    File graphTemplate = new File(String.valueOf(template));
+                    String name = graphTemplate.getName();
+                    name = name.substring(0, name.length() - ".json".length());
+                    name = name.replace("_", " ");
+                    MenuItem item = new MenuItem(name);
+                    String finalName = name;
+                    if (templates.getItems().isEmpty()
+                            || templates.getItems().stream().noneMatch(menuItem -> menuItem.getText().equals(finalName))) {
+                        templates.getItems().add(item);
+                        item.setOnAction(e -> initNewGraph(graphTemplate));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); //TODO Generic error
+        }
+
+
     }
 }
