@@ -63,7 +63,7 @@ public class GXVertex implements Vertex<String> {
         this.marked = false;
         this.visible = false;
         this.currentDistance = 0;
-        this.startOrEnd = null;
+        this.startOrEnd = GXVertexType.NORMAL;
     }
 
     /**
@@ -203,18 +203,18 @@ public class GXVertex implements Vertex<String> {
     }
 
     /**
-     * Sets the type the wvertex is.
+     * Sets the type the vertex is.
      *
-     * @param type Starting if start, Ending if end, null if neither
+     * @param type Starting if start, Ending if end, normal if neither
      */
     public void setStartOrEnd(GXVertexType type) {
         this.startOrEnd = type;
     }
 
     /**
-     * Gets the type of the vertex. If it is either starting or ending vertex. If neither is null
+     * Gets the type of the vertex. If it is either starting, ending vertex or a normal vertex
      *
-     * @return the type of the vertex. If neither {code null}
+     * @return the type of the vertex.
      */
     public GXVertexType getStartOrEnd() {
         return this.startOrEnd;

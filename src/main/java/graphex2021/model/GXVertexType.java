@@ -12,8 +12,11 @@ public enum GXVertexType {
     /**
      * If vertex is ending Vertex
      */
-    ENDING;
-
+    ENDING,
+    /**
+     * If vert is normal Vertex
+     */
+    NORMAL;
 
 
 }
