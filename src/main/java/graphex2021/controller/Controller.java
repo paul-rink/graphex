@@ -32,6 +32,16 @@ import java.util.Optional;
 
 public class Controller {
 
+    /**
+     * Used as the standard pane size in cas no background image is found.
+     */
+    private static final int STANDARD_PANE_WIDTH = 1280;
+    private static final int STANDARD_PANE_HEIGHT = 720;
+    /**
+     * Used  to set the min pane height in case no backgroundimage is found.
+     */
+    private static final int STANDARD_PANE_MIN_WIDTH = 1000;
+    private static final int STANDARD_PANE_MIN_HEIGHT = 563;
     private static final String UNLOCKPASSWORD = "Algorithmus";
     private static final String PATTERN_FIN_TEXT = "[0-9]+";
     private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
@@ -66,7 +76,7 @@ public class Controller {
 
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
-     * by using the standard {@link graphex2021.model.GXGraph}
+     * by using the standard {@link graphex2021.model.GXGraph}690
      */
     public Controller() {
         try {
@@ -164,7 +174,7 @@ public class Controller {
         graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
 
-        //TODO WIP
+        //TODO WIPauf de
         for (Node vertexNode : graphView.getChildren()) {
             if (vertexNode.toString().contains("Circle")) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
@@ -312,12 +322,15 @@ public class Controller {
                                 BackgroundPosition.DEFAULT,
                                size)));
                 parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
+                parent.setPrefSize(width, height);
             } else {
                 //No Image found empty Background
                 new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
+                parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+                parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
                 parent.setBackground(Background.EMPTY);
             }
-            parent.setPrefSize(width, height);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -508,7 +521,6 @@ public class Controller {
         try (DirectoryStream<Path> folderStream = Files.newDirectoryStream(templateFolder.toPath())) {
             for (Path template : folderStream) {
                 if (template.toString().endsWith(".json")) {
-                    System.out.println("gere");
                     File graphTemplate = new File(String.valueOf(template));
                     String name = graphTemplate.getName();
                     name = name.substring(0, name.length() - ".json".length());
