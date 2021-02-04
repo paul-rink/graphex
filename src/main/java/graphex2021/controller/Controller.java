@@ -82,7 +82,6 @@ public class Controller {
         try {
             this.displayModel = new DisplayModel();
         } catch (WrongFileFormatException e) {
-
             Alert genericError = new Alert(Alert.AlertType.ERROR, "Der Standardgraph konnte nicht geladen werden.");
             genericError.showAndWait();
             e.printStackTrace();
@@ -519,7 +518,9 @@ public class Controller {
 
         templateFolder = new File(PATH_TO_TEMPLATES);
         if (!templateFolder.isDirectory()) {
-            //TODO Generic Error
+            Alert genericError = new Alert(Alert.AlertType.ERROR, "Der Ordner in dem die Templates sind wurde nicht gefunden oder existiert nicht.");
+            genericError.showAndWait();
+            return;
         }
 
 
