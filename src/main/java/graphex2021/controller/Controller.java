@@ -310,6 +310,20 @@ public class Controller {
         graphView.setMinSize(prefWidth, prefHeight);
     }
 
+    private void setSizes(Pane parent, Background background) {
+        if (!background.isEmpty()) {
+            if (!background.getImages().isEmpty()) {
+                Image backgroundImage = background.getImages().get(0).getImage();
+                double width = backgroundImage.getWidth();
+                double height = backgroundImage.getHeight();
+                setSizes(parent, width, height, MIN_PANE_SIZE, calcMinHeight(width, height));
+            }
+        } else {
+            setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT
+                    , STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        }
+    }
+
     /**
      * Loads a background for a pane. If the file is an image the image will be used as background. If the file
      * isn't an image an empty background will be returned. The size of the background will be the size of the passed
@@ -376,6 +390,25 @@ public class Controller {
         parent.getChildren().add(graphView);
     }
 
+    /**
+     * Creates and adds a new {@link GraphView} to the pane.
+     *
+     * @param parent parent the {@link GraphView} should be added to.
+     * @param graphView the {@link GraphView} you want to add
+     */
+    private void addToParent(Pane parent, GraphView graphView) {
+        this.graphView = graphView;
+        parent.getChildren().add(graphView);
+    }
+
+    private void reset() {
+
+    }
+
+    /**
+     * Loads a new graphview from the specified file
+     * @param file json that the new view should be loaded from.
+     */
     private void loadNewGraphView(File file) {
         final Pane parent = (Pane) graphView.getParent();
         remove(parent);
@@ -393,17 +426,7 @@ public class Controller {
         Background background = loadBackground(file);
         parent.setBackground(background);
         // Setting the sizes to either standard if there was no background image or to the size of the background image.
-        if (!background.isEmpty()) {
-            if (!background.getImages().isEmpty()) {
-                Image backgroundImage = background.getImages().get(0).getImage();
-                double width = backgroundImage.getWidth();
-                double height = backgroundImage.getHeight();
-                setSizes(parent, width, height, MIN_PANE_SIZE, calcMinHeight(width, height));
-            }
-        } else {
-            setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT
-                    , STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
-        }
+        setSizes(parent, background);
 
         // initialising the window again with the new graph view and updating once to display the graph
         initializeUpdatedView(parent);
@@ -415,7 +438,30 @@ public class Controller {
         this.displayModel = new DisplayModel(graph);
         addToParent(parent);
         parent.setBackground(Background.EMPTY);
-        setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT,STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        initializeUpdatedView(parent);
+    }
+
+    /**
+     * When called the vertices are made moveable
+     *
+     * TODO make it so when its called again the vertices are not moveable.
+     */
+    public void verticesMovable() {
+        final Pane parent = (Pane) graphView.getParent();
+        Background oldBackground = parent.getBackground();
+        remove(parent);
+        GraphView movable;
+        try {
+            movable = new GraphView(true);
+        } catch (FileNotFoundException e) {
+            // Properties not found
+            e.printStackTrace();
+            movable = null;
+        }
+
+        addToParent(parent, movable);
+        setSizes(parent, oldBackground);
         initializeUpdatedView(parent);
     }
 

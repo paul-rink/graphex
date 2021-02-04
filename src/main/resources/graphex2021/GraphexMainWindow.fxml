@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 
 <?import graphex2021.view.GraphView?>
+<?import javafx.scene.control.CheckMenuItem?>
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
 
     <top>
@@ -42,7 +43,8 @@
                 <Menu mnemonicParsing="false" text="Informationen">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#onDisplayInteractionHelp" text="Interaktionshilfe" />
-                  <MenuItem mnemonicParsing="false" onAction="#onDisplayAlgorithmExplanation" text="Informationen zum Dijkstra-Algorithmus" />
+                        <MenuItem mnemonicParsing="false" onAction="#onDisplayAlgorithmExplanation" text="Informationen zum Dijkstra-Algorithmus" />
+                        <CheckMenuItem mnemonicParsing="false" onAction="#verticesMovable" text="Freier Modus"/>
                     </items>
                 </Menu>
             </menus>

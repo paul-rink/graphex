@@ -27,11 +27,21 @@ public class GraphView extends SmartGraphPanel implements Observer {
             + File.separator + "resources" + File.separator + "graphex2021"
             + File.separator + "smartgraph.properties");
 
+    private static final File MOVABLE_PROPERTIES =  new File("src" + File.separator + "main"
+            + File.separator + "resources" + File.separator + "graphex2021"
+            + File.separator + "smartgraphmove.properties");
+
+
+
     private ChangeListener listener;
 
     public GraphView() throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
                 STRAT, STYLESHEET.toURI());
+    }
+
+    public GraphView(boolean moveAble) throws FileNotFoundException {
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(MOVABLE_PROPERTIES)), STRAT, STYLESHEET.toURI());
     }
 
     //TODO how to get this load
