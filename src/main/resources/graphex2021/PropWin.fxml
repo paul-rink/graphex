@@ -17,7 +17,7 @@
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Text>
-      <TextField fx:id="densityText" layoutX="227.0" layoutY="95.0" prefHeight="26.0" prefWidth="59.0" text="20">
+      <TextField fx:id="densityText" layoutX="227.0" layoutY="95.0" prefHeight="26.0" prefWidth="59.0" text="10">
          <font>
             <Font name="System Italic" size="12.0" />
          </font></TextField>
@@ -38,7 +38,7 @@
       <Text layoutX="14.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="max value: 26" wrappingWidth="181.6417694091797" />
       <Text layoutX="14.0" layoutY="131.0" strokeType="OUTSIDE" strokeWidth="0.0" text="min value: 1" wrappingWidth="181.6417694091797" />
       <Text layoutX="14.0" layoutY="148.0" strokeType="OUTSIDE" strokeWidth="0.0" text="max value: 100" wrappingWidth="181.6417694091797" />
-      <Text layoutX="14.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Choose values between 10 and 20. Higher values might result in very complex graphs." wrappingWidth="276.9751281738281" />
+      <Text layoutX="14.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Choose values between 5 and 20. Higher values might result in very complex graphs." wrappingWidth="276.9751281738281" />
       <Text layoutX="14.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max. weight" wrappingWidth="181.6417694091797">
          <font>
             <Font name="System Bold" size="14.0" />
@@ -51,6 +51,6 @@
             <Font name="System Italic" size="12.0" />
          </font>
       </TextField>
-      <Text layoutX="44.0" layoutY="355.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Tick this, then your graph might nor be connnected." wrappingWidth="276.9751281738281" />
+      <Text layoutX="44.0" layoutY="355.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Tick this, then the generated graph might not be connected." wrappingWidth="276.9751281738281" />
    </children>
 </AnchorPane>
