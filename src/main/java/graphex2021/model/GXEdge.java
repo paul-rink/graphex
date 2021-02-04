@@ -176,7 +176,10 @@ public class GXEdge implements Edge<String, String> {
      * @param vertex checks this vertex
      * @return whether the given GXVertex is on this edge
      */
-    public boolean contains(GXVertex vertex) {
+    public boolean contains(GXVertex vertex) throws ElementNotInGraphException {
+        if (vertex == null) {
+            throw new ElementNotInGraphException("This vertex was null");
+        }
         return this.outboundVertex.getId() == vertex.getId() || this.inboundVertex.getId() == vertex.getId();
     }
 

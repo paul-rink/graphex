@@ -104,7 +104,7 @@ public class Controller {
      */
     public void onStartPressed() {
         setActions();
-        if(finish.getText().equals("Start")) {
+        if (finish.getText().equals("Start")) {
             finish.setText("Beenden");
             finish.setDisable(true);
         } else {

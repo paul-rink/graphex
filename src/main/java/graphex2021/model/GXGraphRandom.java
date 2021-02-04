@@ -42,17 +42,17 @@ public class GXGraphRandom extends GXGraph {
      * @param numVertices is the number of vertices the graph should have. Max {@link GXGraphRandom#MAX_NUMBER_VERTICES}
      * @param maxWeight is the maximum weight an edge can have. Range is always 0...maxWeight
      * @param p is the probability in % an edge will be chosen for the graph
-     * @param noIsolated if {@code true} isolated are not allowed and will be randomly connected to the rest of the
-     *                   graph, if {@code false} isolated vertices are allowed
+     * @param isolatedAllowed if {@code false} isolated are not allowed and will be randomly connected
+     *                        to the rest of the graph, if {@code true} isolated vertices are allowed.
      */
-    public GXGraphRandom(int numVertices, int maxWeight, int p, boolean noIsolated) {
+    public GXGraphRandom(int numVertices, int maxWeight, int p, boolean isolatedAllowed) {
         super();
         if (numVertices > MAX_NUMBER_VERTICES || numVertices < MIN_NUMBER_VERTICES) {
             throw new IllegalArgumentException("Maximum amount of vertices = " + MAX_NUMBER_VERTICES);
         }
         generateVertices(numVertices);
         setStartingAndEndingVertex();
-        if (noIsolated) generateRndTree(maxWeight);
+        if (!isolatedAllowed) generateRndTree(maxWeight);
         generateEdges(maxWeight, p);
     }
 

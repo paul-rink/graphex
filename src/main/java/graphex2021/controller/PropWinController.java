@@ -46,7 +46,7 @@ public class PropWinController {
             int maxWeight = Integer.parseInt(maxWeightText.getText());
             int density = Integer.parseInt(densityText.getText());
             if (numVertices < GXGraphRandom.MIN_NUMBER_VERTICES || numVertices > GXGraphRandom.MAX_NUMBER_VERTICES
-                    || maxWeight <GXGraphRandom.MIN_EDGE_WEIGHT || density < GXGraphRandom.MIN_EDGE_PROBABILITY
+                    || maxWeight < GXGraphRandom.MIN_EDGE_WEIGHT || density < GXGraphRandom.MIN_EDGE_PROBABILITY
                     || density > GXGraphRandom.MAX_EDGE_PROBABILITY) {
                 new WrongInputFormatAlert().show();
             } else {
