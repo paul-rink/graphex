@@ -25,6 +25,8 @@ public class GXVertex implements Vertex<String> {
     private boolean marked;
     private boolean isHint;
 
+    private GXVertexType startOrEnd;
+
     /**
      * The previous edge that was chosen to mark this vertex
      *
@@ -61,6 +63,7 @@ public class GXVertex implements Vertex<String> {
         this.marked = false;
         this.visible = false;
         this.currentDistance = 0;
+        this.startOrEnd = null;
     }
 
     /**
@@ -197,6 +200,14 @@ public class GXVertex implements Vertex<String> {
         boolean isGXVertex = o.getClass().isInstance(this);
         boolean hasSameID = this.id == ((GXVertex) o).getId();
         return isGXVertex && hasSameID;
+    }
+
+    public void setStartOrEnd(GXVertexType type) {
+        this.startOrEnd = type;
+    }
+
+    public GXVertexType getStartOrEnd() {
+        return this.startOrEnd;
     }
 
     public void setHint(boolean isHint) {

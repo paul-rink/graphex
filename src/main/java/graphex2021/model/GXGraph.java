@@ -55,6 +55,9 @@ public class GXGraph implements GraphInterface<String, String> {
         this.startingVertex = parser.parseStarting(file, vertices());
         this.endingVertex = parser.parseEnding(file, vertices());
 
+        startingVertex.setStartOrEnd(GXVertexType.STARTING);
+        endingVertex.setStartOrEnd(GXVertexType.ENDING);
+
     }
 
 
