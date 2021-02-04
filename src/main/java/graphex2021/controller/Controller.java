@@ -336,7 +336,10 @@ public class Controller {
             }
 
         } catch (FileNotFoundException e) {
+            Alert genericError = new Alert(Alert.AlertType.ERROR, "Es gab ein Problem beim erstellen der Graph View. Die FXML konnte nicht gefunden werden.");
+            genericError.showAndWait();
             e.printStackTrace();
+            return;
         }
         // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
         parent.layout();
