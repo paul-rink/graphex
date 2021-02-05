@@ -150,7 +150,7 @@ public class GraphParser {
         return object;
     }
 
-    private void checkFileFormat(JSONObject input) throws ValidationException {
+    private void checkFileFormat(JSONObject input) throws ValidationException, WrongFileFormatException {
         String jsonSchemaString = readFromFile(new File(GraphTypeFile));
         JSONObject jsonSchema = new JSONObject(jsonSchemaString);
         Schema schema = SchemaLoader.load(jsonSchema);
