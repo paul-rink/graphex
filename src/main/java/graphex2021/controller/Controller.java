@@ -3,7 +3,6 @@ package graphex2021.controller;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
-import com.brunomnsilva.smartgraph.graphview.SmartRandomPlacementStrategy;
 import graphex2021.Main;
 import graphex2021.model.*;
 import graphex2021.view.GXTableView;
@@ -45,7 +44,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.Random;
 
 public class Controller {
 
@@ -66,6 +64,7 @@ public class Controller {
     private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main"
             + File.separator + "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
+
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -91,6 +90,9 @@ public class Controller {
 
     @FXML
     private TextField finTextField;
+
+    @FXML
+    private CheckMenuItem verticesMoveable;
 
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
@@ -123,6 +125,7 @@ public class Controller {
     public void initGraphView() {
         displayModel.register(graphView);
         graphView.setAutomaticLayout(false);
+        this.verticesMoveable.setSelected(graphView.isMoveable());
         graphView.init();
     }
 
@@ -186,8 +189,16 @@ public class Controller {
         tableStage.setTitle("Tabelle");
         tableStage.setScene(new Scene(new VBox(gxTable)));
         tableStage.show();
+    }
 
-
+    public void setFreeModeActions() {
+        for (Node vertexNode : graphView.getChildren()) {
+            if (vertexNode.toString().contains("Circle")) {
+                vertexNode.setOnMouseReleased((MouseEvent mouseEvent) -> {
+                    this.onDragFinished((SmartGraphVertexNode) vertexNode);
+                });
+            }
+        }
     }
 
     public void setActions() {
@@ -203,23 +214,33 @@ public class Controller {
                         onVertexClicked(vert, mouseEvent.getX(), mouseEvent.getY());
                     }
                 });
-            }
-        }
-
-        for (Node node : graphView.getChildren()) {
-            if (node instanceof SmartGraphVertexNode) {
-                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
                 vert.setOnMouseEntered(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
                 vert.setOnMouseExited(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
             }
         }
+        if (verticesMoveable.isSelected()) {
+            setFreeModeActions();
+        }
+    }
+
+    private void onDragFinished(SmartGraphVertexNode vertexNode) {
+        graphView.setMovedCoordinates(vertexNode);
     }
 
     public void onHoverVertex(SmartGraphVertexNode vertex, MouseEvent mouseEvent) {
         if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
             vertex.setStyleClass("hoverVertex");
         } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
-            displayModel.notifyObservers();
+            GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+            if (!vert.getStartOrEnd().equals(GXVertexType.NORMAL)) {
+                vertex.setStyleClass(vert.getStartOrEnd().toString());
+            } else {
+                if (vert.isMarked()) {
+                    vertex.setStyleClass("markedVertex");
+                } else {
+                    vertex.setStyleClass("vertex");
+                }
+            }
         }
     }
 
@@ -291,83 +312,98 @@ public class Controller {
         fileChooser.getExtensionFilters().add(jsonFilter);
         File file = fileChooser.showOpenDialog(browserStage);
         if (!(file == null)) {
-            initNewGraph(file);
+            loadNewGraphView(file);
         }
     }
 
-    private void initNewGraph(File file) {
-        DisplayModel newModel = null;
-        try {
-            newModel = new DisplayModel(file);
-        } catch (WrongFileFormatException e) {
-            Alert formatError = new FileFormatError(e);
-            formatError.showAndWait();
-            return;
-        }
+
+    /**
+     * When loading a new graph view the old graph view needs to be correctly unlinked from the window and listeners.
+     * Also the {@link GraphView} needs to be removed from the parent pane it was part of.
+     *
+     * @param parent parent of the old {@link GraphView} that it should be removed from
+     */
+    private void remove(Parent parent) {
+        //uncoupling the old views from listeners and the observer.
         displayModel.unregister(graphView);
         displayModel.unregister(gxTable);
         graphView.removeListener();
-        this.displayModel = newModel;
+        // The Pane that graphView is part of (In this case boder pane)
+        Pane pane  = (Pane) parent;
+        // Removing the graphView so that later a graphView with other properties can be added.
+        pane.getChildren().remove(graphView);
+    }
 
-        // The height of the pane in case there is no background image is set to.
-        double height = graphView.getHeight();
-        double width = graphView.getWidth();
+    /**
+     * Will set the passed sizes for the parent and graphView.
+     * @param parent the parent pane you want to set the size for
+     * @param prefWidth preferred Width
+     * @param prefHeight preferred Height
+     * @param minWidth minimum Width
+     * @param minHeight minimum Height
+     */
+    private void setSizes(Pane parent, double prefWidth, double prefHeight, double minWidth, double minHeight) {
+        parent.setPrefSize(prefWidth, prefHeight);
+        parent.setMinSize(minWidth, minHeight);
+        graphView.setPrefSize(prefWidth, prefHeight);
+        graphView.setMinSize(prefWidth, prefHeight);
+    }
 
-        // Loading the new BackgroundImage if there is a file with the same name as
+    private void setSizes(Pane parent, Background background) {
+        if (!background.isEmpty()) {
+            if (!background.getImages().isEmpty()) {
+                Image backgroundImage = background.getImages().get(0).getImage();
+                double width = backgroundImage.getWidth();
+                double height = backgroundImage.getHeight();
+                setSizes(parent, width, height, MIN_PANE_SIZE, calcMinHeight(width, height));
+            }
+        } else {
+            setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT
+                    , STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        }
+    }
+
+
+    /**
+     * Loads a background for a pane. If the file is an image the image will be used as background. If the file
+     * isn't an image an empty background will be returned. The size of the background will be the size of the passed
+     * image and it will be set to cover.
+     *
+     * @param file you want the background created from
+     * @return the background either from the image or empty
+     */
+    private Background loadBackground(File file) {
+
         File imageFile = findBackgroundImage(file);
-        BufferedImage image = null;
+        BufferedImage image;
         if (imageFile != null) {
             image = checkIfImage(imageFile);
-            if (image != null) {
-                // If a background image exists these values should be used to set the params for the new Window
-                height = image.getHeight();
-                width = image.getWidth();
+            if (image == null) {
+                new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
+                return Background.EMPTY;
+            } else {
+                //Creates ne BackgroundImage if there was an image found.
+                Image back = new Image(imageFile.toURI().toString());
+                //Creating the new background with all its parameters
+                BackgroundSize size = new BackgroundSize(back.getWidth(), back.getHeight()
+                        , false, false, false, true);
+                BackgroundImage backgroundImage = new BackgroundImage(back, BackgroundRepeat.NO_REPEAT,
+                        BackgroundRepeat.NO_REPEAT,
+                        BackgroundPosition.DEFAULT,
+                        size);
+                return new Background(backgroundImage);
             }
         }
+        return Background.EMPTY;
+    }
 
-        // The Pane that graphView is part of (In this case boder pane)
-        Pane parent = (Pane) graphView.getParent();
-
-        // Removing the graphView so that later a graphView with other properties can be added.
-        parent.getChildren().remove(graphView);
-
-        //TODO maybe add reset buttons method to reset the button state for all since it is needed more tha once.
-        finish.setText("Start");
-        finish.setDisable(false);
-
-        try {
-            this.graphView = new GraphView();
-        } catch (FileNotFoundException e) {
-            Alert fileAlert = new FileAlert(e.getMessage()+ "\n Die FXML wurde nicht gefunden");
-            fileAlert.showAndWait();
-            e.printStackTrace();
-            e.printStackTrace();
-            return;
-        }
-        graphView.setPrefSize(width, height);
-        // Adding the new graphView to the pane
-        parent.getChildren().add(graphView);
-        if (image != null) {
-            //Creates ne BackgroundImage if there was an image found.
-            Image background = new Image(imageFile.toURI().toString());
-            BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
-                    , false, false, false, true);
-            parent.setBackground(new Background(
-                    new BackgroundImage(background,
-                            BackgroundRepeat.NO_REPEAT,
-                            BackgroundRepeat.NO_REPEAT,
-                            BackgroundPosition.DEFAULT,
-                           size)));
-            parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
-            parent.setPrefSize(width, height);
-        } else {
-            //No Image found empty Background
-            new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
-            parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
-            parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
-            parent.setBackground(Background.EMPTY);
-        }
-
+    /**
+     * Adds the {@link GraphView} to the pane and initializes the {@link GXTableView}. Then correctly initializes
+     * all the features of the Graphex window
+     *
+     * @param parent the parent pane that the graphView needs to be added to.
+     */
+    private void initializeUpdatedView(Pane parent) {
         // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
         parent.layout();
 
@@ -379,45 +415,114 @@ public class Controller {
         displayModel.notifyObservers();
     }
 
-    //TODO better way to compromise this
-    private void initNewGraph(GXGraph graph) {
-        displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
-        graphView.removeListener();
-        this.displayModel = new DisplayModel(graph);
+    /**
+     * Creates and adds a new {@link GraphView} to the pane.
+     *
+     * @param parent parent the {@link GraphView} should be added to.
+     */
+    private void addToParent(Pane parent) {
+        try {
+            this.graphView = new GraphView();
+        } catch (FileNotFoundException e) {
+            Alert fileAlert = new FileAlert(e.getMessage()+ "\n wurde nicht gefunden");
+            fileAlert.showAndWait();
+            e.printStackTrace();
+            return;
+        }
+        parent.getChildren().add(graphView);
+    }
 
-        // The Pane that graphView is part of (In this case boder pane)
-        Pane parent = (Pane) graphView.getParent();
+    /**
+     * Creates and adds a new {@link GraphView} to the pane.
+     *
+     * @param parent parent the {@link GraphView} should be added to.
+     * @param graphView the {@link GraphView} you want to add
+     */
+    private void addToParent(Pane parent, GraphView graphView) {
+        this.graphView = graphView;
+        parent.getChildren().add(graphView);
+    }
 
-        // Removing the graphView so that later a graphView with other properties can be added.
-        parent.getChildren().remove(graphView);
+    private void reset() {
         finish.setText("Start");
         finish.setDisable(false);
+    }
 
-        // TODO check how height is set
-        double height = graphView.getHeight();
-        double width = graphView.getWidth();
-
+    /**
+     * Loads a new graphview from the specified file
+     * @param file json that the new view should be loaded from.
+     */
+    private void loadNewGraphView(File file) {
+        final Pane parent = (Pane) graphView.getParent();
+        remove(parent);
         try {
-            // TODO propably needs to be done like this, so that properties can be changed as well.
-            this.graphView = new GraphView(new SmartRandomPlacementStrategy());
-
-            //TODO Check what needs to happen for this to work correctly
-            graphView.setPrefSize(width, height);
-            // Adding the new graphView to the pane
-            parent.getChildren().add(graphView);
-            graphView.getParent();
-            parent.layout();
-        } catch (FileNotFoundException e) {
+            this.displayModel = new DisplayModel(file);
+        } catch (WrongFileFormatException e) {
+            Alert formatError = new FileFormatError(e);
+            formatError.showAndWait();
             e.printStackTrace();
+            return;
+        }
+        // Creating a new graphView and adding it to the pane
+        addToParent(parent);
+
+        // creating the background if one is in the same folder as the json
+        Background background = loadBackground(file);
+        parent.setBackground(background);
+        // Setting the sizes to either standard if there was no background image or to the size of the background image.
+        setSizes(parent, background);
+
+        reset();
+
+        // initialising the window again with the new graph view and updating once to display the graph
+        initializeUpdatedView(parent);
+    }
+
+    private void loadNewGraphView(GXGraph graph) {
+        final Pane parent = (Pane) graphView.getParent();
+        remove(parent);
+        this.displayModel = new DisplayModel(graph);
+        addToParent(parent);
+        parent.setBackground(Background.EMPTY);
+        setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        reset();
+        initializeUpdatedView(parent);
+    }
+
+    /**
+     * When called the vertices are made moveable
+     *
+     */
+    public void verticesMovable() {
+        final Pane parent = (Pane) graphView.getParent();
+        Background oldBackground = parent.getBackground();
+        remove(parent);
+        GraphView movable;
+        if (verticesMoveable.isSelected()) {
+            try {
+                movable = new GraphView(true);
+                addToParent(parent, movable);
+            } catch (FileNotFoundException e) {
+                // Properties not found
+                e.printStackTrace();
+                movable = null;
+
+            }
+            verticesMoveable.setSelected(true);
+        } else {
+            //TODO make Graph load unmoveable
+            verticesMoveable.setSelected(false);
+            //Update with better constructor
+            addToParent(parent);
         }
 
-        // new Tableview
-        this.gxTable = new GXTableView();
 
-        //Reinitializing all the views
-        init();
-        displayModel.notifyObservers();
+        setSizes(parent, oldBackground);
+        initializeUpdatedView(parent);
+        if (!finish.getText().equals("Start")) {
+            setActions();
+        }
+
     }
 
     /**
@@ -433,7 +538,7 @@ public class Controller {
         propertyWindow.setScene(newScene);
         propertyWindow.showAndWait();
         if (PropWinController.lastGenerationSuccessful()) {
-            initNewGraph(PropWinController.getLastGeneratedGraph());
+            loadNewGraphView(PropWinController.getLastGeneratedGraph());
         }
     }
 
@@ -545,8 +650,8 @@ public class Controller {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
-                        double x = vert.getPositionCenterX() / graphView.getSceneWidth();
-                        double y = vert.getPositionCenterY() / graphView.getSceneHeight();
+                        double x = graphView.calcRelativeX(vert);
+                        double y = graphView.calcRelativeY(vert);
                         System.out.println(vert.getUnderlyingVertex().element().toString() + " x = "
                                 + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
 
@@ -655,7 +760,7 @@ public class Controller {
                     if (templates.getItems().isEmpty()
                             || templates.getItems().stream().noneMatch(menuItem -> menuItem.getText().equals(finalName))) {
                         templates.getItems().add(item);
-                        item.setOnAction(e -> initNewGraph(graphTemplate));
+                        item.setOnAction(e -> loadNewGraphView(graphTemplate));
                     }
                 }
             }
