@@ -460,24 +460,28 @@ public class Controller {
         Background oldBackground = parent.getBackground();
         remove(parent);
         GraphView movable;
-        if () {
+        if (verticesMoveable.isSelected()) {
             try {
                 movable = new GraphView(true);
+                addToParent(parent, movable);
             } catch (FileNotFoundException e) {
                 // Properties not found
                 e.printStackTrace();
                 movable = null;
+
             }
             verticesMoveable.setSelected(true);
         } else {
             //TODO make Graph load unmoveable
             verticesMoveable.setSelected(false);
-            movable = null;
+            //Update with better constructor
+            addToParent(parent);
         }
 
-        addToParent(parent, movable);
+
         setSizes(parent, oldBackground);
         initializeUpdatedView(parent);
+        setActions();
 
     }
 
