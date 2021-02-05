@@ -18,16 +18,26 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -476,14 +486,31 @@ public class Controller {
      * Will show some information on the selected algorithm in the view.
      */
     public void onDisplayAlgorithmExplanation() {
-
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Information");
+        dialog.setHeaderText("Dijkstra-Algorithmus");
+        dialog.setContentText("Der Algorithmus von Dijkstra (nach seinem Erfinder Edsger W. Dijkstra) ist ein " +
+                "Algorithmus aus der Klasse der Greedy-Algorithmen und löst das Problem der kürzesten Pfade für einen " +
+                "gegebenen Startknoten. Er berechnet somit einen kürzesten Pfad zwischen dem gegebenen Startknoten " +
+                "und einem der (oder allen) übrigen Knoten in einem kantengewichteten Graphen (sofern dieser keine " +
+                "Negativkanten enthält).\n" +
+                "\n" +
+                "Für unzusammenhängende ungerichtete Graphen ist der Abstand zu denjenigen Knoten unendlich, zu " +
+                "denen kein Pfad vom Startknoten aus existiert. Dasselbe gilt auch für gerichtete nicht stark " +
+                "zusammenhängende Graphen. Dabei wird der Abstand synonym auch als Entfernung, Kosten oder Gewicht " +
+                "bezeichnet. \n (Wikipedia) \n \n HINWEIS: Wähle bei unentschiedenen Gewichten immer den Knoten " +
+                "mit der niedrigeren ID!");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.setHeight(600);
+        dialog.showAndWait();
     }
 
     /**
      * Will show some information on interaction options in the view.
      */
     public void onDisplayInteractionHelp() {
-
+        Dialog iaDialog = new InteractionDialog();
+        iaDialog.showAndWait();
     }
 
     /**
