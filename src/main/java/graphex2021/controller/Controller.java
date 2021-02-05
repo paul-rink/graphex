@@ -51,7 +51,8 @@ public class Controller {
     private static final String PATTERN_FIN_TEXT = "[0-9]+";
     private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
     private static final int MIN_PANE_SIZE = 1000;
-    private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
+    private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main"
+            + File.separator + "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
 
     /**
@@ -87,8 +88,10 @@ public class Controller {
         try {
             this.displayModel = new DisplayModel();
         } catch (WrongFileFormatException e) {
-            //TODO handle this error by displaying a message box
+            Alert error = new FileAlert(e.getMessage());
+            error.showAndWait();
             e.printStackTrace();
+            return;
         }
 
         this.gxTable = new GXTableView();
@@ -281,16 +284,18 @@ public class Controller {
     }
 
     private void initNewGraph(File file) {
-        displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
-        graphView.removeListener();
-
+        DisplayModel newModel = null;
         try {
-            this.displayModel = new DisplayModel(file);
+            newModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
             Alert formatError = new FileFormatError(e);
             formatError.showAndWait();
+            return;
         }
+        displayModel.unregister(graphView);
+        displayModel.unregister(gxTable);
+        graphView.removeListener();
+        this.displayModel = newModel;
 
         // The height of the pane in case there is no background image is set to.
         double height = graphView.getHeight();
@@ -320,33 +325,37 @@ public class Controller {
 
         try {
             this.graphView = new GraphView();
-            graphView.setPrefSize(width, height);
-            // Adding the new graphView to the pane
-            parent.getChildren().add(graphView);
-            if (image != null) {
-                //Creates ne BackgroundImage if there was an image found.
-                Image background = new Image(imageFile.toURI().toString());
-                BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
-                        , false, false, false, true);
-                parent.setBackground(new Background(
-                        new BackgroundImage(background,
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundPosition.DEFAULT,
-                               size)));
-                parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
-                parent.setPrefSize(width, height);
-            } else {
-                //No Image found empty Background
-                new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
-                parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
-                parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
-                parent.setBackground(Background.EMPTY);
-            }
-
         } catch (FileNotFoundException e) {
+            Alert fileAlert = new FileAlert(e.getMessage()+ "\n Die FXML wurde nicht gefunden");
+            fileAlert.showAndWait();
             e.printStackTrace();
+            e.printStackTrace();
+            return;
         }
+        graphView.setPrefSize(width, height);
+        // Adding the new graphView to the pane
+        parent.getChildren().add(graphView);
+        if (image != null) {
+            //Creates ne BackgroundImage if there was an image found.
+            Image background = new Image(imageFile.toURI().toString());
+            BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
+                    , false, false, false, true);
+            parent.setBackground(new Background(
+                    new BackgroundImage(background,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundPosition.DEFAULT,
+                           size)));
+            parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
+            parent.setPrefSize(width, height);
+        } else {
+            //No Image found empty Background
+            new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
+            parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+            parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
+            parent.setBackground(Background.EMPTY);
+        }
+
         // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
         parent.layout();
 
@@ -435,6 +444,8 @@ public class Controller {
         try {
             displayModel.undo();
         } catch (ElementNotInGraphException e) {
+            Alert a = new ElementNotInGraphAlert();
+            a.showAndWait();
             e.printStackTrace();
         }
     }
@@ -445,7 +456,7 @@ public class Controller {
      * @param algo is the algorithm that is selected to be performed at the graph in the view.
      */
     public void onAlgorithmSelect(Algorithm algo) {
-
+    //TODO do something like the vorlagen where the program scans for available algorithms
     }
 
     /**
@@ -483,7 +494,7 @@ public class Controller {
             } else if ("Test".equals(result.get())) {
                 displayCoordinates();
             } else {
-                new Alert(Alert.AlertType.ERROR, "Das war das falsche Passwort.").showAndWait();
+                new Alert(Alert.AlertType.INFORMATION, "Das war das falsche Passwort.").showAndWait();
             }
         }
     }
@@ -535,8 +546,10 @@ public class Controller {
                 }
                 dirStream.close();
             } catch (IOException e) {
-                //TODO
+                Alert fileAlert = new FileAlert(pathToDir.toString() + e.getMessage());
+                fileAlert.showAndWait();
                 e.printStackTrace();
+                return null;
             }
         }
         return null;
@@ -552,9 +565,15 @@ public class Controller {
                     return image;
                 }
             } catch (IOException ioe) {
+                Alert fileAlert = new FileAlert(imageFile.getAbsolutePath() + ioe.getMessage());
+                fileAlert.showAndWait();
+                ioe.printStackTrace();
                 return null;
             }
         } catch (IOException e) {
+            Alert fileAlert = new FileAlert(imageFile.getAbsolutePath() + e.getMessage());
+            fileAlert.showAndWait();
+            e.printStackTrace();
             return null;
         }
         return null;
@@ -578,7 +597,9 @@ public class Controller {
 
         templateFolder = new File(PATH_TO_TEMPLATES);
         if (!templateFolder.isDirectory()) {
-            //TODO Generic Error
+            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath()+ "\n An diesem Pfad ist kein Ordner.");
+            fileAlert.showAndWait();
+            return;
         }
 
 
@@ -599,7 +620,10 @@ public class Controller {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace(); //TODO Generic error
+            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath());
+            fileAlert.showAndWait();
+            e.printStackTrace();
+            return;
         }
 
 
