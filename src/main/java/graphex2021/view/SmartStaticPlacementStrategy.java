@@ -43,26 +43,14 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
         this.correction = correctionFactor;
 
         if (width < minWidth &&  height < minHeight) {
-            System.out.println("both");
-            if (correctionFactor < 1) {
-                System.out.println("taller");
-                for (SmartGraphVertex<V> vertex : vertices) {
+            for (SmartGraphVertex<V> vertex : vertices) {
 
-                    GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
-                    double x = calcFromRelative(minWidth, vert.getPosition().getPosition()[0]);
-                    double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]);
-                    vertex.setPosition(x, y);
-                }
-            } else if (correctionFactor > 1) {
-                System.out.println("wider");
-                for (SmartGraphVertex<V> vertex : vertices) {
-
-                    GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
-                    double x = calcFromRelative(minWidth, vert.getPosition().getPosition()[0]);
-                    double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]);
-                    vertex.setPosition(x, y);
-                }
+                GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+                double x = calcFromRelative(minWidth, vert.getPosition().getPosition()[0]);
+                double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]);
+                vertex.setPosition(x, y);
             }
+
         } else {
 
             if (correctionFactor == 1) {
