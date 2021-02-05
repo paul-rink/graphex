@@ -52,6 +52,7 @@ public class Controller {
     private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
 
+
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
      */
@@ -76,6 +77,9 @@ public class Controller {
 
     @FXML
     private TextField finTextField;
+
+    @FXML
+    private CheckMenuItem verticesMoveable;
 
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
@@ -456,17 +460,25 @@ public class Controller {
         Background oldBackground = parent.getBackground();
         remove(parent);
         GraphView movable;
-        try {
-            movable = new GraphView(true);
-        } catch (FileNotFoundException e) {
-            // Properties not found
-            e.printStackTrace();
+        if () {
+            try {
+                movable = new GraphView(true);
+            } catch (FileNotFoundException e) {
+                // Properties not found
+                e.printStackTrace();
+                movable = null;
+            }
+            verticesMoveable.setSelected(true);
+        } else {
+            //TODO make Graph load unmoveable
+            verticesMoveable.setSelected(false);
             movable = null;
         }
 
         addToParent(parent, movable);
         setSizes(parent, oldBackground);
         initializeUpdatedView(parent);
+
     }
 
     /**

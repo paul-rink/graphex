@@ -44,7 +44,7 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#onDisplayInteractionHelp" text="Interaktionshilfe" />
                         <MenuItem mnemonicParsing="false" onAction="#onDisplayAlgorithmExplanation" text="Informationen zum Dijkstra-Algorithmus" />
-                        <CheckMenuItem mnemonicParsing="false" onAction="#verticesMovable" text="Freier Modus"/>
+                        <CheckMenuItem fx:id="verticesMoveable" mnemonicParsing="false" onAction="#verticesMovable" text="Freier Modus"/>
                     </items>
                 </Menu>
             </menus>
