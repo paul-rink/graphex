@@ -206,7 +206,16 @@ public class Controller {
         if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
             vertex.setStyleClass("hoverVertex");
         } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
-            displayModel.notifyObservers();
+            GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+            if (!vert.getStartOrEnd().equals(GXVertexType.NORMAL)) {
+                vertex.setStyleClass(vert.getStartOrEnd().toString());
+            } else {
+                if (vert.isMarked()) {
+                    vertex.setStyleClass("markedVertex");
+                } else {
+                    vertex.setStyleClass("vertex");
+                }
+            }
         }
     }
 
