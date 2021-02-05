@@ -2,7 +2,7 @@ package graphex2021.controller;
 
 import graphex2021.model.WrongFileFormatException;
 import javafx.scene.control.Alert;
-//TODO javadoc
+
 public class FileFormatError extends Alert {
     public FileFormatError(WrongFileFormatException formatException) {
         super(AlertType.ERROR);

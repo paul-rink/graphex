@@ -87,7 +87,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
         if (gxEdge.isHighlighted()) {
             edge.setStyleClass("highlightedEdge");
         }
-        showVertexTooltip(edge);
+        showDistanceTooltip(edge);
     }
 
     private void styleVertex(SmartGraphVertexNode vertex) {
@@ -95,10 +95,10 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
         if (gxVertex.isMarked()) {
             vertex.setStyleClass("markedVertex");
-            showVertexTooltip(vertex, TooltipType.DISTANCE);
+            showDistanceTooltip(vertex, true);
         } else if (!gxVertex.isMarked()) {
             vertex.setStyleClass("vertex");
-            showVertexTooltip(vertex, TooltipType.ID);
+            showDistanceTooltip(vertex, false);
         }
         //TODO rethink the order here
         if (gxVertex.isHint()) {
@@ -169,21 +169,15 @@ public class GraphView extends SmartGraphPanel implements Observer {
     /**
      * Enables or disables tooltip for a vertex that contains its current distance to the start.
      * @param v is the vertex
-     * @param type is the {@link TooltipType} that should be displayed, default is no tooltip
+     * @param show is {@code true} if tooltip should be displayed, {@code false} otherwise.
      */
-    private void showVertexTooltip(SmartGraphVertexNode v, TooltipType type) {
+    private void showDistanceTooltip(SmartGraphVertexNode v, boolean show) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
-        Tooltip t = new Tooltip();
-        switch (type) {
-            case DISTANCE:
-                t = new Tooltip("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
-                Tooltip.install(v, t);
-                break;
-            case ID:
-                t = new Tooltip("ID: " + vertex.getId());
-                Tooltip.install(v, t);
-                break;
-            default: Tooltip.uninstall(v, t);
+        Tooltip t = new Tooltip("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+        if (show) {
+            Tooltip.install(v, t);
+        } else {
+            Tooltip.uninstall(v, t);
         }
     }
 
@@ -192,7 +186,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
      * for unmarked and unblocked edges and with exact 1 marked vertex.
      * @param e is the hovered edge
      */
-    private void showVertexTooltip(SmartGraphEdgeLine e) {
+    private void showDistanceTooltip(SmartGraphEdgeLine e) {
         GXEdge gxEdge = (GXEdge) e.getUnderlyingEdge();
         GXVertex unmarkedVertex = gxEdge.getNextVertex();
         Tooltip t = new Tooltip();
@@ -273,16 +267,5 @@ public class GraphView extends SmartGraphPanel implements Observer {
      */
     public boolean isMoveable() {
         return isMoveable;
-    }
-
-    public enum TooltipType {
-        /**
-         * Tooltip will contain information to distances.
-         */
-        DISTANCE,
-        /**
-         * Tooltip should display ID of element
-         */
-        ID
     }
 }

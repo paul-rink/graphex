@@ -207,7 +207,7 @@ public class GXVertex implements Vertex<String> {
      *
      * @param type Starting if start, Ending if end, normal if neither
      */
-    public void setType(GXVertexType type) {
+    public void setStartOrEnd(GXVertexType type) {
         this.startOrEnd = type;
     }
 

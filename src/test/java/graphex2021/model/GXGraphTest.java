@@ -19,8 +19,12 @@ public class GXGraphTest {
     @Test
     public void testGXGraphConstructor() {
         try {
-            g = new GXGraph(graphFile);
-        } catch (WrongFileFormatException e) {
+            try {
+                g = new GXGraph(graphFile);
+            } catch (WrongFileFormatException e) {
+                e.printStackTrace();
+            }
+        } catch (ElementNotInGraphException e) {
             e.printStackTrace();
         }
         assertEquals(14,g.vertices().size());
