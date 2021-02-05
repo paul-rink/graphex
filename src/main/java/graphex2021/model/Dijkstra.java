@@ -36,8 +36,9 @@ public class Dijkstra implements Algorithm {
     public Dijkstra() {
          //This comparator is used for comparing two vertices by their current distance to the start vertex.
         Comparator<GXVertex> vertexDistanceComparator = (v, u) -> {
-            //case u and v are unvisited and therefore distance infinity (-1)
-            if (dist[v.getId()] == dist[u.getId()]) return 0;
+            //case u and v are unvisited and therefore distance infinity (-1) or have same distance then choose
+            //the one with lower id
+            if (dist[v.getId()] == dist[u.getId()]) return (v.getId() - u.getId());
             //case v is unvisited and therefore distance infinity (-1), u is better than v
             else if (dist[v.getId()] == -1) return 1;
             //case u is unvisited and therefore distance infinity (-1), v is better than u
