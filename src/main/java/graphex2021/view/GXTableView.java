@@ -166,9 +166,13 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         } else if (markedVertices == 1) {
             // one vertex marked ==> reset or undo the first selection ==> works too
             reset();
-        } else if (markedVertices > prevMarked) {
+            //in order to guarantee an update delete the current row as well and re add it
+            addRow(graph);
+        } else if (markedVertices < prevMarked) {
             // one less marked vertex ==> something undone
             undo();
+            //in order to guarantee an update delete the current row as well and re add it
+            addRow(graph);
             this.prevMarked = markedVertices;
         }
 
@@ -186,13 +190,16 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
     }
 
     private void reset() {
-        steps.remove(1, steps.size());
-        stepCounter = 1;
+        steps.remove(0, steps.size());
+        stepCounter = 0;
         this.prevMarked = 1;
     }
 
     private void undo() {
+        //TODO not nice but works
         steps.remove(steps.size() - 1);
+        steps.remove(steps.size() - 1);
+        stepCounter--;
         stepCounter--;
     }
 
