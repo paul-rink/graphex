@@ -38,7 +38,7 @@
       <Text layoutX="14.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="max value: 26" wrappingWidth="181.6417694091797" />
       <Text layoutX="14.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="min value: 1" wrappingWidth="181.6417694091797" />
       <Text layoutX="14.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="max value: 100" wrappingWidth="181.6417694091797" />
-      <Text layoutX="14.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Choose values between 5 and 20. Higher values might result in very complex graphs." wrappingWidth="276.9751281738281" />
+      <Text layoutX="14.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Choose values between 2 and 10. Higher values might result in very complex graphs." wrappingWidth="276.9751281738281" />
       <Text layoutX="14.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max. weight" wrappingWidth="181.6417694091797">
          <font>
             <Font name="System Bold" size="14.0" />

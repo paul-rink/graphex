@@ -29,20 +29,22 @@ public class DisplayModel extends Subject {
     public DisplayModel() throws WrongFileFormatException {
         this(EXAMPLEGRAPH);
     }
-
-    public DisplayModel(File inputFile) throws WrongFileFormatException {
-        try {
-            this.graph = new GXGraph(inputFile);
-        } catch (ElementNotInGraphException eni) {
-            //TODO better way to handle this. Wrong exception here
-        }
-        loadGraph();
-    }
-
+  
     public DisplayModel(GXGraph graph) {
         this.graph = graph;
         loadGraph();
     }
+
+    public DisplayModel(File inputFile) throws WrongFileFormatException {
+        loadGraph(inputFile);
+    }
+
+    private void loadGraph(File inputFile) throws WrongFileFormatException {
+        this.graph = new GXGraph(inputFile);
+        loadGraph();
+    }
+
+
 
     private void loadGraph() {
         this.visibleGraph = new GXGraph();

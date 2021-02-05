@@ -42,21 +42,26 @@ public class GXGraph implements GraphInterface<String, String> {
         this.endingVertex = null;
     }
 
-    public GXGraph(File file) throws ElementNotInGraphException, WrongFileFormatException {
+    public GXGraph(File file) throws WrongFileFormatException {
         this.vertices = new HashMap<>();
         this.edges = new HashMap<>();
         GraphParser parser = GraphParser.getGraphParser();
         for (GXVertex vertex : parser.parseVertices(file)) {
             insertVertex(vertex);
         }
+
         for (GXEdge edge : parser.parseEdges(file, vertices())) {
-            insertEdge(edge);
+            try {
+                insertEdge(edge);
+            } catch (ElementNotInGraphException e) {
+                throw new WrongFileFormatException("Wrong edges in file: "+ file.getAbsolutePath());
+            }
         }
         this.startingVertex = parser.parseStarting(file, vertices());
         this.endingVertex = parser.parseEnding(file, vertices());
 
-        startingVertex.setStartOrEnd(GXVertexType.STARTING);
-        endingVertex.setStartOrEnd(GXVertexType.ENDING);
+        startingVertex.setType(GXVertexType.STARTING);
+        endingVertex.setType(GXVertexType.ENDING);
 
     }
 
@@ -260,11 +265,13 @@ public class GXGraph implements GraphInterface<String, String> {
     @Override
     public void setStartingVertex(GXVertex v) {
         this.startingVertex = v;
+        this.startingVertex.setType(GXVertexType.STARTING);
     }
 
     @Override
     public void setEndingVertex(GXVertex v) {
         this.endingVertex = v;
+        this.endingVertex.setType(GXVertexType.ENDING);
     }
 
     /**

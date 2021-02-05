@@ -11,20 +11,32 @@ import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -49,7 +61,8 @@ public class Controller {
     private static final String PATTERN_FIN_TEXT = "[0-9]+";
     private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
     private static final int MIN_PANE_SIZE = 1000;
-    private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
+    private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main"
+            + File.separator + "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
 
 
@@ -89,8 +102,10 @@ public class Controller {
         try {
             this.displayModel = new DisplayModel();
         } catch (WrongFileFormatException e) {
-            //TODO handle this error by displaying a message box
+            Alert error = new FileAlert(e.getMessage());
+            error.showAndWait();
             e.printStackTrace();
+            return;
         }
 
         this.gxTable = new GXTableView();
@@ -196,7 +211,7 @@ public class Controller {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                        onVertexClicked(vert);
+                        onVertexClicked(vert, mouseEvent.getX(), mouseEvent.getY());
                     }
                 });
                 vert.setOnMouseEntered(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
@@ -301,6 +316,7 @@ public class Controller {
         }
     }
 
+
     /**
      * When loading a new graph view the old graph view needs to be correctly unlinked from the window and listeners.
      * Also the {@link GraphView} needs to be removed from the parent pane it was part of.
@@ -347,6 +363,7 @@ public class Controller {
         }
     }
 
+
     /**
      * Loads a background for a pane. If the file is an image the image will be used as background. If the file
      * isn't an image an empty background will be returned. The size of the background will be the size of the passed
@@ -365,7 +382,6 @@ public class Controller {
                 new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
                 return Background.EMPTY;
             } else {
-
                 //Creates ne BackgroundImage if there was an image found.
                 Image back = new Image(imageFile.toURI().toString());
                 //Creating the new background with all its parameters
@@ -408,7 +424,10 @@ public class Controller {
         try {
             this.graphView = new GraphView();
         } catch (FileNotFoundException e) {
+            Alert fileAlert = new FileAlert(e.getMessage()+ "\n wurde nicht gefunden");
+            fileAlert.showAndWait();
             e.printStackTrace();
+            return;
         }
         parent.getChildren().add(graphView);
     }
@@ -442,6 +461,7 @@ public class Controller {
             Alert formatError = new FileFormatError(e);
             formatError.showAndWait();
             e.printStackTrace();
+            return;
         }
         // Creating a new graphView and adding it to the pane
         addToParent(parent);
@@ -524,12 +544,23 @@ public class Controller {
 
     /**
      * When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
-     * selected edges by the user.
+     * selected edges by the user. Additionally a context menu opens, showing the current shortest distance to the
+     * clicked vertex.
      *
-     * @param v
+     * @param v vertex node
+     * @param x coordinate of mouse event
+     * @param y coordinate of mouse event
      */
-    public void onVertexClicked(SmartGraphVertexNode v) {
+    public void onVertexClicked(SmartGraphVertexNode v, double x, double y) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
+        //context menu that displays current distance
+        ContextMenu context = new ContextMenu();
+        MenuItem item = new MenuItem();
+        item.setText("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+        context.getItems().add(item);
+        double offsetX = graphView.getScene().getWindow().getX();
+        double offsetY = graphView.getScene().getWindow().getY();
+        context.show(v, x + offsetX, y + offsetY);
         displayModel.highlightShortestPathTo(vertex);
     }
 
@@ -541,6 +572,8 @@ public class Controller {
         try {
             displayModel.undo();
         } catch (ElementNotInGraphException e) {
+            Alert a = new ElementNotInGraphAlert();
+            a.showAndWait();
             e.printStackTrace();
         }
     }
@@ -551,21 +584,38 @@ public class Controller {
      * @param algo is the algorithm that is selected to be performed at the graph in the view.
      */
     public void onAlgorithmSelect(Algorithm algo) {
-
+    //TODO do something like the vorlagen where the program scans for available algorithms
     }
 
     /**
      * Will show some information on the selected algorithm in the view.
      */
     public void onDisplayAlgorithmExplanation() {
-
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Information");
+        dialog.setHeaderText("Dijkstra-Algorithmus");
+        dialog.setContentText("Der Algorithmus von Dijkstra (nach seinem Erfinder Edsger W. Dijkstra) ist ein " +
+                "Algorithmus aus der Klasse der Greedy-Algorithmen und löst das Problem der kürzesten Pfade für einen " +
+                "gegebenen Startknoten. Er berechnet somit einen kürzesten Pfad zwischen dem gegebenen Startknoten " +
+                "und einem der (oder allen) übrigen Knoten in einem kantengewichteten Graphen (sofern dieser keine " +
+                "Negativkanten enthält).\n" +
+                "\n" +
+                "Für unzusammenhängende ungerichtete Graphen ist der Abstand zu denjenigen Knoten unendlich, zu " +
+                "denen kein Pfad vom Startknoten aus existiert. Dasselbe gilt auch für gerichtete nicht stark " +
+                "zusammenhängende Graphen. Dabei wird der Abstand synonym auch als Entfernung, Kosten oder Gewicht " +
+                "bezeichnet. \n (Wikipedia) \n \n HINWEIS: Wähle bei unentschiedenen Gewichten immer den Knoten " +
+                "mit der niedrigeren ID!");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.setHeight(600);
+        dialog.showAndWait();
     }
 
     /**
      * Will show some information on interaction options in the view.
      */
     public void onDisplayInteractionHelp() {
-
+        Dialog iaDialog = new InteractionDialog();
+        iaDialog.showAndWait();
     }
 
     /**
@@ -589,7 +639,7 @@ public class Controller {
             } else if ("Test".equals(result.get())) {
                 displayCoordinates();
             } else {
-                new Alert(Alert.AlertType.ERROR, "Das war das falsche Passwort.").showAndWait();
+                new Alert(Alert.AlertType.INFORMATION, "Das war das falsche Passwort.").showAndWait();
             }
         }
     }
@@ -641,8 +691,10 @@ public class Controller {
                 }
                 dirStream.close();
             } catch (IOException e) {
-                //TODO
+                Alert fileAlert = new FileAlert(pathToDir.toString() + e.getMessage());
+                fileAlert.showAndWait();
                 e.printStackTrace();
+                return null;
             }
         }
         return null;
@@ -658,9 +710,15 @@ public class Controller {
                     return image;
                 }
             } catch (IOException ioe) {
+                Alert fileAlert = new FileAlert(imageFile.getAbsolutePath() + ioe.getMessage());
+                fileAlert.showAndWait();
+                ioe.printStackTrace();
                 return null;
             }
         } catch (IOException e) {
+            Alert fileAlert = new FileAlert(imageFile.getAbsolutePath() + e.getMessage());
+            fileAlert.showAndWait();
+            e.printStackTrace();
             return null;
         }
         return null;
@@ -684,7 +742,9 @@ public class Controller {
 
         templateFolder = new File(PATH_TO_TEMPLATES);
         if (!templateFolder.isDirectory()) {
-            //TODO Generic Error
+            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath()+ "\n An diesem Pfad ist kein Ordner.");
+            fileAlert.showAndWait();
+            return;
         }
 
 
@@ -705,7 +765,10 @@ public class Controller {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace(); //TODO Generic error
+            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath());
+            fileAlert.showAndWait();
+            e.printStackTrace();
+            return;
         }
 
 
