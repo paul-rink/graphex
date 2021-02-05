@@ -12,6 +12,7 @@ import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 
 import javafx.scene.Parent;
@@ -22,6 +23,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -188,7 +190,7 @@ public class Controller {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                        onVertexClicked(vert);
+                        onVertexClicked(vert, mouseEvent.getX(), mouseEvent.getY());
                     }
                 });
             }
@@ -427,12 +429,23 @@ public class Controller {
 
     /**
      * When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
-     * selected edges by the user.
+     * selected edges by the user. Additionally a context menu opens, showing the current shortest distance to the
+     * clicked vertex.
      *
-     * @param v
+     * @param v vertex node
+     * @param x coordinate of mouse event
+     * @param y coordinate of mouse event
      */
-    public void onVertexClicked(SmartGraphVertexNode v) {
+    public void onVertexClicked(SmartGraphVertexNode v, double x, double y) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
+        //context menu that displays current distance
+        ContextMenu context = new ContextMenu();
+        MenuItem item = new MenuItem();
+        item.setText("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+        context.getItems().add(item);
+        double offsetX = graphView.getScene().getWindow().getX();
+        double offsetY = graphView.getScene().getWindow().getY();
+        context.show(v, x + offsetX, y + offsetY);
         displayModel.highlightShortestPathTo(vertex);
     }
 
