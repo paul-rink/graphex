@@ -221,14 +221,15 @@ public class GraphView extends SmartGraphPanel implements Observer {
         double correction = STRAT.getCorrection();
         Pane parent = (Pane) this.getParent();
         double relY;
-        if (parent.getWidth() > parent.getMinWidth() && getPaneHeight() > parent.getMinHeight()) {
+        if (parent.getWidth() > this.getMinWidth() && parent.getHeight() > this.getMinHeight()) {
             if (correction > 1) {
-                relY = (smartVertex.getPositionCenterY() / getPaneHeight()) * 1000. / correction;
+                relY = (smartVertex.getPositionCenterY() * 1000) / (correction * parent.getHeight());
             } else {
-                relY = (smartVertex.getPositionCenterY() / getPaneHeight()) * 1000.;
+
+                relY = (smartVertex.getPositionCenterY() * 1000) / parent.getHeight();
             }
         } else {
-            relY = (smartVertex.getPositionCenterY() / parent.getMinHeight()) * 1000.;
+            relY = (smartVertex.getPositionCenterY() / this.getMinHeight()) * 1000.;
         }
         return relY;
     }
@@ -237,14 +238,16 @@ public class GraphView extends SmartGraphPanel implements Observer {
         double correction = STRAT.getCorrection();
         Pane parent = (Pane) this.getParent();
         double relX;
-        if (parent.getWidth() > parent.getMinWidth() && getPaneHeight() > parent.getMinHeight()) {
-            if (correction > 1) {
-                relX = (smartVertex.getPositionCenterX() / getPaneHeight()) * 1000.;
+        if (parent.getWidth() > this.getMinWidth() && parent.getWidth() > this.getMinWidth()) {
+            if (correction < 1) {
+                System.out.println("corr");
+                relX = (smartVertex.getPositionCenterX() * 1000. * correction) / (parent.getWidth());
             } else {
-                relX = (smartVertex.getPositionCenterX() / getPaneHeight()) * 1000. * correction;
+                System.out.println("rect");
+                relX = (smartVertex.getPositionCenterX() * 1000.) / parent.getWidth();
             }
         } else {
-            relX = (smartVertex.getPositionCenterX() / parent.getMinHeight()) * 1000.;
+            relX = (smartVertex.getPositionCenterX() / this.getMinWidth()) * 1000.;
         }
         return relX;
     }
