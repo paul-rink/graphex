@@ -263,4 +263,13 @@ public class GraphView extends SmartGraphPanel implements Observer {
         GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
         vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
     }
+
+    /**
+     * Returns whether the vertices are moveable in this graph view
+     *
+     * @return whether vertices are moveable
+     */
+    public boolean isMoveable() {
+        return isMoveable;
+    }
 }

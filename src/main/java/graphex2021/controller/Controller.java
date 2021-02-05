@@ -110,6 +110,7 @@ public class Controller {
     public void initGraphView() {
         displayModel.register(graphView);
         graphView.setAutomaticLayout(false);
+        this.verticesMoveable.setSelected(graphView.isMoveable());
         graphView.init();
     }
 
