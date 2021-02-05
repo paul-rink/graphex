@@ -60,6 +60,9 @@ public class GXGraph implements GraphInterface<String, String> {
         this.startingVertex = parser.parseStarting(file, vertices());
         this.endingVertex = parser.parseEnding(file, vertices());
 
+        startingVertex.setType(GXVertexType.STARTING);
+        endingVertex.setType(GXVertexType.ENDING);
+
     }
 
 
@@ -262,11 +265,13 @@ public class GXGraph implements GraphInterface<String, String> {
     @Override
     public void setStartingVertex(GXVertex v) {
         this.startingVertex = v;
+        this.startingVertex.setType(GXVertexType.STARTING);
     }
 
     @Override
     public void setEndingVertex(GXVertex v) {
         this.endingVertex = v;
+        this.endingVertex.setType(GXVertexType.ENDING);
     }
 
     /**

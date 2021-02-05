@@ -176,7 +176,10 @@ public class GXEdge implements Edge<String, String> {
      * @param vertex checks this vertex
      * @return whether the given GXVertex is on this edge
      */
-    public boolean contains(GXVertex vertex) {
+    public boolean contains(GXVertex vertex) throws ElementNotInGraphException {
+        if (vertex == null) {
+            throw new ElementNotInGraphException("This vertex was null");
+        }
         return this.outboundVertex.getId() == vertex.getId() || this.inboundVertex.getId() == vertex.getId();
     }
 
@@ -277,6 +280,26 @@ public class GXEdge implements Edge<String, String> {
             return inboundVertex;
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Two edges equals each other, if they consist of the same vertices (since edges are undirected).
+     * @param o is the object to compare
+     * @return
+     */
+    @Override
+    public boolean equals (Object o) {
+        if (o instanceof GXEdge) {
+            GXEdge other = (GXEdge) o;
+            GXVertex thisIn = this.inboundVertex;
+            GXVertex thisOut = this.outboundVertex;
+            GXVertex otherIn = other.inboundVertex;
+            GXVertex otherOut = other.outboundVertex;
+            return thisIn.equals(otherIn) && thisOut.equals(otherOut)
+                    || (thisOut.equals(otherIn) && thisIn.equals(otherOut));
+        } else {
+            return false;
         }
     }
 }

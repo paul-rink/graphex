@@ -34,6 +34,12 @@ public class GraphView extends SmartGraphPanel implements Observer {
                 STRAT, STYLESHEET.toURI());
     }
 
+    //TODO how to get this load
+    public GraphView(SmartPlacementStrategy strategy) throws FileNotFoundException {
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
+                strategy, STYLESHEET.toURI());
+    }
+
     @Override
     public void doUpdate(Subject s) {
         GXGraph visible = (GXGraph) s.getState();
@@ -90,6 +96,14 @@ public class GraphView extends SmartGraphPanel implements Observer {
         if (gxVertex.isHint()) {
             vertex.setStyleClass("hintVertex");
         }
+
+        if (gxVertex.getStartOrEnd() == GXVertexType.STARTING) {
+            vertex.setStyleClass("startingVertex");
+        } else if (gxVertex.getStartOrEnd() == GXVertexType.ENDING) {
+            vertex.setStyleClass("endingVertex");
+        }
+
+
     }
 
 
