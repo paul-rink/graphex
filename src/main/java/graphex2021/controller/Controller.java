@@ -174,8 +174,16 @@ public class Controller {
         tableStage.setTitle("Tabelle");
         tableStage.setScene(new Scene(new VBox(gxTable)));
         tableStage.show();
+    }
 
-
+    public void setFreeModeActions() {
+        for (Node vertexNode : graphView.getChildren()) {
+            if (vertexNode.toString().contains("Circle")) {
+                vertexNode.setOnMouseReleased((MouseEvent mouseEvent) -> {
+                    this.onDragFinished((SmartGraphVertexNode) vertexNode);
+                });
+            }
+        }
     }
 
     public void setActions() {
@@ -191,16 +199,17 @@ public class Controller {
                         onVertexClicked(vert);
                     }
                 });
-            }
-        }
-
-        for (Node node : graphView.getChildren()) {
-            if (node instanceof SmartGraphVertexNode) {
-                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
                 vert.setOnMouseEntered(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
                 vert.setOnMouseExited(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
             }
         }
+        if (verticesMoveable.isSelected()) {
+            setFreeModeActions();
+        }
+    }
+
+    private void onDragFinished(SmartGraphVertexNode vertexNode) {
+        graphView.setMovedCoordinates(vertexNode);
     }
 
     public void onHoverVertex(SmartGraphVertexNode vertex, MouseEvent mouseEvent) {

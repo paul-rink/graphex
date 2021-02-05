@@ -64,12 +64,6 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     @Override
     public void update() {
-        //TODO possible fix for vertices now being placed correctly immediately.
-        // Not sure what all the implications of this change are.
-        if (this.getScene() == null) {
-            throw new IllegalStateException("You must call this method after the instance was added to a scene.");
-        }
-
         super.updateNodes();
         iterChildren();
     }
@@ -153,9 +147,6 @@ public class GraphView extends SmartGraphPanel implements Observer {
             } else if (node.toString().startsWith("Circle")) {
                 styleVertex((SmartGraphVertexNode) node);
                 vertices.add((SmartGraphVertexNode<String>) node);
-                if (isMoveable) {
-                    setMovedCoordinates((SmartGraphVertexNode) node);
-                }
             }
         }
         placeVertices(vertices);
@@ -259,7 +250,12 @@ public class GraphView extends SmartGraphPanel implements Observer {
         return relX;
     }
 
-    private void setMovedCoordinates(SmartGraphVertexNode smartVertex) {
+    /**
+     * Saves the current coordinates of the vertex in the pane in the underlyingVertex.
+     *
+     * @param smartVertex of which the position should be saved.
+     */
+    public void setMovedCoordinates(SmartGraphVertexNode smartVertex) {
         GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
         vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
     }
