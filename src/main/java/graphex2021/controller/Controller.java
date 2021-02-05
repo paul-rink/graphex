@@ -472,7 +472,6 @@ public class Controller {
     /**
      * When called the vertices are made moveable
      *
-     * TODO make it so when its called again the vertices are not moveable.
      */
     public void verticesMovable() {
         final Pane parent = (Pane) graphView.getParent();
@@ -500,7 +499,9 @@ public class Controller {
 
         setSizes(parent, oldBackground);
         initializeUpdatedView(parent);
-        setActions();
+        if (!finish.getText().equals("Start")) {
+            setActions();
+        }
 
     }
 
