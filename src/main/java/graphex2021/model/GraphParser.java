@@ -48,7 +48,6 @@ public class GraphParser {
      * @return a collection of GXVertex specified in the file
      */
     public Collection<GXVertex> parseVertices(File input) throws WrongFileFormatException {
-        //TODO actually handle the exception in the controller if the file has the wrong format
         freeVertexId = 0;
         freeEdgeId = 0;
         Collection<GXVertex> vertexList = new <GXVertex>ArrayList();
@@ -77,7 +76,6 @@ public class GraphParser {
      * @return a Collection of edges for the graph
      */
     public Collection<GXEdge> parseEdges(File input, Collection<GXVertex> vertices) throws WrongFileFormatException {
-        //TODO actually handle the exception in the controller if the file has the wrong format
         Collection<GXEdge> edgeList = new ArrayList<>();
 
         JSONObject graphObject = null;
@@ -109,7 +107,6 @@ public class GraphParser {
      * @return GXVertex that should be the designated starting vertex
      */
     public GXVertex parseStarting(File input, Collection<GXVertex> vertices)  throws WrongFileFormatException {
-        //TODO actually handle the exception in the controller if the file has the wrong format
         JSONObject graphObject = null;
         graphObject = getJsonObject(input);
 
@@ -124,7 +121,6 @@ public class GraphParser {
      * @return GXVertex that should be the designated ending vertex
      */
     public GXVertex parseEnding(File input, Collection<GXVertex> vertices) throws WrongFileFormatException{
-        //TODO actually handle the exception in the controller if the file has the wrong format
         JSONObject graphObject = null;
         graphObject = getJsonObject(input);
 
@@ -166,12 +162,12 @@ public class GraphParser {
      * @param input the File the string should be read from
      * @return a String with the contents of the File
      */
-    private String readFromFile(File input) {
+    private String readFromFile(File input) throws WrongFileFormatException {
         String output = "";
         try {
             output = Files.readString(input.toPath());
         } catch (IOException e) {
-            //TODO shouldnt happen. think when Controller is ready
+            throw new WrongFileFormatException(input.getAbsolutePath()+ "couldnt read.");
         }
         return output;
     }
