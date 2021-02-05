@@ -15,6 +15,7 @@ import javafx.util.Callback;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -167,12 +168,14 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
             // one vertex marked ==> reset or undo the first selection ==> works too
             reset();
             //in order to guarantee an update delete the current row as well and re add it
+            updateMarkedVert(graph.vertices());
             addRow(graph);
         } else if (markedVertices < prevMarked) {
             // one less marked vertex ==> something undone
             undo();
             //in order to guarantee an update delete the current row as well and re add it
             this.prevMarked = markedVertices;
+            updateMarkedVert(graph.vertices());
             this.refresh();
         }
 
@@ -196,12 +199,26 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
     }
 
     private void undo() {
-
         steps.remove(steps.size() - 1);
         stepCounter--;
     }
 
-
+    private void updateMarkedVert(Collection<GXVertex> v) {
+        Iterator<String> it = markedColumns.keySet().iterator();
+        while(it.hasNext()){
+            String key = it.next();
+            boolean found = false;
+            for(GXVertex vertex : v) {
+                if(vertex.element().equals(key)) {
+                    found = true;
+                    this.markedColumns.replace(vertex.element(),vertex.isMarked());
+                }
+            }
+            if(!found) {
+                this.markedColumns.replace(key,false);
+            }
+        }
+    }
 
 
 
