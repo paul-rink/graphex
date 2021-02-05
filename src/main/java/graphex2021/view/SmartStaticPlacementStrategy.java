@@ -16,6 +16,7 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
     private double startHeight;
     private double minHeight;
     private double minWidth;
+    private double correction;
 
     public SmartStaticPlacementStrategy() {
 
@@ -39,6 +40,7 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
          */
 
         double correctionFactor = currentRatio / startingRatio;
+        this.correction = correctionFactor;
 
         if (width < minWidth &&  height < minHeight) {
             System.out.println("both");
@@ -112,6 +114,10 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
 
     private double calcFromRelative(double size, int x) {
         return (x / 1000.) * size;
+    }
+
+    public double getCorrection() {
+        return correction;
     }
 
 }

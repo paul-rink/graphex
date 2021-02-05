@@ -202,18 +202,18 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     /**
-     * method that returns the width of the scene the graphView is in in pixels
-     * @return the width of the scene in pixels
+     * method that returns the width of the pane the graphView is in in pixels
+     * @return the width of the pane in pixels
      */
-    public double getSceneWidth() {
-        return this.getScene().getWidth();
+    public double getPaneWidth() {
+        return ((Pane) this.getParent()).getHeight();
     }
 
     /**
-     * method that returns the height of the scene the graphView is in in pixels
-     * @return the height of the scene in pixels
+     * method that returns the height of the pane the graphView is in in pixels
+     * @return the height of the pane in pixels
      */
-    public double getSceneHeight() {
-        return this.getScene().getHeight();
+    public double getPaneHeight() {
+        return ((Pane) this.getParent()).getHeight();
     }
 }
