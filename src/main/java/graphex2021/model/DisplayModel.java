@@ -35,11 +35,7 @@ public class DisplayModel extends Subject {
     }
 
     private void loadGraph(File inputFile) throws WrongFileFormatException {
-        try {
-            this.graph = new GXGraph(inputFile);
-        } catch (ElementNotInGraphException eni) {
-            //TODO better way to handle this. Wrong exception here
-        }
+        this.graph = new GXGraph(inputFile);
         this.visibleGraph = new GXGraph();
         initialVisibleGraph();
 

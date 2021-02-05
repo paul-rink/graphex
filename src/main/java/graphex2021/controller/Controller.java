@@ -83,8 +83,8 @@ public class Controller {
         try {
             this.displayModel = new DisplayModel();
         } catch (WrongFileFormatException e) {
-            Alert genericError = new Alert(Alert.AlertType.ERROR, "Der Standardgraph konnte nicht geladen werden.");
-            genericError.showAndWait();
+            Alert error = new FileAlert(e.getMessage());
+            error.showAndWait();
             e.printStackTrace();
             return;
         }
@@ -312,38 +312,37 @@ public class Controller {
 
         try {
             this.graphView = new GraphView();
-            graphView.setPrefSize(width, height);
-            // Adding the new graphView to the pane
-            parent.getChildren().add(graphView);
-            if (image != null) {
-                //Creates ne BackgroundImage if there was an image found.
-                Image background = new Image(imageFile.toURI().toString());
-                BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
-                        , false, false, false, true);
-                parent.setBackground(new Background(
-                        new BackgroundImage(background,
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundPosition.DEFAULT,
-                               size)));
-                parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
-                parent.setPrefSize(width, height);
-            } else {
-                //No Image found empty Background
-                new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
-                parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
-                parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
-                parent.setBackground(Background.EMPTY);
-            }
-
         } catch (FileNotFoundException e) {
-            //TODO correct?? Alert genericError = new Alert(Alert.AlertType.ERROR, "Es gab ein Problem beim erstellen der Graph View. Die FXML konnte nicht gefunden werden.");
             Alert fileAlert = new FileAlert(e.getMessage()+ "\n Die FXML wurde nicht gefunden");
             fileAlert.showAndWait();
             e.printStackTrace();
             e.printStackTrace();
             return;
         }
+        graphView.setPrefSize(width, height);
+        // Adding the new graphView to the pane
+        parent.getChildren().add(graphView);
+        if (image != null) {
+            //Creates ne BackgroundImage if there was an image found.
+            Image background = new Image(imageFile.toURI().toString());
+            BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
+                    , false, false, false, true);
+            parent.setBackground(new Background(
+                    new BackgroundImage(background,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundRepeat.NO_REPEAT,
+                            BackgroundPosition.DEFAULT,
+                           size)));
+            parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
+            parent.setPrefSize(width, height);
+        } else {
+            //No Image found empty Background
+            new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
+            parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+            parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
+            parent.setBackground(Background.EMPTY);
+        }
+
         // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
         parent.layout();
 
@@ -393,7 +392,7 @@ public class Controller {
      * @param algo is the algorithm that is selected to be performed at the graph in the view.
      */
     public void onAlgorithmSelect(Algorithm algo) {
-
+    //TODO do something like the vorlagen where the program scans for available algorithms
     }
 
     /**
@@ -431,7 +430,7 @@ public class Controller {
             } else if ("Test".equals(result.get())) {
                 displayCoordinates();
             } else {
-                new Alert(Alert.AlertType.ERROR, "Das war das falsche Passwort.").showAndWait();
+                new Alert(Alert.AlertType.INFORMATION, "Das war das falsche Passwort.").showAndWait();
             }
         }
     }
