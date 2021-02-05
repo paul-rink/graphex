@@ -454,15 +454,19 @@ public class Controller {
      */
     private void loadNewGraphView(File file) {
         final Pane parent = (Pane) graphView.getParent();
-        remove(parent);
+
+        DisplayModel newModel = null;
         try {
-            this.displayModel = new DisplayModel(file);
+            newModel = new DisplayModel(file);
         } catch (WrongFileFormatException e) {
             Alert formatError = new FileFormatError(e);
             formatError.showAndWait();
             e.printStackTrace();
             return;
         }
+        remove(parent);
+        this.displayModel = newModel;
+
         // Creating a new graphView and adding it to the pane
         addToParent(parent);
 
