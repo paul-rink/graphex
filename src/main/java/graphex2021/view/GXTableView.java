@@ -6,9 +6,11 @@ import graphex2021.model.Observer;
 import graphex2021.model.Subject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
+import javafx.util.Callback;
 
 
 import java.util.Collection;
@@ -34,6 +36,7 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
     private int stepCounter;
     private int prevMarked;
     private Map<String, String> lastEntries;
+    private Map<String, Boolean> markedColumns;
 
     /**
      * If this is true distances will only be put into the table if distance has changed from the previous one
@@ -52,6 +55,7 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         this.prevMarked = 0;
         this.lastEntries = new HashMap<>();
         this.onlyShowChanged = false;
+        this.markedColumns = new HashMap<>();
 
     }
 
@@ -68,9 +72,43 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         this.getColumns().add(stepColumn);
         for (GXVertex vertex : vertices) {
             TableColumn<Map<String, String>, String> column =  new TableColumn<>(vertex.element());
+            this.markedColumns.put(vertex.element(), vertex.isMarked());
             // The value of each cell in a column will be taken from a map. If the column name ("element") exists in the
             // map the corresponding value will be pulled and inserted into the cell.
+            Callback factory = new Callback<TableColumn<Map<String,String>, String>, TableCell<Map<String,String>, String>>() {
+
+
+                @Override
+                public TableCell<Map<String,String>, String> call(TableColumn<Map<String, String>, String> param) {
+                    return new TableCell<Map<String, String>, String>() {
+                        @Override
+                        public void updateIndex(int i) {
+                            super.updateIndex(i);
+                            if(markedColumns.get(this.getTableColumn().getText())) {
+                                this.setStyle("-fx-background-color: palegreen");
+                            } else {
+                                this.setStyle("-fx-background-color: transparent");
+                            }
+                        }
+
+                        @Override
+                        protected void updateItem(String item, boolean empty) {
+                            super.updateItem(item, empty);
+
+                            // assign item's toString value as text
+                            if (empty || item == null) {
+                                setText(null);
+                            } else {
+                                setText(item.toString());
+                            }
+                        }
+
+                    };
+                }
+
+            };
             column.setCellValueFactory(new MapValueFactory(vertex.element()));
+            column.setCellFactory(factory);
             column.setSortable(false);
             this.getColumns().add(column);
             this.lastEntries.put(vertex.element(), "");
@@ -93,6 +131,7 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         row.put("Schritt", String.valueOf(stepCounter));
         stepCounter++;
         for (GXVertex vertex : graph.vertices()) {
+            this.markedColumns.put(vertex.element(), vertex.isMarked());
             int currDist = vertex.getCurrentDistance();
             String entry;
             //display distance (0) for starting vertex
@@ -127,10 +166,14 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         } else if (markedVertices == 1) {
             // one vertex marked ==> reset or undo the first selection ==> works too
             reset();
-        } else if (markedVertices > prevMarked) {
+            //in order to guarantee an update delete the current row as well and re add it
+            addRow(graph);
+        } else if (markedVertices < prevMarked) {
             // one less marked vertex ==> something undone
             undo();
+            //in order to guarantee an update delete the current row as well and re add it
             this.prevMarked = markedVertices;
+            this.refresh();
         }
 
     }
@@ -147,12 +190,13 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
     }
 
     private void reset() {
-        steps.remove(1, steps.size());
-        stepCounter = 1;
+        steps.remove(0, steps.size());
+        stepCounter = 0;
         this.prevMarked = 1;
     }
 
     private void undo() {
+
         steps.remove(steps.size() - 1);
         stepCounter--;
     }
