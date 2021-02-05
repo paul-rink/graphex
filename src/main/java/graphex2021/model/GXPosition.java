@@ -35,13 +35,12 @@ public class GXPosition {
 
     /**
      * Sets the the positions x and y values.
-     *
-     * @param x position
+     *  @param x position
      * @param y position
      */
-    public void setPosition(int x, int y) {
-        this.xPosition = x;
-        this.yPosition = y;
+    public void setPosition(double x, double y) {
+        this.xPosition = (int) Math.round(x);
+        this.yPosition = (int) Math.round(y);
     }
 
     /**

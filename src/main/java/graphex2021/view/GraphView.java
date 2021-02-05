@@ -6,7 +6,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Tooltip;
-import javax.tools.Tool;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +30,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
             + File.separator + "resources" + File.separator + "graphex2021"
             + File.separator + "smartgraphmove.properties");
 
+    private boolean isMoveable = false;
+
 
 
     private ChangeListener listener;
@@ -38,16 +39,19 @@ public class GraphView extends SmartGraphPanel implements Observer {
     public GraphView() throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
                 STRAT, STYLESHEET.toURI());
+        this.isMoveable = false;
     }
 
-    public GraphView(boolean moveAble) throws FileNotFoundException {
+    public GraphView(boolean isMoveable) throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(MOVABLE_PROPERTIES)), STRAT, STYLESHEET.toURI());
+        this.isMoveable = isMoveable;
     }
 
     //TODO how to get this load
     public GraphView(SmartPlacementStrategy strategy) throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
                 strategy, STYLESHEET.toURI());
+        this.isMoveable = false;
     }
 
     @Override
@@ -149,6 +153,9 @@ public class GraphView extends SmartGraphPanel implements Observer {
             } else if (node.toString().startsWith("Circle")) {
                 styleVertex((SmartGraphVertexNode) node);
                 vertices.add((SmartGraphVertexNode<String>) node);
+                if (isMoveable) {
+                    setMovedCoordinates((SmartGraphVertexNode) node);
+                }
             }
         }
         placeVertices(vertices);
@@ -250,5 +257,10 @@ public class GraphView extends SmartGraphPanel implements Observer {
             relX = (smartVertex.getPositionCenterX() / this.getMinWidth()) * 1000.;
         }
         return relX;
+    }
+
+    private void setMovedCoordinates(SmartGraphVertexNode smartVertex) {
+        GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
+        vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
     }
 }
