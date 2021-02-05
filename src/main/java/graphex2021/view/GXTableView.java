@@ -172,8 +172,8 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
             // one less marked vertex ==> something undone
             undo();
             //in order to guarantee an update delete the current row as well and re add it
-            addRow(graph);
             this.prevMarked = markedVertices;
+            this.refresh();
         }
 
     }
@@ -196,10 +196,8 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
     }
 
     private void undo() {
-        //TODO not nice but works
+
         steps.remove(steps.size() - 1);
-        steps.remove(steps.size() - 1);
-        stepCounter--;
         stepCounter--;
     }
 
