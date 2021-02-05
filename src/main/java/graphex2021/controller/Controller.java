@@ -485,7 +485,7 @@ public class Controller {
                 "Für unzusammenhängende ungerichtete Graphen ist der Abstand zu denjenigen Knoten unendlich, zu " +
                 "denen kein Pfad vom Startknoten aus existiert. Dasselbe gilt auch für gerichtete nicht stark " +
                 "zusammenhängende Graphen. Dabei wird der Abstand synonym auch als Entfernung, Kosten oder Gewicht " +
-                "bezeichnet. \n (Wikipedia) \n \n HINWEIS: Wähle bei unentschiedenen Gewichten immer den Knoten" +
+                "bezeichnet. \n (Wikipedia) \n \n HINWEIS: Wähle bei unentschiedenen Gewichten immer den Knoten " +
                 "mit der niedrigeren ID!");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         dialog.setHeight(600);
