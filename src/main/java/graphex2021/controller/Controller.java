@@ -558,14 +558,10 @@ public class Controller {
     public void onVertexClicked(SmartGraphVertexNode v, double x, double y) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
         //context menu that displays current distance
-        ContextMenu context = new ContextMenu();
-        MenuItem item = new MenuItem();
-        item.setText("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
-        context.getItems().add(item);
-        double offsetX = graphView.getScene().getWindow().getX();
-        double offsetY = graphView.getScene().getWindow().getY();
-        context.show(v, x + offsetX, y + offsetY);
-        displayModel.highlightShortestPathTo(vertex);
+        if (vertex.isMarked()) {
+            graphView.showVertexDistance(v, x, y);
+            displayModel.highlightShortestPathTo(vertex);
+        }
     }
 
     /**

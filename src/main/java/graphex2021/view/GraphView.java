@@ -4,6 +4,9 @@ import com.brunomnsilva.smartgraph.graphview.*;
 import graphex2021.model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Tooltip;
 
@@ -203,6 +206,18 @@ public class GraphView extends SmartGraphPanel implements Observer {
         } else {
             Tooltip.uninstall(e, t);
         }
+    }
+
+    public void showVertexDistance(SmartGraphVertexNode v, double x, double y) {
+        GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
+        Label label = new Label("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+        ContextMenu context = new ContextMenu();
+        MenuItem item = new MenuItem();
+        item.setText("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+        context.getItems().add(item);
+        double offsetX = this.getScene().getWindow().getX();
+        double offsetY = this.getScene().getWindow().getY();
+        context.show(v, x + offsetX, y + offsetY);
     }
 
     /**
