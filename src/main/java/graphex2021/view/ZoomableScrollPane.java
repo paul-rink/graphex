@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
 
 public class ZoomableScrollPane extends ScrollPane {
@@ -25,8 +26,8 @@ public class ZoomableScrollPane extends ScrollPane {
         setPannable(true);
         //setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         //setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        //setFitToHeight(true); //center
-        //setFitToWidth(true); //center
+        setFitToHeight(true); //center
+        setFitToWidth(true); //center
 
 
         updateScale();
@@ -92,5 +93,9 @@ public class ZoomableScrollPane extends ScrollPane {
         Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
         this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
         this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
+    }
+    public void update(Background b) {
+        String url =  b.getImages().get(0).getImage().getUrl();
+        this.target.setStyle("-fx-background-image: url('" + url + "'); -fx-background-repeat: no-repeat; -fx-background-size: cover");
     }
 }

@@ -132,7 +132,8 @@ public class Controller {
     }
 
     public void initScrollPane() {
-        scrollPane.init(graphView.getParent());
+        Node n = graphView.getParent();
+        scrollPane.init(n);
     }
     /**
      * Start/finish button has 2 states. In Start state, pressing will enable interactions with the graph. The button
@@ -484,10 +485,8 @@ public class Controller {
         setSizes(parent, background);
 
         reset();
-
-
         // initialising the window again with the new graph view and updating once to display the graph
-        scrollPane.layout();
+        scrollPane.update(background);
         initializeUpdatedView(parent);
     }
 
