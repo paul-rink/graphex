@@ -356,13 +356,11 @@ public class Controller {
     }
 
     private void setSizes(Pane parent, Background background) {
-        if (!background.isEmpty()) {
-            if (!background.getImages().isEmpty()) {
-                Image backgroundImage = background.getImages().get(0).getImage();
-                double width = backgroundImage.getWidth();
-                double height = backgroundImage.getHeight();
-                setSizes(parent, width, height, MIN_PANE_SIZE, calcMinHeight(width, height));
-            }
+        if (!background.getImages().isEmpty()) {
+            Image backgroundImage = background.getImages().get(0).getImage();
+            double width = backgroundImage.getWidth();
+            double height = backgroundImage.getHeight();
+            setSizes(parent, width, height, MIN_PANE_SIZE, calcMinHeight(width, height));
         } else {
             setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT
                     , STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
