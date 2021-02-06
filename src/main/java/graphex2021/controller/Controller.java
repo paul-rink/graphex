@@ -8,19 +8,19 @@ import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 
+import graphex2021.view.ZoomableScrollPane;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
+import javafx.scene.*;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
@@ -80,6 +80,8 @@ public class Controller {
     private GraphView graphView;
 
     @FXML
+    private ZoomableScrollPane scrollPane;
+    @FXML
     private MenuItem check;
 
     @FXML
@@ -112,9 +114,9 @@ public class Controller {
     }
 
     public void init() {
-
         loadTemplates();
         initGraphView();
+        initScrollPane();
         initTableView();
         displayModel.notifyObservers();
     }
@@ -129,6 +131,9 @@ public class Controller {
         graphView.init();
     }
 
+    public void initScrollPane() {
+        scrollPane.init(graphView.getParent());
+    }
     /**
      * Start/finish button has 2 states. In Start state, pressing will enable interactions with the graph. The button
      * then switches in finish state. This will be disabled until the "done" button is pressed with success. Then the
@@ -471,14 +476,18 @@ public class Controller {
         addToParent(parent);
 
         // creating the background if one is in the same folder as the json
+        //scrollPane.setBackground(Background.EMPTY);
         Background background = loadBackground(file);
+        //parent.setBackground(Background.EMPTY);
         parent.setBackground(background);
         // Setting the sizes to either standard if there was no background image or to the size of the background image.
         setSizes(parent, background);
 
         reset();
 
+
         // initialising the window again with the new graph view and updating once to display the graph
+        scrollPane.layout();
         initializeUpdatedView(parent);
     }
 
