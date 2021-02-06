@@ -417,7 +417,9 @@ public class Controller {
         this.gxTable = new GXTableView();
 
         //Reinitializing all the views
+        scrollPane.update(parent.getBackground());
         init();
+
         displayModel.notifyObservers();
     }
 
@@ -498,6 +500,7 @@ public class Controller {
         parent.setBackground(Background.EMPTY);
         setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
         reset();
+        scrollPane.update(parent.getBackground());
         initializeUpdatedView(parent);
     }
 
