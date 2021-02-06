@@ -95,7 +95,11 @@ public class ZoomableScrollPane extends ScrollPane {
         this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
     }
     public void update(Background b) {
-        String url =  b.getImages().get(0).getImage().getUrl();
-        this.target.setStyle("-fx-background-image: url('" + url + "'); -fx-background-repeat: no-repeat; -fx-background-size: cover");
+        if(!b.getImages().isEmpty()) {
+            String url = b.getImages().get(0).getImage().getUrl();
+            this.target.setStyle("-fx-background-image: url('" + url + "'); -fx-background-repeat: no-repeat; -fx-background-size: cover");
+        } else {
+            this.target.setStyle("-fx-background-color: transparent");
+        }
     }
 }
