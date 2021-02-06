@@ -8,15 +8,27 @@ public enum GXVertexType {
     /**
      * If vertex is starting Vertex
      */
-    STARTING,
+    STARTING("startingVertex"),
     /**
      * If vertex is ending Vertex
      */
-    ENDING,
+    ENDING("endingVertex"),
     /**
      * If vert is normal Vertex
      */
-    NORMAL;
+    NORMAL("vertex");
 
+    private String type;
 
+    private GXVertexType(String type) {
+        this.type = type;
+    }
+
+    public String toString() {
+        return this.type;
+    }
+
+    public void setType(String s) {
+        this.type = s;
+    }
 }

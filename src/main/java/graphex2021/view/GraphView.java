@@ -26,17 +26,32 @@ public class GraphView extends SmartGraphPanel implements Observer {
             + File.separator + "resources" + File.separator + "graphex2021"
             + File.separator + "smartgraph.properties");
 
+    private static final File MOVABLE_PROPERTIES =  new File("src" + File.separator + "main"
+            + File.separator + "resources" + File.separator + "graphex2021"
+            + File.separator + "smartgraphmove.properties");
+
+    private boolean isMoveable = false;
+
+
+
     private ChangeListener listener;
 
     public GraphView() throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
                 STRAT, STYLESHEET.toURI());
+        this.isMoveable = false;
+    }
+
+    public GraphView(boolean isMoveable) throws FileNotFoundException {
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(MOVABLE_PROPERTIES)), STRAT, STYLESHEET.toURI());
+        this.isMoveable = isMoveable;
     }
 
     //TODO how to get this load
     public GraphView(SmartPlacementStrategy strategy) throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
                 strategy, STYLESHEET.toURI());
+        this.isMoveable = false;
     }
 
     @Override
@@ -49,12 +64,6 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     @Override
     public void update() {
-        //TODO possible fix for vertices now being placed correctly immediately.
-        // Not sure what all the implications of this change are.
-        if (this.getScene() == null) {
-            throw new IllegalStateException("You must call this method after the instance was added to a scene.");
-        }
-
         super.updateNodes();
         iterChildren();
     }
@@ -197,19 +206,73 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     /**
-     * method that returns the width of the scene the graphView is in in pixels
-     * @return the width of the scene in pixels
+     * method that returns the width of the pane the graphView is in in pixels
+     * @return the width of the pane in pixels
      */
-    public double getSceneWidth() {
-        return this.getScene().getWidth();
+    public double getPaneWidth() {
+        return ((Pane) this.getParent()).getHeight();
     }
 
     /**
-     * method that returns the height of the scene the graphView is in in pixels
-     * @return the height of the scene in pixels
+     * method that returns the height of the pane the graphView is in in pixels
+     * @return the height of the pane in pixels
      */
-    public double getSceneHeight() {
-        return this.getScene().getHeight();
+    public double getPaneHeight() {
+        return ((Pane) this.getParent()).getHeight();
+    }
+
+    public double calcRelativeY(SmartGraphVertexNode smartVertex) {
+        double correction = STRAT.getCorrection();
+        Pane parent = (Pane) this.getParent();
+        double relY;
+        if (parent.getWidth() > this.getMinWidth() && parent.getHeight() > this.getMinHeight()) {
+            if (correction > 1) {
+                relY = (smartVertex.getPositionCenterY() * 1000) / (correction * parent.getHeight());
+            } else {
+
+                relY = (smartVertex.getPositionCenterY() * 1000) / parent.getHeight();
+            }
+        } else {
+            relY = (smartVertex.getPositionCenterY() / this.getMinHeight()) * 1000.;
+        }
+        return relY;
+    }
+
+    public double calcRelativeX(SmartGraphVertexNode smartVertex) {
+        double correction = STRAT.getCorrection();
+        Pane parent = (Pane) this.getParent();
+        double relX;
+        if (parent.getWidth() > this.getMinWidth() && parent.getWidth() > this.getMinWidth()) {
+            if (correction < 1) {
+                System.out.println("corr");
+                relX = (smartVertex.getPositionCenterX() * 1000. * correction) / (parent.getWidth());
+            } else {
+                System.out.println("rect");
+                relX = (smartVertex.getPositionCenterX() * 1000.) / parent.getWidth();
+            }
+        } else {
+            relX = (smartVertex.getPositionCenterX() / this.getMinWidth()) * 1000.;
+        }
+        return relX;
+    }
+
+    /**
+     * Saves the current coordinates of the vertex in the pane in the underlyingVertex.
+     *
+     * @param smartVertex of which the position should be saved.
+     */
+    public void setMovedCoordinates(SmartGraphVertexNode smartVertex) {
+        GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
+        vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
+    }
+
+    /**
+     * Returns whether the vertices are moveable in this graph view
+     *
+     * @return whether vertices are moveable
+     */
+    public boolean isMoveable() {
+        return isMoveable;
     }
 
     public enum TooltipType {
