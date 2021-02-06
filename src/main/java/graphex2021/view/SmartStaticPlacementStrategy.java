@@ -16,7 +16,6 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
     private double startHeight;
     private double minHeight;
     private double minWidth;
-    private double correction;
 
     public SmartStaticPlacementStrategy() {
 
@@ -40,17 +39,28 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
          */
 
         double correctionFactor = currentRatio / startingRatio;
-        this.correction = correctionFactor;
 
         if (width < minWidth &&  height < minHeight) {
-            for (SmartGraphVertex<V> vertex : vertices) {
+            System.out.println("both");
+            if (correctionFactor < 1) {
+                System.out.println("taller");
+                for (SmartGraphVertex<V> vertex : vertices) {
 
-                GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
-                double x = calcFromRelative(minWidth, vert.getPosition().getPosition()[0]);
-                double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]);
-                vertex.setPosition(x, y);
+                    GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+                    double x = calcFromRelative(minWidth, vert.getPosition().getPosition()[0]);
+                    double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]);
+                    vertex.setPosition(x, y);
+                }
+            } else if (correctionFactor > 1) {
+                System.out.println("wider");
+                for (SmartGraphVertex<V> vertex : vertices) {
+
+                    GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+                    double x = calcFromRelative(minWidth, vert.getPosition().getPosition()[0]);
+                    double y = calcFromRelative(minHeight, vert.getPosition().getPosition()[1]);
+                    vertex.setPosition(x, y);
+                }
             }
-
         } else {
 
             if (correctionFactor == 1) {
@@ -102,10 +112,6 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
 
     private double calcFromRelative(double size, int x) {
         return (x / 1000.) * size;
-    }
-
-    public double getCorrection() {
-        return correction;
     }
 
 }
