@@ -1,24 +1,122 @@
 {
-    "type" : "GXGraph",
-    "vertices" : [
+    "type": "GXGraph",
+    "vertices": [
         {
             "name" : "S",
-            "posx" : "300",
+            "posx" : "500",
+            "posy" : "100",
+        },
+        {
+            "name" : "A",
+            "posx" : "330",
             "posy" : "300",
         },
         {
+            "name" : "B",
+            "posx" : "660",
+            "posy" : "300",
+        },
+        {
+            "name" : "C",
+            "posx" : "330",
+            "posy" : "700",
+        },
+        {
+            "name" : "D",
+            "posx" : "660",
+            "posy" : "700",
+        },
+        {
+            "name" : "E",
+            "posx" : "100",
+            "posy" : "500",
+        },
+        {
+            "name" : "F",
+            "posx" : "900",
+            "posy" : "500",
+        },
+        {
+            "name" : "G",
+            "posx" : "500",
+            "posy" : "900",
+        },
+        {
             "name" : "Z",
-            "posx" : "700",
+            "posx" : "500",
             "posy" : "500",
         }
     ],
     "edges" : [
         {
             "vertex1" : "S",
+            "vertex2" : "A",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "S",
+            "vertex2" : "B",
+            "weight" :  "4",
+        },
+        {    
+            "vertex1" : "A",
+            "vertex2" : "B",
+            "weight" :  "3",
+        },
+        {    
+            "vertex1" : "A",
+            "vertex2" : "E",
+            "weight" :  "1",
+        },{    
+            "vertex1" : "A",
+            "vertex2" : "C",
+            "weight" :  "24",
+        },{    
+            "vertex1" : "B",
+            "vertex2" : "D",
+            "weight" :  "3",
+        },
+        {    
+            "vertex1" : "B",
+            "vertex2" : "F",
+            "weight" :  "2",
+        },
+        {    
+            "vertex1" : "C",
+            "vertex2" : "D",
+            "weight" :  "6",
+        },
+        {    
+            "vertex1" : "C",
+            "vertex2" : "E",
+            "weight" :  "13",
+        },
+        {    
+            "vertex1" : "C",
+            "vertex2" : "G",
+            "weight" :  "3",
+        },
+        {    
+            "vertex1" : "C",
             "vertex2" : "Z",
-            "weight" :"99",
+            "weight" :  "4",
+        },
+        {    
+            "vertex1" : "D",
+            "vertex2" : "F",
+            "weight" :  "7",
+        },
+        {    
+            "vertex1" : "D",
+            "vertex2" : "Z",
+            "weight" :  "8",
+        },
+        {    
+            "vertex1" : "D",
+            "vertex2" : "G",
+            "weight" :  "2",
         }
     ],
-    "startVertex" : "S",
-    "endVertex" : "Z"
+    "startVertex": "S",
+    "endVertex": "Z"
 }
