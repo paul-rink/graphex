@@ -132,8 +132,8 @@ public class Controller {
     }
 
     public void initScrollPane() {
-        Node n = graphView.getParent();
-        scrollPane.init(n);
+        Node parentPane = graphView.getParent();
+        scrollPane.init(parentPane);
     }
     /**
      * Start/finish button has 2 states. In Start state, pressing will enable interactions with the graph. The button
@@ -415,7 +415,6 @@ public class Controller {
         this.gxTable = new GXTableView();
 
         //Reinitializing all the views
-        scrollPane.update(parent.getBackground());
         init();
 
         displayModel.notifyObservers();
@@ -477,16 +476,13 @@ public class Controller {
         addToParent(parent);
 
         // creating the background if one is in the same folder as the json
-        //scrollPane.setBackground(Background.EMPTY);
         Background background = loadBackground(file);
-        //parent.setBackground(Background.EMPTY);
-        parent.setBackground(background);
+        graphView.setBackground(background);
         // Setting the sizes to either standard if there was no background image or to the size of the background image.
         setSizes(parent, background);
 
         reset();
         // initialising the window again with the new graph view and updating once to display the graph
-        scrollPane.update(background);
         initializeUpdatedView(parent);
     }
 
@@ -495,10 +491,9 @@ public class Controller {
         remove(parent);
         this.displayModel = new DisplayModel(graph);
         addToParent(parent);
-        parent.setBackground(Background.EMPTY);
+        graphView.setBackground(Background.EMPTY);
         setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
         reset();
-        scrollPane.update(parent.getBackground());
         initializeUpdatedView(parent);
     }
 
@@ -508,7 +503,7 @@ public class Controller {
      */
     public void verticesMovable() {
         final Pane parent = (Pane) graphView.getParent();
-        Background oldBackground = parent.getBackground();
+        Background oldBackground = graphView.getBackground();
         remove(parent);
         GraphView movable;
         if (verticesMoveable.isSelected()) {
@@ -529,7 +524,7 @@ public class Controller {
             addToParent(parent);
         }
 
-
+        graphView.setBackground(oldBackground);
         setSizes(parent, oldBackground);
         initializeUpdatedView(parent);
         if (!finish.getText().equals("Start")) {

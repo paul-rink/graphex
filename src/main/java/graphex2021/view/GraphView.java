@@ -205,21 +205,6 @@ public class GraphView extends SmartGraphPanel implements Observer {
         }
     }
 
-    /**
-     * method that returns the width of the pane the graphView is in in pixels
-     * @return the width of the pane in pixels
-     */
-    public double getPaneWidth() {
-        return ((Pane) this.getParent()).getHeight();
-    }
-
-    /**
-     * method that returns the height of the pane the graphView is in in pixels
-     * @return the height of the pane in pixels
-     */
-    public double getPaneHeight() {
-        return ((Pane) this.getParent()).getHeight();
-    }
 
     public double calcRelativeY(SmartGraphVertexNode smartVertex) {
         double correction = STRAT.getCorrection();
@@ -229,7 +214,6 @@ public class GraphView extends SmartGraphPanel implements Observer {
             if (correction > 1) {
                 relY = (smartVertex.getPositionCenterY() * 1000) / (correction * parent.getHeight());
             } else {
-
                 relY = (smartVertex.getPositionCenterY() * 1000) / parent.getHeight();
             }
         } else {
@@ -244,10 +228,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
         double relX;
         if (parent.getWidth() > this.getMinWidth() && parent.getWidth() > this.getMinWidth()) {
             if (correction < 1) {
-                System.out.println("corr");
                 relX = (smartVertex.getPositionCenterX() * 1000. * correction) / (parent.getWidth());
             } else {
-                System.out.println("rect");
                 relX = (smartVertex.getPositionCenterX() * 1000.) / parent.getWidth();
             }
         } else {

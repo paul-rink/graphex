@@ -58,8 +58,8 @@
     <center>
         <ZoomableScrollPane fx:id="scrollPane" pannable="true">
             <content>
-                <Pane maxHeight="Infinity" maxWidth="Infinity" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
-                    <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532">
+                <Pane maxHeight="Infinity" maxWidth="Infinity" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532">
+                    <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532"  style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
                     </GraphView>
                 </Pane>
             </content>
