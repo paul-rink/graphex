@@ -14,6 +14,7 @@
 <?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import graphex2021.view.ZoomableScrollPane?>
+<?import javafx.scene.Group?>
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
 
     <top>
@@ -59,8 +60,10 @@
         <ZoomableScrollPane fx:id="scrollPane" pannable="true">
             <content>
                 <Pane maxHeight="Infinity" maxWidth="Infinity" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532">
-                    <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532"  style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
-                    </GraphView>
+                    <Group fx:id="group">
+                        <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532"  style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
+                        </GraphView>
+                    </Group>
                 </Pane>
             </content>
         </ZoomableScrollPane>

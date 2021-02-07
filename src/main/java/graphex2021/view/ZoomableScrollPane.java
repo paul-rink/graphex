@@ -17,12 +17,12 @@ public class ZoomableScrollPane extends ScrollPane {
         super();
     }
 
-    public void init(Node target) {
-        Pane pane = (Pane) target;
-        Pane graphView = (Pane) pane.getChildren().get(0);
-        this.target = graphView;
-        this.zoomNode = new Group(graphView.getChildren());
-        setScrollAction(graphView);
+    public void init(Node target, Group group, GraphView view) {
+        //Pane graphView = (Pane) pane.getChildren().get(0);
+        this.target = view;
+        this.zoomNode = group;
+        setScrollAction(view);
+        //pane.getChildren().add(zoomNode);
         setContent(target);
 
         setPannable(true);

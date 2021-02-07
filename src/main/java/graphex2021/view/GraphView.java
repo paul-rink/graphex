@@ -134,8 +134,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
         // start reacting correctly to changes below min size
-        Pane parent = (Pane) this.getParent();
-        STRAT.place(parent.getWidth(), parent.getHeight(), super.theGraph, vertices);
+        // Pane parent = (Pane) this.getParent();
+        STRAT.place(this.getWidth(), this.getHeight(), super.theGraph, vertices);
 
     }
 
@@ -208,7 +208,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     public double calcRelativeY(SmartGraphVertexNode smartVertex) {
         double correction = STRAT.getCorrection();
-        Pane parent = (Pane) this.getParent();
+        Pane parent = (Pane) this.getParent().getParent();
         double relY;
         if (parent.getWidth() > this.getMinWidth() && parent.getHeight() > this.getMinHeight()) {
             if (correction > 1) {
@@ -224,7 +224,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     public double calcRelativeX(SmartGraphVertexNode smartVertex) {
         double correction = STRAT.getCorrection();
-        Pane parent = (Pane) this.getParent();
+        Pane parent = (Pane) this.getParent().getParent();
         double relX;
         if (parent.getWidth() > this.getMinWidth() && parent.getWidth() > this.getMinWidth()) {
             if (correction < 1) {
