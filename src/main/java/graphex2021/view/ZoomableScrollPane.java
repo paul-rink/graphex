@@ -6,6 +6,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class ZoomableScrollPane extends ScrollPane {
@@ -20,9 +21,12 @@ public class ZoomableScrollPane extends ScrollPane {
     }
 
     public void init(Node target) {
-        this.target = target;
-        this.zoomNode = new Group(target);
-        setContent(outerNode(zoomNode));
+        Pane pane = (Pane) target;
+        Pane graphView = (Pane) pane.getChildren().get(0);
+        this.target = graphView;
+        this.zoomNode = new Group(graphView.getChildren());
+        outerNode(graphView);
+        setContent(target);
 
         setPannable(true);
         //setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -49,8 +53,8 @@ public class ZoomableScrollPane extends ScrollPane {
         updateScale();
     }
 
-    private Node outerNode(Node node) {
-        Node outerNode = centeredNode(node);
+    private Node outerNode(Node outerNode) {
+
         outerNode.setOnScroll(e -> {
             e.consume();
             onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
