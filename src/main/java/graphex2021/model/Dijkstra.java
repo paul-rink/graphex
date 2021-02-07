@@ -151,7 +151,7 @@ public class Dijkstra implements Algorithm {
 
             //if the next vertex that would be marked has infinity distance this means that zhe graph is not connected
             // and that all remaining vertices are not reachable from start vertex
-            if ((dist[v.getId()] != INFINITY_DIST)) {
+            if ((dist[v.getId()] == INFINITY_DIST)) {
                 //all remaining vertices can be removed from the unmarked list, since the algo can stop here
                 unmarked.clear();
                 break;
