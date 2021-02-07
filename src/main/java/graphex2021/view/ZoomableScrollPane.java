@@ -1,23 +1,20 @@
 package graphex2021.view;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 public class ZoomableScrollPane extends ScrollPane {
     private double scaleValue = 0.7;
-    private double zoomIntensity = 0.002;
+    private final double zoomIntensity = 0.002;
     private Node target;
     private Node zoomNode;
 
     public ZoomableScrollPane() {
         super();
-        //this.getChildren();
     }
 
     public void init(Node target) {
@@ -25,12 +22,10 @@ public class ZoomableScrollPane extends ScrollPane {
         Pane graphView = (Pane) pane.getChildren().get(0);
         this.target = graphView;
         this.zoomNode = new Group(graphView.getChildren());
-        outerNode(graphView);
+        setScrollAction(graphView);
         setContent(target);
 
         setPannable(true);
-        //setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        //setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         setFitToHeight(true); //center
         setFitToWidth(true); //center
 
@@ -38,34 +33,11 @@ public class ZoomableScrollPane extends ScrollPane {
         updateScale();
     }
 
-    public ZoomableScrollPane(Node target) {
-        super();
-        this.target = target;
-        this.zoomNode = new Group(target);
-        setContent(outerNode(zoomNode));
-
-        setPannable(true);
-        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        setFitToHeight(true); //center
-        setFitToWidth(true); //center
-
-        updateScale();
-    }
-
-    private Node outerNode(Node outerNode) {
-
+    private void setScrollAction(Node outerNode) {
         outerNode.setOnScroll(e -> {
             e.consume();
             onScroll(e.getDeltaY(), new Point2D(e.getX(), e.getY()));
         });
-        return outerNode;
-    }
-
-    private Node centeredNode(Node node) {
-        VBox vBox = new VBox(node);
-        vBox.setAlignment(Pos.CENTER);
-        return vBox;
     }
 
     private void updateScale() {
@@ -98,14 +70,5 @@ public class ZoomableScrollPane extends ScrollPane {
         Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
         this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
         this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
-    }
-
-    public void update(Background b) {
-        if (!b.getImages().isEmpty()) {
-            String url = b.getImages().get(0).getImage().getUrl();
-            this.target.setStyle("-fx-background-image: url('" + url + "'); -fx-background-repeat: no-repeat; -fx-background-size: cover");
-        } else {
-            this.target.setStyle("-fx-background-color: transparent");
-        }
     }
 }
