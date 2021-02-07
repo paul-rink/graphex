@@ -1,39 +1,216 @@
 {
-    "type" : "GXGraph",
-    "vertices" : [
+    "type": "GXGraph",
+    "vertices": [
         {
             "name" : "S",
-            "posx" : "200",
-            "posy" : "700",
+            "posx" : "813",
+            "posy" : "145",
         },
         {
             "name" : "A",
-            "posx" : "550",
-            "posy" : "250",
+            "posx" : "758",
+            "posy" : "200",
         },
         {
-            "name" : "Z",
-            "posx" : "700",
-            "posy" : "350",
+            "name" : "B",
+            "posx" : "521",
+            "posy" : "14",
+        },
+        {
+            "name" : "C",
+            "posx" : "659",
+            "posy" : "553",
+        },
+        {
+            "name" : "D",
+            "posx" : "442",
+            "posy" : "218",
+        },{
+            "name" : "E",
+            "posx" : "542",
+            "posy" : "353",
+        },{
+            "name" : "F",
+            "posx" : "569",
+            "posy" : "616",
+        },{
+            "name" : "G",
+            "posx" : "668",
+            "posy" : "631",
+        },{
+            "name" : "H",
+            "posx" : "790",
+            "posy" : "585",
+        },{
+            "name" : "I",
+            "posx" : "691",
+            "posy" : "741",
+        },{
+            "name" : "J",
+            "posx" : "534",
+            "posy" : "779",
+        },{
+            "name" : "K",
+            "posx" : "448",
+            "posy" : "985",
+        },{
+            "name" : "L",
+            "posx" : "228",
+            "posy" : "785",
+        },{
+            "name" : "M",
+            "posx" : "41",
+            "posy" : "612",
+        },{
+            "name" : "N",
+            "posx" : "85",
+            "posy" : "356",
+        },{
+            "name" : "O",
+            "posx" : "157",
+            "posy" : "219",
+        },{
+            "name" : "P",
+            "posx" : "304",
+            "posy" : "156",
+        },{
+            "name" : "Q",
+            "posx" : "66",
+            "posy" : "134",
+        },{
+            "name" : "R",
+            "posx" : "306",
+            "posy" : "573",
+        },{
+            "name" : "T",
+            "posx" : "363",
+            "posy" : "427",
         }
     ],
-    "edges" : [
-        {
-            "vertex1" : "S",
-            "vertex2" : "Z",
-            "weight" :"20",
-        },
-        {
+    "edges": [
+    {
             "vertex1" : "S",
             "vertex2" : "A",
-            "weight" :"2",
+            "weight" :"1",
         },
         {
             "vertex1" : "A",
-            "vertex2" : "Z",
+            "vertex2" : "B",
+            "weight" :"4",
+        },
+        {
+            "vertex1" : "A",
+            "vertex2" : "C",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "B",
+            "vertex2" : "D",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "C",
+            "vertex2" : "F",
             "weight" :"1",
-        }
+        },
+        {
+            "vertex1" : "D",
+            "vertex2" : "E",
+            "weight" :"4",
+        },
+        {
+            "vertex1" : "D",
+            "vertex2" : "P",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "D",
+            "vertex2" : "T",
+            "weight" :"15",
+            
+        },
+        {
+            "vertex1" : "E",
+            "vertex2" : "F",
+            "weight" :"2",
+        },{
+            "vertex1" : "F",
+            "vertex2" : "J",
+            "weight" :"1",
+        },
+        {
+            "vertex1" : "F",
+            "vertex2" : "G",
+            "weight" :"6",
+        },
+        {
+            "vertex1" : "F",
+            "vertex2" : "T",
+            "weight" :"18",
+        },{
+            "vertex1" : "G",
+            "vertex2" : "H",
+            "weight" :"4",
+        },
+        {
+            "vertex1" : "G",
+            "vertex2" : "I",
+            "weight" :"2",
+        },{
+            "vertex1" : "J",
+            "vertex2" : "K",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "J",
+            "vertex2" : "R",
+            "weight" :"20",
+        },{
+            "vertex1" : "K",
+            "vertex2" : "L",
+            "weight" :"7",
+        },{
+            "vertex1" : "L",
+            "vertex2" : "M",
+            "weight" :"1",
+        },
+        {
+            "vertex1" : "L",
+            "vertex2" : "R",
+            "weight" :"5",
+        },{
+            "vertex1" : "M",
+            "vertex2" : "N",
+            "weight" :"4",
+        },{
+            "vertex1" : "N",
+            "vertex2" : "O",
+            "weight" :"2",
+        },{
+            "vertex1" : "N",
+            "vertex2" : "R",
+            "weight" :"8",
+        },
+        {
+            "vertex1" : "O",
+            "vertex2" : "P",
+            "weight" :"2",
+        },{
+            "vertex1" : "O",
+            "vertex2" : "Q",
+            "weight" :"5",
+        },
+        {
+            "vertex1" : "O",
+            "vertex2" : "T",
+            "weight" :"10",
+        },{
+            "vertex1" : "T",
+            "vertex2" : "R",
+            "weight" :"2",
+        }        
     ],
-    "startVertex" : "S",
-    "endVertex" : "Z"
+    "startVertex": "S",
+    "endVertex": "T"
 }
+    
