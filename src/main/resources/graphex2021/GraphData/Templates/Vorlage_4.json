@@ -45,28 +45,13 @@
         },
         {
             "vertex1" : "S",
-            "vertex2" : "A",
-            "weight" :"2",
-        },
-        {
-            "vertex1" : "A",
-            "vertex2" : "D",
-            "weight" :"3",
-        },
-        {
-            "vertex1" : "S",
             "vertex2" : "B",
             "weight" :"2",
         },
         {
-            "vertex1" : "B",
-            "vertex2" : "C",
-            "weight" :"3",
-        },
-        {
-            "vertex1" : "B",
-            "vertex2" : "D",
-            "weight" :"3",
+            "vertex1" : "S",
+            "vertex2" : "A",
+            "weight" :"2",
         }
     ],
     "startVertex" : "S",
