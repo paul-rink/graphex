@@ -2,6 +2,7 @@ package graphex2021.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -20,7 +21,7 @@ import org.everit.json.schema.loader.*;
 public class GraphParser {
 
     private static final GraphParser singleInstance = new GraphParser();
-    private static final String GraphTypeFile = "src/main/resources/graphex2021/GraphData/graph-scheme.json";
+    private static final String GRAPH_TYPE_FILE = "resources/graphex2021/GraphData/graph-scheme.json";
     private int freeVertexId;
     private  int freeEdgeId;
 
@@ -151,7 +152,14 @@ public class GraphParser {
     }
 
     private void checkFileFormat(JSONObject input) throws ValidationException, WrongFileFormatException {
-        String jsonSchemaString = readFromFile(new File(GraphTypeFile));
+        File graphType = null;
+        try {
+            graphType = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
+        } catch (URISyntaxException e) {
+            graphType = null;
+            throw new WrongFileFormatException(e.getMessage());
+        }
+        String jsonSchemaString = readFromFile(new File(graphType, GRAPH_TYPE_FILE));
         JSONObject jsonSchema = new JSONObject(jsonSchemaString);
         Schema schema = SchemaLoader.load(jsonSchema);
         schema.validate(input);
@@ -169,8 +177,6 @@ public class GraphParser {
         } catch (IOException e) {
             throw new WrongFileFormatException(input.getAbsolutePath()+ "couldnt read.");
         } catch (NullPointerException r) {
-            System.out.println("-----------------------------------------------------------------------------------------------------------");
-            System.out.println("path: " + input);
             r.printStackTrace();
         }
         return output;

@@ -21,7 +21,8 @@ import java.util.LinkedList;
  */
 public class DisplayModel extends Subject {
     //TODO best way to use File.Separator
-    private static final String EXAMPLEGRAPH = "resources/graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).json";
+    private static final String EXAMPLEGRAPH = "resources" + File.separator + "graphex2021" + File.separator
+            + "GraphDataTemplates" + File.separator + "Vorlage_(Karlsruhe).json";
 
     private LinkedList<Step> userSteps;
     private LinkedList<Step> algoSteps;
