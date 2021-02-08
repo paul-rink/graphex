@@ -33,7 +33,7 @@ public class DisplayModel extends Subject {
         File example = null;
         String path = "a";
         try {
-            path = getClass().getClassLoader().getResource((EXAMPLEGRAPH)).toExternalForm();
+            path = getClass().getResource((EXAMPLEGRAPH)).toExternalForm();
         } catch (NullPointerException e) {
             System.out.println("nullpoint");
         }
