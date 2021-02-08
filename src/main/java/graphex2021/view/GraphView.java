@@ -235,13 +235,12 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     public double calcRelativeY(SmartGraphVertexNode smartVertex) {
         double correction = STRAT.getCorrection();
-        Pane parent = (Pane) this.getParent().getParent();
         double relY;
-        if (parent.getWidth() > this.getMinWidth() && parent.getHeight() > this.getMinHeight()) {
+        if (this.getWidth() > this.getMinWidth() && this.getHeight() > this.getMinHeight()) {
             if (correction > 1) {
-                relY = (smartVertex.getPositionCenterY() * 1000) / (correction * parent.getHeight());
+                relY = (smartVertex.getPositionCenterY() * 1000) / (correction * this.getHeight());
             } else {
-                relY = (smartVertex.getPositionCenterY() * 1000) / parent.getHeight();
+                relY = (smartVertex.getPositionCenterY() * 1000) / this.getHeight();
             }
         } else {
             relY = (smartVertex.getPositionCenterY() / this.getMinHeight()) * 1000.;
@@ -251,13 +250,12 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     public double calcRelativeX(SmartGraphVertexNode smartVertex) {
         double correction = STRAT.getCorrection();
-        Pane parent = (Pane) this.getParent().getParent();
         double relX;
-        if (parent.getWidth() > this.getMinWidth() && parent.getWidth() > this.getMinWidth()) {
+        if (this.getWidth() > this.getMinWidth() && this.getWidth() > this.getMinWidth()) {
             if (correction < 1) {
-                relX = (smartVertex.getPositionCenterX() * 1000. * correction) / (parent.getWidth());
+                relX = (smartVertex.getPositionCenterX() * 1000. * correction) / (this.getWidth());
             } else {
-                relX = (smartVertex.getPositionCenterX() * 1000.) / parent.getWidth();
+                relX = (smartVertex.getPositionCenterX() * 1000.) / this.getWidth();
             }
         } else {
             relX = (smartVertex.getPositionCenterX() / this.getMinWidth()) * 1000.;
