@@ -168,6 +168,10 @@ public class GraphParser {
             output = Files.readString(input.toPath());
         } catch (IOException e) {
             throw new WrongFileFormatException(input.getAbsolutePath()+ "couldnt read.");
+        } catch (NullPointerException r) {
+            System.out.println("-----------------------------------------------------------------------------------------------------------");
+            System.out.println("path: " + input);
+            r.printStackTrace();
         }
         return output;
     }

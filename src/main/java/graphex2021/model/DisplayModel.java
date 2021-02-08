@@ -5,6 +5,7 @@ import graphex2021.Main;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -28,9 +29,19 @@ public class DisplayModel extends Subject {
     private GXGraph visibleGraph;
 
     public DisplayModel() throws WrongFileFormatException {
+        System.out.println("------------------displaymodel construct-------------------------------");
         File example = null;
+        String path = "a";
         try {
-            String path = this.getClass().getClassLoader().getResource((EXAMPLEGRAPH)).toExternalForm();
+            path = getClass().getClassLoader().getResource((EXAMPLEGRAPH)).toExternalForm();
+        } catch (NullPointerException e) {
+            System.out.println("nullpoint");
+        }
+
+        System.out.println("-------------------------------------------------");
+        System.out.println(path);
+        System.out.println("-------------------------------------------------");
+        try {
             example = new File(path);
         } catch (Exception e) {
             e.printStackTrace();

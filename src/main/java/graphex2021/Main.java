@@ -16,14 +16,18 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         //init primary stage: GUI
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("graphex2021/GraphexMainWindow.fxml"));
+        System.out.println("---------------------loader----------------------------");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/graphex2021/GraphexMainWindow.fxml"));
+        System.out.println("--------------------root-----------------------------");
         Parent root = loader.load();
         primaryStage.setTitle("GraphEx");
+        System.out.println("------------------stage-------------------------------");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        
 
+        System.out.println("---------------------controller----------------------------");
         Controller graphController = loader.getController();
+        System.out.println("------------------------init-------------------------");
         graphController.init();
     }
 }

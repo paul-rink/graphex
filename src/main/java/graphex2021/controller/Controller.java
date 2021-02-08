@@ -98,6 +98,7 @@ public class Controller {
      * by using the standard {@link graphex2021.model.GXGraph}690
      */
     public Controller() {
+        System.out.println("---------------------controller construct----------------------------");
         try {
             this.displayModel = new DisplayModel();
         } catch (WrongFileFormatException e) {
