@@ -34,7 +34,9 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
 
 
-    private ChangeListener listener;
+
+    private ChangeListener<Number> widthListener;
+    private ChangeListener<Number> heightListener;
 
     public GraphView() throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
@@ -153,17 +155,27 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private void graphViewSizeListener() {
-        ChangeListener<Number> listener = ((observable, oldValue, newValue) -> this.placeVertices());
-
-        this.getScene().widthProperty().addListener(listener);
-        this.getScene().heightProperty().addListener(listener);
-        this.listener = listener;
+        ChangeListener<Number> widthListener = ((observable, oldValue, newValue) -> {
+            this.setWidth(newValue.doubleValue());
+            this.placeVertices();
+        }
+        );
+        ChangeListener<Number> heightListener = ((observable, oldValue, newValue) -> {
+            this.setHeight(newValue.doubleValue());
+            this.placeVertices();
+        }
+        );
+        this.getScene().widthProperty().addListener(widthListener);
+        this.getScene().heightProperty().addListener(heightListener);
+        this.widthListener = widthListener;
+        this.heightListener = heightListener;
     }
 
     public void removeListener() {
-        this.getScene().widthProperty().removeListener(listener);
-        this.getScene().heightProperty().removeListener(listener);
+        this.getScene().widthProperty().removeListener(widthListener);
+        this.getScene().heightProperty().removeListener(heightListener);
     }
+
 
 
     /**

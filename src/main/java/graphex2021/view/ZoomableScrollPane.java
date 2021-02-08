@@ -28,7 +28,12 @@ public class ZoomableScrollPane extends ScrollPane {
         setPannable(true);
         setFitToHeight(true); //center
         setFitToWidth(true); //center
+        setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        setHbarPolicy(ScrollBarPolicy.ALWAYS);
 
+        target.setOnMouseEntered(e -> System.out.println("Vbox"));
+        group.setOnMouseEntered(e -> System.out.println("group"));
+        view.setOnMouseEntered(e -> System.out.println("view"));
 
         updateScale();
     }

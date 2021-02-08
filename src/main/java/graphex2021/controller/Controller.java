@@ -121,6 +121,8 @@ public class Controller {
         initGraphView();
         initScrollPane();
         initTableView();
+        graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
+        graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
         displayModel.notifyObservers();
     }
 
@@ -354,8 +356,10 @@ public class Controller {
     private void setSizes(Group parent, double prefWidth, double prefHeight, double minWidth, double minHeight) {
         //parent.setPrefSize(prefWidth, prefHeight);
         //parent.setMinSize(minWidth, minHeight);
-        graphView.setPrefSize(prefWidth, prefHeight);
-        graphView.setMinSize(prefWidth, prefHeight);
+        graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
+        graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
+        //graphView.setPrefSize(prefWidth, prefHeight);
+        //graphView.setMinSize(prefWidth, prefHeight);
     }
 
     private void setSizes(Group parent, Background background) {
