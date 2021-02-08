@@ -59,23 +59,28 @@ public class ZoomableScrollPane extends ScrollPane {
         System.out.println("new Height: " + newHeight);
         double newWidth = currentWidth*newScaleValue;
         System.out.println("new Width: "+ newWidth);
-        if (newHeight < sceneHeight && tar.getMinHeight() < sceneHeight) {
+        double minHeight =tar.getMinHeight();
+        double minWidth = tar.getMinWidth();
+        if (newHeight < sceneHeight && minHeight < sceneHeight) {
             System.out.println("case 1");
             double factor = currentHeight/sceneHeight;
             target.setScaleX(factor);
             target.setScaleY(factor);
             scaleValue = 1;
-        } else if(newWidth < sceneWidth && tar.getMinWidth() < sceneWidth) {
+        } else if(newWidth < sceneWidth && minWidth < sceneWidth) {
             System.out.println("case 2");
             double factor = currentWidth / sceneWidth;
             target.setScaleX(factor);
             target.setScaleY(factor);
             scaleValue = 1;
         } else {
-            System.out.println("case 3");
-            target.setScaleX(newScaleValue);
-            target.setScaleY(newScaleValue);
-            scaleValue = newScaleValue;
+            if(newWidth > minWidth && newHeight > minHeight) {
+                System.out.println("case 3");
+                target.setScaleX(newScaleValue);
+                target.setScaleY(newScaleValue);
+                scaleValue = newScaleValue;
+            }
+
         }
     }
 
