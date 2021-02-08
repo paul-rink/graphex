@@ -18,11 +18,9 @@ public class ZoomableScrollPane extends ScrollPane {
     }
 
     public void init(Node target, Group group, GraphView view) {
-        //Pane graphView = (Pane) pane.getChildren().get(0);
         this.target = view;
         this.zoomNode = group;
         setScrollAction(view);
-        //pane.getChildren().add(zoomNode);
         setContent(target);
 
         setPannable(true);
@@ -30,10 +28,6 @@ public class ZoomableScrollPane extends ScrollPane {
         setFitToWidth(true); //center
         setVbarPolicy(ScrollBarPolicy.ALWAYS);
         setHbarPolicy(ScrollBarPolicy.ALWAYS);
-
-        //target.setOnMouseEntered(e -> System.out.println("Vbox"));
-        //group.setOnMouseEntered(e -> System.out.println("group"));
-        //view.setOnMouseEntered(e -> System.out.println("view"));
 
         updateScale(scaleValue);
     }

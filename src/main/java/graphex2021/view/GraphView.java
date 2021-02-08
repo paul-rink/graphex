@@ -151,9 +151,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
-        // start reacting correctly to changes below min size
          Pane parent = (Pane) this.getParent().getParent();
-        //STRAT.place(parent.getWidth(), parent.getHeight(), super.theGraph, vertices);
         STRAT.place(this.getWidth(), this.getHeight(), super.theGraph, vertices);
 
     }
