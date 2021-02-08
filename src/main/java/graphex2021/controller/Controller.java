@@ -8,19 +8,19 @@ import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 
+import graphex2021.view.ZoomableScrollPane;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
+import javafx.scene.*;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
@@ -77,8 +77,13 @@ public class Controller {
     private Menu templates;
 
     @FXML
+    private Group group;
+
+    @FXML
     private GraphView graphView;
 
+    @FXML
+    private ZoomableScrollPane scrollPane;
     @FXML
     private MenuItem check;
 
@@ -112,10 +117,12 @@ public class Controller {
     }
 
     public void init() {
-
         loadTemplates();
         initGraphView();
+        initScrollPane();
         initTableView();
+        graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
+        graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
         displayModel.notifyObservers();
     }
 
@@ -129,6 +136,10 @@ public class Controller {
         graphView.init();
     }
 
+    public void initScrollPane() {
+        Node parentPane = graphView.getParent();
+        scrollPane.init(parentPane, group, graphView);
+    }
     /**
      * Start/finish button has 2 states. In Start state, pressing will enable interactions with the graph. The button
      * then switches in finish state. This will be disabled until the "done" button is pressed with success. Then the
@@ -329,7 +340,7 @@ public class Controller {
         displayModel.unregister(gxTable);
         graphView.removeListener();
         // The Pane that graphView is part of (In this case boder pane)
-        Pane pane  = (Pane) parent;
+        Group pane  = (Group) parent;
         // Removing the graphView so that later a graphView with other properties can be added.
         pane.getChildren().remove(graphView);
     }
@@ -342,21 +353,17 @@ public class Controller {
      * @param minWidth minimum Width
      * @param minHeight minimum Height
      */
-    private void setSizes(Pane parent, double prefWidth, double prefHeight, double minWidth, double minHeight) {
-        parent.setPrefSize(prefWidth, prefHeight);
-        parent.setMinSize(minWidth, minHeight);
-        graphView.setPrefSize(prefWidth, prefHeight);
-        graphView.setMinSize(prefWidth, prefHeight);
+    private void setSizes(Group parent, double prefWidth, double prefHeight, double minWidth, double minHeight) {
+        graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
+        graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
     }
 
-    private void setSizes(Pane parent, Background background) {
-        if (!background.isEmpty()) {
-            if (!background.getImages().isEmpty()) {
-                Image backgroundImage = background.getImages().get(0).getImage();
-                double width = backgroundImage.getWidth();
-                double height = backgroundImage.getHeight();
-                setSizes(parent, width, height, MIN_PANE_SIZE, calcMinHeight(width, height));
-            }
+    private void setSizes(Group parent, Background background) {
+        if (!background.getImages().isEmpty()) {
+            Image backgroundImage = background.getImages().get(0).getImage();
+            double width = backgroundImage.getWidth();
+            double height = backgroundImage.getHeight();
+            setSizes(parent, width, height, MIN_PANE_SIZE, calcMinHeight(width, height));
         } else {
             setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT
                     , STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
@@ -403,7 +410,7 @@ public class Controller {
      *
      * @param parent the parent pane that the graphView needs to be added to.
      */
-    private void initializeUpdatedView(Pane parent) {
+    private void initializeUpdatedView(Group parent) {
         // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
         parent.layout();
 
@@ -412,6 +419,7 @@ public class Controller {
 
         //Reinitializing all the views
         init();
+
         displayModel.notifyObservers();
     }
 
@@ -420,7 +428,7 @@ public class Controller {
      *
      * @param parent parent the {@link GraphView} should be added to.
      */
-    private void addToParent(Pane parent) {
+    private void addToParent(Group parent) {
         try {
             this.graphView = new GraphView();
         } catch (FileNotFoundException e) {
@@ -438,7 +446,7 @@ public class Controller {
      * @param parent parent the {@link GraphView} should be added to.
      * @param graphView the {@link GraphView} you want to add
      */
-    private void addToParent(Pane parent, GraphView graphView) {
+    private void addToParent(Group parent, GraphView graphView) {
         this.graphView = graphView;
         parent.getChildren().add(graphView);
     }
@@ -453,7 +461,8 @@ public class Controller {
      * @param file json that the new view should be loaded from.
      */
     private void loadNewGraphView(File file) {
-        final Pane parent = (Pane) graphView.getParent();
+        Group parent = (Group) graphView.getParent();
+        //final Pane parent = (Pane) graphView.getParent();
 
         DisplayModel newModel = null;
         try {
@@ -472,22 +481,22 @@ public class Controller {
 
         // creating the background if one is in the same folder as the json
         Background background = loadBackground(file);
-        parent.setBackground(background);
+        graphView.setBackground(background);
         // Setting the sizes to either standard if there was no background image or to the size of the background image.
         setSizes(parent, background);
 
         reset();
-
         // initialising the window again with the new graph view and updating once to display the graph
         initializeUpdatedView(parent);
     }
 
     private void loadNewGraphView(GXGraph graph) {
-        final Pane parent = (Pane) graphView.getParent();
+        Group parent = (Group) graphView.getParent();
+        //final Pane parent = (Pane) graphView.getParent();
         remove(parent);
         this.displayModel = new DisplayModel(graph);
         addToParent(parent);
-        parent.setBackground(Background.EMPTY);
+        graphView.setBackground(Background.EMPTY);
         setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
         reset();
         initializeUpdatedView(parent);
@@ -498,8 +507,9 @@ public class Controller {
      *
      */
     public void verticesMovable() {
-        final Pane parent = (Pane) graphView.getParent();
-        Background oldBackground = parent.getBackground();
+        Group parent = (Group) graphView.getParent();
+        //final Pane parent = (Pane) graphView.getParent();
+        Background oldBackground = graphView.getBackground();
         remove(parent);
         GraphView movable;
         if (verticesMoveable.isSelected()) {
@@ -520,7 +530,7 @@ public class Controller {
             addToParent(parent);
         }
 
-
+        graphView.setBackground(oldBackground);
         setSizes(parent, oldBackground);
         initializeUpdatedView(parent);
         if (!finish.getText().equals("Start")) {
