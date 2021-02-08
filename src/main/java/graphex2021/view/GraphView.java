@@ -119,9 +119,25 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     @Override
     public void init() {
-        STRAT.setSizes(this.getWidth(), this.getHeight(), this.getMinWidth(), this.getMinHeight());
+        double prefWidth = getBackgroundImageWidth();
+        double prefHeight = getBackgroundImageHeight();
+        STRAT.setSizes(prefWidth, prefHeight, this.getMinWidth(), this.getMinHeight());
         super.init();
         graphViewSizeListener();
+    }
+
+    private double getBackgroundImageHeight() {
+        if(!this.getBackground().getImages().isEmpty()) {
+            return this.getBackground().getImages().get(0).getImage().getHeight();
+        }
+        return this.getPrefHeight();
+    }
+
+    private double getBackgroundImageWidth() {
+        if(!this.getBackground().getImages().isEmpty()) {
+            return this.getBackground().getImages().get(0).getImage().getWidth();
+        }
+        return this.getPrefHeight();
     }
 
     private void placeVertices() {
@@ -136,7 +152,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
         // start reacting correctly to changes below min size
-        // Pane parent = (Pane) this.getParent();
+         Pane parent = (Pane) this.getParent().getParent();
+        //STRAT.place(parent.getWidth(), parent.getHeight(), super.theGraph, vertices);
         STRAT.place(this.getWidth(), this.getHeight(), super.theGraph, vertices);
 
     }

@@ -28,12 +28,12 @@ public class ZoomableScrollPane extends ScrollPane {
         setPannable(true);
         setFitToHeight(true); //center
         setFitToWidth(true); //center
-        setVbarPolicy(ScrollBarPolicy.NEVER);
-        setHbarPolicy(ScrollBarPolicy.NEVER);
+        setVbarPolicy(ScrollBarPolicy.ALWAYS);
+        setHbarPolicy(ScrollBarPolicy.ALWAYS);
 
-        target.setOnMouseEntered(e -> System.out.println("Vbox"));
-        group.setOnMouseEntered(e -> System.out.println("group"));
-        view.setOnMouseEntered(e -> System.out.println("view"));
+        //target.setOnMouseEntered(e -> System.out.println("Vbox"));
+        //group.setOnMouseEntered(e -> System.out.println("group"));
+        //view.setOnMouseEntered(e -> System.out.println("view"));
 
         updateScale(scaleValue);
     }
@@ -48,20 +48,33 @@ public class ZoomableScrollPane extends ScrollPane {
     private void updateScale(double newScaleValue) {
         Pane tar = (Pane) target;
         double sceneHeight = this.getScene().getHeight();
+        System.out.println("Scene Height: "+ sceneHeight);
         double sceneWidth = this.getScene().getWidth();
-        double currentHeight = tar.getHeight();
-        double currentWidth = tar.getWidth();
-        double newHeight = currentHeight*scaleValue;
-        double newWidth = currentWidth*scaleValue;
-        if(newHeight <= sceneHeight ) {
-            target.setScaleX(currentWidth/sceneWidth);
-            target.setScaleY(currentHeight/sceneHeight);
-        } else if(newWidth <= sceneWidth) {
-            target.setScaleX(currentWidth/sceneWidth);
-            target.setScaleY(currentHeight/sceneHeight);
+        System.out.println("Scene Width: "+ sceneWidth);
+        double currentHeight = tar.heightProperty().doubleValue();
+        System.out.println("current Height: "+ currentHeight);
+        double currentWidth = tar.widthProperty().doubleValue();
+        System.out.println("current Width: " + currentWidth);
+        double newHeight = currentHeight*newScaleValue;
+        System.out.println("new Height: " + newHeight);
+        double newWidth = currentWidth*newScaleValue;
+        System.out.println("new Width: "+ newWidth);
+        if (newHeight < sceneHeight && tar.getMinHeight() < sceneHeight) {
+            System.out.println("case 1");
+            double factor = currentHeight/sceneHeight;
+            target.setScaleX(factor);
+            target.setScaleY(factor);
+            scaleValue = 1;
+        } else if(newWidth < sceneWidth && tar.getMinWidth() < sceneWidth) {
+            System.out.println("case 2");
+            double factor = currentWidth / sceneWidth;
+            target.setScaleX(factor);
+            target.setScaleY(factor);
+            scaleValue = 1;
         } else {
-            target.setScaleX(scaleValue);
-            target.setScaleY(scaleValue);
+            System.out.println("case 3");
+            target.setScaleX(newScaleValue);
+            target.setScaleY(newScaleValue);
             scaleValue = newScaleValue;
         }
     }
