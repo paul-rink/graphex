@@ -11,7 +11,6 @@ import graphex2021.view.GraphView;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 
 import javafx.scene.Parent;
@@ -26,12 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -39,6 +33,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,8 +55,7 @@ public class Controller {
     private static final String PATTERN_FIN_TEXT = "-??[0-9]+";
     private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
     private static final int MIN_PANE_SIZE = 1000;
-    private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main"
-            + File.separator + "resources" + File.separator + "graphex2021"
+    private static final String PATH_TO_TEMPLATES = "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
 
 
@@ -424,7 +418,7 @@ public class Controller {
         try {
             this.graphView = new GraphView();
         } catch (FileNotFoundException e) {
-            Alert fileAlert = new FileAlert(e.getMessage()+ "\n wurde nicht gefunden");
+            Alert fileAlert = new FileAlert(e.getMessage() + "\n wurde nicht gefunden");
             fileAlert.showAndWait();
             e.printStackTrace();
             return;
@@ -725,9 +719,14 @@ public class Controller {
     private void loadTemplates() {
         File templateFolder = null;
 
-        templateFolder = new File(PATH_TO_TEMPLATES);
+        try {
+            templateFolder = new File(new File(getClass().getProtectionDomain().getCodeSource()
+                    .getLocation().toURI()).getParentFile(), PATH_TO_TEMPLATES);
+        } catch (URISyntaxException e) {
+            new FileFormatError(new WrongFileFormatException(e.getMessage()));
+        }
         if (!templateFolder.isDirectory()) {
-            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath()+ "\n An diesem Pfad ist kein Ordner.");
+            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath() + "\n An diesem Pfad ist kein Ordner.");
             fileAlert.showAndWait();
             return;
         }
@@ -743,7 +742,8 @@ public class Controller {
                     MenuItem item = new MenuItem(name);
                     String finalName = name;
                     if (templates.getItems().isEmpty()
-                            || templates.getItems().stream().noneMatch(menuItem -> menuItem.getText().equals(finalName))) {
+                            || templates.getItems().stream().
+                            noneMatch(menuItem -> menuItem.getText().equals(finalName))) {
                         templates.getItems().add(item);
                         item.setOnAction(e -> loadNewGraphView(graphTemplate));
                     }

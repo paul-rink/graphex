@@ -1,13 +1,8 @@
 package graphex2021.model;
 
-
-import graphex2021.Main;
-
 import java.io.File;
-import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,9 +15,8 @@ import java.util.LinkedList;
  * @version 1.0 14.01.2021
  */
 public class DisplayModel extends Subject {
-    //TODO best way to use File.Separator
     private static final String EXAMPLEGRAPH = "resources" + File.separator + "graphex2021" + File.separator
-            + "GraphDataTemplates" + File.separator + "Vorlage_(Karlsruhe).json";
+            + "GraphData" + File.separator + "Templates" + File.separator + "Vorlage_(Karlsruhe).json";
 
     private LinkedList<Step> userSteps;
     private LinkedList<Step> algoSteps;
