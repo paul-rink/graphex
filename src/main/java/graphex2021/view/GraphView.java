@@ -39,7 +39,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
                     + File.separator + "graphex2021"
                     + File.separator + "smartgraphmove.properties");
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            //TODO what here
+            e.getMessage();
         }
     }
 
