@@ -4,6 +4,7 @@ package graphex2021.model;
 import graphex2021.Main;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,8 +30,9 @@ public class DisplayModel extends Subject {
     public DisplayModel() throws WrongFileFormatException {
         File example = null;
         try {
-            example = new File(getClass().getResource(EXAMPLEGRAPH).toURI());
-        } catch (URISyntaxException e) {
+            String path = this.getClass().getClassLoader().getResource((EXAMPLEGRAPH)).toExternalForm();
+            example = new File(path);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         loadGraph(example);
