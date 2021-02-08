@@ -12,6 +12,10 @@
 
 <?import graphex2021.view.GraphView?>
 <?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import graphex2021.view.ZoomableScrollPane?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.VBox?>
 <BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
 
     <top>
@@ -54,10 +58,16 @@
         </MenuBar>
     </top>
     <center>
-        <Pane maxHeight="Infinity" maxWidth="Infinity" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover">
-            <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532">
-            </GraphView>
-        </Pane>
+        <ZoomableScrollPane fx:id="scrollPane" pannable="true">
+            <content>
+                <VBox minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" alignment="CENTER" >
+                    <Group fx:id="group">
+                        <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover" >
+                        </GraphView>
+                    </Group>
+                </VBox>
+            </content>
+        </ZoomableScrollPane>
     </center>
    <bottom>
       <ToolBar BorderPane.alignment="CENTER">
