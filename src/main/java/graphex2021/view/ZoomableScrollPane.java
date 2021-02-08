@@ -28,14 +28,14 @@ public class ZoomableScrollPane extends ScrollPane {
         setPannable(true);
         setFitToHeight(true); //center
         setFitToWidth(true); //center
-        setVbarPolicy(ScrollBarPolicy.ALWAYS);
-        setHbarPolicy(ScrollBarPolicy.ALWAYS);
+        setVbarPolicy(ScrollBarPolicy.NEVER);
+        setHbarPolicy(ScrollBarPolicy.NEVER);
 
         target.setOnMouseEntered(e -> System.out.println("Vbox"));
         group.setOnMouseEntered(e -> System.out.println("group"));
         view.setOnMouseEntered(e -> System.out.println("view"));
 
-        updateScale();
+        updateScale(scaleValue);
     }
 
     private void setScrollAction(Node outerNode) {
@@ -45,9 +45,25 @@ public class ZoomableScrollPane extends ScrollPane {
         });
     }
 
-    private void updateScale() {
-        target.setScaleX(scaleValue);
-        target.setScaleY(scaleValue);
+    private void updateScale(double newScaleValue) {
+        Pane tar = (Pane) target;
+        double sceneHeight = this.getScene().getHeight();
+        double sceneWidth = this.getScene().getWidth();
+        double currentHeight = tar.getHeight();
+        double currentWidth = tar.getWidth();
+        double newHeight = currentHeight*scaleValue;
+        double newWidth = currentWidth*scaleValue;
+        if(newHeight <= sceneHeight ) {
+            target.setScaleX(currentWidth/sceneWidth);
+            target.setScaleY(currentHeight/sceneHeight);
+        } else if(newWidth <= sceneWidth) {
+            target.setScaleX(currentWidth/sceneWidth);
+            target.setScaleY(currentHeight/sceneHeight);
+        } else {
+            target.setScaleX(scaleValue);
+            target.setScaleY(scaleValue);
+            scaleValue = newScaleValue;
+        }
     }
 
     private void onScroll(double wheelDelta, Point2D mousePoint) {
@@ -60,8 +76,8 @@ public class ZoomableScrollPane extends ScrollPane {
         double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
 
-        scaleValue = scaleValue * zoomFactor;
-        updateScale();
+        double newscaleValue = scaleValue * zoomFactor;
+        updateScale(newscaleValue);
         this.layout(); // refresh ScrollPane scroll positions & target bounds
 
         // convert target coordinates to zoomTarget coordinates
