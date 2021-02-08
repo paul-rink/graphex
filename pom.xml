@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>graphex2021</groupId>
     <artifactId>graphex</artifactId>
-    <version>0.1</version>
+    <version>1.0</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -111,6 +111,7 @@
                 <configuration>
                     <descriptor>src/assembly/bin.xml</descriptor>
                     <finalName>Graphex-${pom.version}</finalName>
+                    <outputDirectory>release/</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
