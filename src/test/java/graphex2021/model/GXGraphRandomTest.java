@@ -6,7 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author kmarq
+ * Some test classes for generating a random {@link GXGraph}.
+ *
+ * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 03.02.2021
  */
 public class GXGraphRandomTest {
@@ -31,7 +33,7 @@ public class GXGraphRandomTest {
     @Test
     public void testGenerateEdges2() {
         GXGraph graph = new GXGraphRandom(4, 10, 60, true, true);
-        Assert.assertEquals(4, graph.vertices());
+        Assert.assertEquals(4, graph.vertices().size());
     }
 
     @Test

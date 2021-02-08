@@ -4,6 +4,9 @@ import com.brunomnsilva.smartgraph.graphview.*;
 import graphex2021.model.*;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Tooltip;
 
@@ -232,6 +235,33 @@ public class GraphView extends SmartGraphPanel implements Observer {
         }
     }
 
+    public void showVertexDistance(SmartGraphVertexNode v, double x, double y) {
+        GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
+        Label label = new Label("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+        ContextMenu context = new ContextMenu();
+        MenuItem item = new MenuItem();
+        item.setText("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+        context.getItems().add(item);
+        double offsetX = this.getScene().getWindow().getX();
+        double offsetY = this.getScene().getWindow().getY();
+        context.show(v, x + offsetX, y + offsetY);
+    }
+
+    /**
+     * method that returns the width of the pane the graphView is in in pixels
+     * @return the width of the pane in pixels
+     */
+    public double getPaneWidth() {
+        return ((Pane) this.getParent()).getHeight();
+    }
+
+    /**
+     * method that returns the height of the pane the graphView is in in pixels
+     * @return the height of the pane in pixels
+     */
+    public double getPaneHeight() {
+        return ((Pane) this.getParent()).getHeight();
+    }
 
     public double calcRelativeY(SmartGraphVertexNode smartVertex) {
         double correction = STRAT.getCorrection();

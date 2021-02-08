@@ -30,6 +30,12 @@ public class Dijkstra implements Algorithm {
     private LinkedList<Step> steps;
 
     /**
+     * This is a placeholder for telling the algorithmus that distance to a vertex is infinity, i.e. not known, or the
+     * vertex is unreachable at all.
+     */
+    public static final int INFINITY_DIST = -1;
+
+    /**
      * Creates a new Dijkstra instance for a given {@link GXGraph}. Initializes the PriorityQueue for distance
      * comparison.
      */
@@ -40,9 +46,9 @@ public class Dijkstra implements Algorithm {
             //the one with lower id
             if (dist[v.getId()] == dist[u.getId()]) return (v.getId() - u.getId());
             //case v is unvisited and therefore distance infinity (-1), u is better than v
-            else if (dist[v.getId()] == -1) return 1;
+            else if (dist[v.getId()] == INFINITY_DIST) return 1;
             //case u is unvisited and therefore distance infinity (-1), v is better than u
-            else if (dist[u.getId()] == -1) return -1;
+            else if (dist[u.getId()] == INFINITY_DIST) return -1;
             //both are visited, then calc difference of dist, v -> less, then v -> choose first
             else return dist[v.getId()] - dist[u.getId()];
         };
@@ -127,7 +133,7 @@ public class Dijkstra implements Algorithm {
         for (GXVertex v : vertices) {
             if (!v.equals(start)) {
                 int vId = v.getId();
-                dist[vId] = -1;             //set all distances to infinity (-1)
+                dist[vId] = INFINITY_DIST;             //set all distances to infinity (-1)
                 prev[vId] = null;           //set all predecessor undefined
             }
             unmarked.add(v);
@@ -142,6 +148,14 @@ public class Dijkstra implements Algorithm {
     private void createSteps() throws ElementNotInGraphException {
         while (!unmarked.isEmpty()) {
             GXVertex v = unmarked.remove();     //this is the next chosen vertex
+
+            //if the next vertex that would be marked has infinity distance this means that zhe graph is not connected
+            // and that all remaining vertices are not reachable from start vertex
+            if ((dist[v.getId()] == INFINITY_DIST)) {
+                //all remaining vertices can be removed from the unmarked list, since the algo can stop here
+                unmarked.clear();
+                break;
+            }
 
             //create a step with this vertex, but don't create a step for starting vertex
             if (!v.equals(start)) {
@@ -188,7 +202,7 @@ public class Dijkstra implements Algorithm {
             //the resulting distance if the new path would go over v to u
             int alternativeDist = dist[selectedVertex.getId()] + edge.getWeight();
             //if u is not visited yet (dist infinity/-1) or new distance is less than old distance, update distance
-            if (dist[u.getId()] == -1 || alternativeDist < dist[u.getId()]) {
+            if (dist[u.getId()] == INFINITY_DIST || alternativeDist < dist[u.getId()]) {
                 dist[u.getId()] = alternativeDist;
 
                 //because the distance of u changed, insert it again to queue to update its priority

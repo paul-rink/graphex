@@ -1,0 +1,354 @@
+{
+    "type" : "GXGraph",
+    "vertices" : [
+        {
+            "name" : "Wien",
+            "posx" : "890",
+            "posy" : "881",
+        },
+        {
+            "name" : "Salzburg",
+            "posx" : "681",
+            "posy" : "938",
+        },
+        {
+            "name" : "Prag",
+            "posx" : "764",
+            "posy" : "663",
+        },
+        {
+            "name" : "Muenchen",
+            "posx" : "571",
+            "posy" : "899",
+        },
+        {
+            "name" : "Nuernberg",
+            "posx" : "551",
+            "posy" : "728",
+        },
+        {
+            "name" : "Leipzig",
+            "posx" : "636",
+            "posy" : "488",
+        },
+        {
+            "name" : "Dresden",
+            "posx" : "716",
+            "posy" : "519",
+        },
+        {
+            "name" : "Berlin",
+            "posx" : "694",
+            "posy" : "333",
+        },
+        {
+            "name" : "Thueringen",
+            "posx" : "540",
+            "posy" : "543",
+        },
+        {
+            "name" : "Heilbronn",
+            "posx" : "431",
+            "posy" : "761",
+        },
+        {
+            "name" : "Zuerich",
+            "posx" : "381",
+            "posy" : "944",
+        },
+        {
+            "name" : "Basel",
+            "posx" : "303",
+            "posy" : "950",
+        },
+        {
+            "name" : "Freiburg",
+            "posx" : "331",
+            "posy" : "887",
+        },
+        {
+            "name" : "Karlsruhe",
+            "posx" : "362",
+            "posy" : "781",
+        },
+        {
+            "name" : "Frankfurt",
+            "posx" : "393",
+            "posy" : "644",
+        },
+        {
+            "name" : "Hannover",
+            "posx" : "458",
+            "posy" : "350",
+        },
+        {
+            "name" : "Hamburg",
+            "posx" : "476",
+            "posy" : "191",
+        },
+        {
+            "name" : "Bremen",
+            "posx" : "401",
+            "posy" : "254",
+        },
+        {
+            "name" : "Amsterdam",
+            "posx" : "146",
+            "posy" : "358",
+        },
+        {
+            "name" : "Bruessel",
+            "posx" : "114",
+            "posy" : "548",
+        },
+        {
+            "name" : "Koeln",
+            "posx" : "276",
+            "posy" : "550",
+        },
+        {
+            "name" : "Luxemburg",
+            "posx" : "224",
+            "posy" : "707",
+        },
+        {
+            "name" : "Troyes",
+            "posx" : "94",
+            "posy" : "874",
+        },
+        {
+            "name" : "Rostock",
+            "posx" : "610",
+            "posy" : "131",
+        }
+    ],
+    "edges" : [
+        {
+            "vertex1" : "Wien",
+            "vertex2" : "Prag",
+            "weight" :"7",
+        },
+        {
+            "vertex1" : "Wien",
+            "vertex2" : "Salzburg",
+            "weight" :"3",
+        },
+        {
+            "vertex1" : "Salzburg",
+            "vertex2" : "Prag",
+            "weight" :"3",
+        },
+        {
+            "vertex1" : "Dresden",
+            "vertex2" : "Prag",
+            "weight" :"5",
+        },
+        {
+            "vertex1" : "Nuernberg",
+            "vertex2" : "Prag",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "Salzburg",
+            "vertex2" : "Muenchen",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "Nuernberg",
+            "vertex2" : "Muenchen",
+            "weight" :"6",
+        },
+        {
+            "vertex1" : "Zuerich",
+            "vertex2" : "Muenchen",
+            "weight" :"6",
+        },
+        {
+            "vertex1" : "Zuerich",
+            "vertex2" : "Freiburg",
+            "weight" :"3",
+        },
+        {
+            "vertex1" : "Freiburg",
+            "vertex2" : "Basel",
+            "weight" :"1",
+        },
+        {
+            "vertex1" : "Basel",
+            "vertex2" : "Troyes",
+            "weight" :"4",
+        },
+        {
+            "vertex1" : "Troyes",
+            "vertex2" : "Bruessel",
+            "weight" :"10",
+        },
+        {
+            "vertex1" : "Troyes",
+            "vertex2" : "Luxemburg",
+            "weight" :"3",
+        },
+        {
+            "vertex1" : "Koeln",
+            "vertex2" : "Luxemburg",
+            "weight" :"4",
+        },
+        {
+            "vertex1" : "Basel",
+            "vertex2" : "Luxemburg",
+            "weight" :"9",
+        },
+        {
+            "vertex1" : "Bruessel",
+            "vertex2" : "Koeln",
+            "weight" :"5",
+        },
+        {
+            "vertex1" : "Bruessel",
+            "vertex2" : "Amsterdam",
+            "weight" :"8",
+        },
+        {
+            "vertex1" : "Koeln",
+            "vertex2" : "Amsterdam",
+            "weight" :"15",
+        },
+        {
+            "vertex1" : "Koeln",
+            "vertex2" : "Frankfurt",
+            "weight" :"3",
+        },
+        {
+            "vertex1" : "Frankfurt",
+            "vertex2" : "Karlsruhe",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "Karlsruhe",
+            "vertex2" : "Freiburg",
+            "weight" :"5",
+        },
+        {
+            "vertex1" : "Karlsruhe",
+            "vertex2" : "Muenchen",
+            "weight" :"5",
+        },
+        {
+            "vertex1" : "Karlsruhe",
+            "vertex2" : "Heilbronn",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "Heilbronn",
+            "vertex2" : "Frankfurt",
+            "weight" :"3",
+        },
+        {
+            "vertex1" : "Heilbronn",
+            "vertex2" : "Nuernberg",
+            "weight" :"10",
+        },
+        {
+            "vertex1" : "Nuernberg",
+            "vertex2" : "Thüringen",
+            "weight" :"3",
+        },
+        {
+            "vertex1" : "Nuernberg",
+            "vertex2" : "Leipzig",
+            "weight" :"4",
+        },
+        {
+            "vertex1" : "Leipzig",
+            "vertex2" : "Dresden",
+            "weight" :"4",
+        },
+        {
+            "vertex1" : "Dresden",
+            "vertex2" : "Berlin",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "Leipzig",
+            "vertex2" : "Berlin",
+            "weight" :"6",
+        },
+        {
+            "vertex1" : "Thueringen",
+            "vertex2" : "Leipzig",
+            "weight" :"1",
+        },
+        {
+            "vertex1" : "Frankfurt",
+            "vertex2" : "Thueringen",
+            "weight" :"5",
+        },
+        {
+            "vertex1" : "Frankfurt",
+            "vertex2" : "Hannover",
+            "weight" :"5",
+        },
+        {
+            "vertex1" : "Koeln",
+            "vertex2" : "Hannover",
+            "weight" :"4",
+        },
+        {
+            "vertex1" : "Amsterdam",
+            "vertex2" : "Hannover",
+            "weight" :"6",
+        },
+        {
+            "vertex1" : "Bremen",
+            "vertex2" : "Hannover",
+            "weight" :"1",
+        },
+        {
+            "vertex1" : "Amsterdam",
+            "vertex2" : "Bremen",
+            "weight" :"12",
+        },
+        {
+            "vertex1" : "Bremen",
+            "vertex2" : "Hamburg",
+            "weight" :"3",
+        },
+        {
+            "vertex1" : "Hamburg",
+            "vertex2" : "Hannover",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "Hannover",
+            "vertex2" : "Thueringen",
+            "weight" :"9",
+        },
+        {
+            "vertex1" : "Leipzig",
+            "vertex2" : "Hannover",
+            "weight" :"9",
+        },
+        {
+            "vertex1" : "Hannover",
+            "vertex2" : "Berlin",
+            "weight" :"5",
+        },
+        {
+            "vertex1" : "Berlin",
+            "vertex2" : "Hamburg",
+            "weight" :"5",
+        },
+        {
+            "vertex1" : "Berlin",
+            "vertex2" : "Rostock",
+            "weight" :"2",
+        },
+        {
+            "vertex1" : "Rostock",
+            "vertex2" : "Hamburg",
+            "weight" :"2",
+        }
+    ],
+    "startVertex" : "Wien",
+    "endVertex" : "Amsterdam"
+}

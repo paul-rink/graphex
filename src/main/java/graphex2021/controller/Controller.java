@@ -58,7 +58,7 @@ public class Controller {
     private static final int STANDARD_PANE_MIN_WIDTH = 1000;
     private static final int STANDARD_PANE_MIN_HEIGHT = 563;
     private static final String UNLOCKPASSWORD = "Algorithmus";
-    private static final String PATTERN_FIN_TEXT = "[0-9]+";
+    private static final String PATTERN_FIN_TEXT = "-??[0-9]+";
     private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
     private static final int MIN_PANE_SIZE = 1000;
     private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main"
@@ -568,14 +568,10 @@ public class Controller {
     public void onVertexClicked(SmartGraphVertexNode v, double x, double y) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
         //context menu that displays current distance
-        ContextMenu context = new ContextMenu();
-        MenuItem item = new MenuItem();
-        item.setText("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
-        context.getItems().add(item);
-        double offsetX = graphView.getScene().getWindow().getX();
-        double offsetY = graphView.getScene().getWindow().getY();
-        context.show(v, x + offsetX, y + offsetY);
-        displayModel.highlightShortestPathTo(vertex);
+        if (vertex.isMarked()) {
+            graphView.showVertexDistance(v, x, y);
+            displayModel.highlightShortestPathTo(vertex);
+        }
     }
 
     /**
@@ -605,22 +601,7 @@ public class Controller {
      * Will show some information on the selected algorithm in the view.
      */
     public void onDisplayAlgorithmExplanation() {
-        Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("Information");
-        dialog.setHeaderText("Dijkstra-Algorithmus");
-        dialog.setContentText("Der Algorithmus von Dijkstra (nach seinem Erfinder Edsger W. Dijkstra) ist ein " +
-                "Algorithmus aus der Klasse der Greedy-Algorithmen und löst das Problem der kürzesten Pfade für einen " +
-                "gegebenen Startknoten. Er berechnet somit einen kürzesten Pfad zwischen dem gegebenen Startknoten " +
-                "und einem der (oder allen) übrigen Knoten in einem kantengewichteten Graphen (sofern dieser keine " +
-                "Negativkanten enthält).\n" +
-                "\n" +
-                "Für unzusammenhängende ungerichtete Graphen ist der Abstand zu denjenigen Knoten unendlich, zu " +
-                "denen kein Pfad vom Startknoten aus existiert. Dasselbe gilt auch für gerichtete nicht stark " +
-                "zusammenhängende Graphen. Dabei wird der Abstand synonym auch als Entfernung, Kosten oder Gewicht " +
-                "bezeichnet. \n (Wikipedia) \n \n HINWEIS: Wähle bei unentschiedenen Gewichten immer den Knoten " +
-                "mit der niedrigeren ID!");
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        dialog.setHeight(600);
+        Dialog<Void> dialog = new InfoDialog(AlgorithmName.DIJKSTRA);
         dialog.showAndWait();
     }
 
