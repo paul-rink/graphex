@@ -9,7 +9,7 @@
 <fileSets>
     <fileSet>
         <directory>src/main/resources</directory>
-        <outputDirectory>Graphex</outputDirectory>
+        <outputDirectory>Graphex/resources</outputDirectory>
     </fileSet>
     <fileSet>
         <directory>target</directory>
