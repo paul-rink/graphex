@@ -36,7 +36,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 

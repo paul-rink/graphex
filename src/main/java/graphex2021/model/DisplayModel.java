@@ -1,7 +1,10 @@
 package graphex2021.model;
 
 
+import graphex2021.Main;
+
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,10 +18,7 @@ import java.util.LinkedList;
  */
 public class DisplayModel extends Subject {
     //TODO best way to use File.Separator
-    private static final File EXAMPLEGRAPH = new File(
-            "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
-                    + File.separator + "GraphData" + File.separator + "Templates" + File.separator
-                    + "Vorlage_(Karlsruhe).json");
+    private static final String EXAMPLEGRAPH = "/graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).json";
 
     private LinkedList<Step> userSteps;
     private LinkedList<Step> algoSteps;
@@ -27,7 +27,14 @@ public class DisplayModel extends Subject {
     private GXGraph visibleGraph;
 
     public DisplayModel() throws WrongFileFormatException {
-        this(EXAMPLEGRAPH);
+        File example = null;
+        try {
+            example = new File(getClass().getResource(EXAMPLEGRAPH).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        loadGraph(example);
+
     }
   
     public DisplayModel(GXGraph graph) {
