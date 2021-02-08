@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -20,7 +21,7 @@ import java.util.LinkedList;
  */
 public class DisplayModel extends Subject {
     //TODO best way to use File.Separator
-    private static final String EXAMPLEGRAPH = "/graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).json";
+    private static final String EXAMPLEGRAPH = "resources/graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).json";
 
     private LinkedList<Step> userSteps;
     private LinkedList<Step> algoSteps;
@@ -29,24 +30,13 @@ public class DisplayModel extends Subject {
     private GXGraph visibleGraph;
 
     public DisplayModel() throws WrongFileFormatException {
-        System.out.println("------------------displaymodel construct-------------------------------");
-        File example = null;
-        String path = "a";
+        File jarPath = null;
         try {
-            path = getClass().getResource((EXAMPLEGRAPH)).toExternalForm();
-        } catch (NullPointerException e) {
-            System.out.println("nullpoint");
+            jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
+        } catch (URISyntaxException e) {
+            throw new WrongFileFormatException(e.getMessage());
         }
-
-        System.out.println("-------------------------------------------------");
-        System.out.println(path);
-        System.out.println("-------------------------------------------------");
-        try {
-            example = new File(path);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        loadGraph(example);
+        loadGraph(new File(jarPath, EXAMPLEGRAPH));
 
     }
   
