@@ -8,7 +8,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 
 public class ZoomableScrollPane extends ScrollPane {
-    private double scaleValue = 0.7;
+    private double scaleValue = 1;
     private final double zoomIntensity = 0.002;
     private Node target;
     private Node zoomNode;
