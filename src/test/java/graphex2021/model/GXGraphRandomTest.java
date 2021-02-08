@@ -1,9 +1,6 @@
 package graphex2021.model;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * Some test classes for generating a random {@link GXGraph}.
@@ -29,8 +26,7 @@ public class GXGraphRandomTest {
         GXGraph graph = new GXGraphRandom(2, 10, 100, true, true);
         Assert.assertEquals(1, graph.edges().size());
     }
-
-    @Test
+    @Ignore
     public void testGenerateEdges2() {
         GXGraph graph = new GXGraphRandom(4, 10, 60, true, true);
         Assert.assertEquals(4, graph.vertices().size());
