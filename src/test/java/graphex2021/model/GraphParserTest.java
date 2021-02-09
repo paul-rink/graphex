@@ -86,7 +86,7 @@ public class GraphParserTest {
     }
 
     @Test
-    //@Ignore
+    @Ignore
     public void testParseEdges() {
         Collection<GXVertex> expectedVertices = createExpectedVertices();
         Collection<GXEdge> expectedEdges = createExpectedEdges(expectedVertices);
