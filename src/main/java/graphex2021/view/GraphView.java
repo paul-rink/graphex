@@ -13,6 +13,7 @@ import javafx.scene.control.Tooltip;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
@@ -22,40 +23,58 @@ public class GraphView extends SmartGraphPanel implements Observer {
     private static final SmartStaticPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
 
     //TODO check best Filepath separator
-    private static final File STYLESHEET = new File("src" + File.separator + "main"
-            + File.separator + "resources" + File.separator + "graphex2021"
-            + File.separator + "smartgraph.css");
-    private static final File PROPERTIES = new File("src" + File.separator + "main"
-            + File.separator + "resources" + File.separator + "graphex2021"
-            + File.separator + "smartgraph.properties");
+    private static File stylesheet;
 
-    private static final File MOVABLE_PROPERTIES =  new File("src" + File.separator + "main"
-            + File.separator + "resources" + File.separator + "graphex2021"
-            + File.separator + "smartgraphmove.properties");
+    private static File properties;
 
+    static {
+        try {
+            stylesheet = new File(new File(GraphView.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile(), "resources"
+                    + File.separator + "graphex2021"
+                    + File.separator + "smartgraph.css");
+            properties = new File(new File(GraphView.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile(), "resources"
+                            + File.separator + "graphex2021"
+                            + File.separator + "smartgraph.properties");
+            moveableProperties = new File(new File(GraphView.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile(), "resources"
+                    + File.separator + "graphex2021"
+                    + File.separator + "smartgraphmove.properties");
+        } catch (URISyntaxException e) {
+            //TODO what here
+            e.getMessage();
+        }
+    }
+
+
+    private static File moveableProperties;
     private boolean isMoveable = false;
 
+    private ChangeListener listener;
 
+    private static File print(File s) {
+        System.out.println(s);
+        return s;
+    }
 
 
     private ChangeListener<Number> widthListener;
     private ChangeListener<Number> heightListener;
 
+
     public GraphView() throws FileNotFoundException {
-        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
-                STRAT, STYLESHEET.toURI());
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(print(properties))),
+                STRAT, stylesheet.toURI());
         this.isMoveable = false;
     }
 
     public GraphView(boolean isMoveable) throws FileNotFoundException {
-        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(MOVABLE_PROPERTIES)), STRAT, STYLESHEET.toURI());
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(moveableProperties)), STRAT, stylesheet.toURI());
         this.isMoveable = isMoveable;
     }
 
     //TODO how to get this load
     public GraphView(SmartPlacementStrategy strategy) throws FileNotFoundException {
-        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
-                strategy, STYLESHEET.toURI());
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(properties)),
+                strategy, stylesheet.toURI());
         this.isMoveable = false;
     }
 

@@ -2,6 +2,7 @@ package graphex2021.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -17,10 +18,11 @@ import org.everit.json.schema.loader.*;
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
-public class GraphParser {
+public final class GraphParser {
 
-    private static final GraphParser singleInstance = new GraphParser();
-    private static final String GraphTypeFile = "src/main/resources/graphex2021/GraphData/graph-scheme.json";
+    private static final GraphParser SINGLE_INSTANCE = new GraphParser();
+    private static final String GRAPH_TYPE_FILE = "resources" + File.separator + "graphex2021" + File.separator
+            + "GraphData" + File.separator + "graph-scheme.json";
     private int freeVertexId;
     private  int freeEdgeId;
 
@@ -28,7 +30,7 @@ public class GraphParser {
     /**
      * private constructor for the singleton
      */
-    private GraphParser () {
+    private GraphParser() {
         freeEdgeId = 0;
         freeVertexId = 0;
     }
@@ -38,7 +40,7 @@ public class GraphParser {
      * @return the instance
      */
     public static GraphParser getGraphParser() {
-        return singleInstance;
+        return SINGLE_INSTANCE;
     }
 
     /**
@@ -120,7 +122,7 @@ public class GraphParser {
      * @param vertices the list of vertices in the graph
      * @return GXVertex that should be the designated ending vertex
      */
-    public GXVertex parseEnding(File input, Collection<GXVertex> vertices) throws WrongFileFormatException{
+    public GXVertex parseEnding(File input, Collection<GXVertex> vertices) throws WrongFileFormatException {
         JSONObject graphObject = null;
         graphObject = getJsonObject(input);
 
@@ -151,7 +153,15 @@ public class GraphParser {
     }
 
     private void checkFileFormat(JSONObject input) throws ValidationException, WrongFileFormatException {
-        String jsonSchemaString = readFromFile(new File(GraphTypeFile));
+        File graphType = null;
+        try {
+            graphType = new File(getClass().getProtectionDomain().getCodeSource()
+                    .getLocation().toURI()).getParentFile();
+        } catch (URISyntaxException e) {
+            graphType = null;
+            throw new WrongFileFormatException(e.getMessage());
+        }
+        String jsonSchemaString = readFromFile(new File(graphType, GRAPH_TYPE_FILE));
         JSONObject jsonSchema = new JSONObject(jsonSchemaString);
         Schema schema = SchemaLoader.load(jsonSchema);
         schema.validate(input);
@@ -167,7 +177,9 @@ public class GraphParser {
         try {
             output = Files.readString(input.toPath());
         } catch (IOException e) {
-            throw new WrongFileFormatException(input.getAbsolutePath()+ "couldnt read.");
+            throw new WrongFileFormatException(input.getAbsolutePath() + "couldnt read.");
+        } catch (NullPointerException r) {
+            r.printStackTrace();
         }
         return output;
     }

@@ -85,7 +85,8 @@ public class GraphParserTest {
         assertTrue(allSame);
     }
 
-    @Test
+
+    //@Test
     @Ignore
     public void testParseEdges() {
         Collection<GXVertex> expectedVertices = createExpectedVertices();
