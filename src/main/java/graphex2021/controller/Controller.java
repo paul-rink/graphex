@@ -348,6 +348,8 @@ public class Controller {
      * @param minHeight minimum Height
      */
     private void setSizes(Group parent, double prefWidth, double prefHeight, double minWidth, double minHeight) {
+        graphView.setMinSize(minWidth, minHeight);
+        graphView.setPrefSize(prefWidth, prefHeight);
         graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
         graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
     }
