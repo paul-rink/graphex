@@ -68,6 +68,7 @@
                                     <finalName>Graphex-${project.version}</finalName>
                                     <outputDirectory>target/</outputDirectory>
                                 </configuration>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>single</goal>
                                 </goals>
