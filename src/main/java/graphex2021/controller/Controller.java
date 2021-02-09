@@ -12,10 +12,9 @@ import graphex2021.view.ZoomableScrollPane;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.scene.*;
 
 
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
