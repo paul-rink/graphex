@@ -85,6 +85,7 @@ public class GraphParserTest {
         assertTrue(allSame);
     }
 
+
     //@Test
     @Ignore
     public void testParseEdges() {
