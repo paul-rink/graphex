@@ -18,5 +18,11 @@
         </includes>
         <outputDirectory>Graphex</outputDirectory>
     </fileSet>
+    <fileSet>
+        <includes>
+            <include>README.md</include>
+        </includes>
+        <outputDirectory>Graphex</outputDirectory>
+    </fileSet>
 </fileSets>
 </assembly>
