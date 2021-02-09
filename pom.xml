@@ -4,6 +4,81 @@
     <groupId>graphex2021</groupId>
     <artifactId>graphex</artifactId>
     <version>1.0</version>
+
+    <profiles>
+        <profile>
+            <id>Win</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>package-for-release-windows</id>
+                                <configuration>
+                                    <descriptor>src/assembly/bin.xml</descriptor>
+                                    <finalName>Graphex-${project.version}-Win</finalName>
+                                    <outputDirectory>release/</outputDirectory>
+                                </configuration>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>Lin</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>package-for-release-linux</id>
+                                <configuration>
+                                    <descriptor>src/assembly/bin.xml</descriptor>
+                                    <finalName>Graphex-${project.version}-Linux</finalName>
+                                    <outputDirectory>release/</outputDirectory>
+                                </configuration>
+                                <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>Test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>package-for-test</id>
+                                <configuration>
+                                    <descriptor>src/assembly/bin.xml</descriptor>
+                                    <finalName>Graphex-${project.version}</finalName>
+                                    <outputDirectory>target/</outputDirectory>
+                                </configuration>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -108,19 +183,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptor>src/assembly/bin.xml</descriptor>
-                    <finalName>Graphex-${pom.version}</finalName>
-                    <outputDirectory>release/</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <!--
             <plugin>
