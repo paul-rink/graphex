@@ -33,8 +33,8 @@ public class InfoDialog extends Dialog<Void> {
                         "denen kein Pfad vom Startknoten aus existiert. Dasselbe gilt auch für gerichtete nicht stark " +
                         "zusammenhängende Graphen. Dabei wird der Abstand synonym auch als Entfernung, Kosten oder Gewicht " +
                         "bezeichnet. \n (Wikipedia) \n \n HINWEISE: \n Wähle bei unentschiedenen Gewichten immer den Knoten " +
-                        "mit der niedrigeren ID. \n Wenn der Zielknoten nicht erreichbar ist, verwende " + Dijkstra.INFINITY_DIST
-                        + " als kürzeste Distanz.");
+                        "bzw. die Kante mit der niedrigeren ID. \n Wenn der Zielknoten nicht erreichbar ist, verwende "
+                        + Dijkstra.INFINITY_DIST + " als kürzeste Distanz.");
 
                 break;
 
