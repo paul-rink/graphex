@@ -3,6 +3,7 @@ package graphex2021.model;
 
 import org.junit.*;
 import org.junit.internal.runners.statements.Fail;
+import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,10 +43,6 @@ public class GraphParserTest {
         } else {
             TEST_DIR.mkdirs();
         }
-
-        //String testPathFile = originalFile.getAbsolutePath();
-        //String testPathDir = TEST_DIR.getAbsolutePath();
-
 
 
     }
@@ -129,6 +126,20 @@ public class GraphParserTest {
             fail();
         }
         assertTrue(sameVertices(expectedEndingVertex, readEndingVertex));
+    }
+
+
+    @Test
+    public void testFileNullException() {
+        String expected = "File ist null.";
+        try {
+            parser.parseVertices(null);
+        } catch (WrongFileFormatException e) {
+            String message = e.getMessage();
+            if(!expected.equals(message)) {
+                fail();
+            }
+        }
     }
 
     private boolean sameEdge(GXEdge expectedEdge, GXEdge readEdge) {
