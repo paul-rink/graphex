@@ -8,7 +8,7 @@ import java.util.*;
  * The algorithm works only for positive edge weights >0 correctly. If for a next step multiple vertices share the
  * same distance, the vertex with the lowest id will be chosen. The same holds in case multiple edges to a vertex
  * will result in the same distance. The edge with the smallest ID is chosen. <br>
- *     Unreachable / unvisited vertices have infinity distance, represented by {@link GXEdge#INVALID_DISTANCE}
+ *     Unreachable / unvisited vertices have infinity distance, represented by {@link Dijkstra#INFINITY_DIST}
  *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
@@ -94,24 +94,6 @@ public class Dijkstra implements Algorithm {
     @Override
     public boolean isCorrectDistance(GXVertex goal, int distance) {
         return distance == dist[goal.getId()];
-    }
-
-    @Override
-    public boolean isCorrectPath(GXVertex goal) {
-        GXVertex current = goal;
-        GXVertex previous = prev[goal.getId()];
-        while (previous != null) {
-            GXEdge edge;
-            try {
-                edge = g.getEdge(current, previous);
-                if (!edge.isMarked()) return false;
-            } catch (ElementNotInGraphException e) {
-                e.printStackTrace();
-            }
-            current = previous;
-            previous = prev[current.getId()];
-        }
-        return true;
     }
 
     /**
