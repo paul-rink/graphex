@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class DijkstraTest {
     private static final File GRAPH_ID_SWITCH_FILE = new File("src/test/resources/GraphData/testGraphDijkstraIDSwitch.json");
+    private static final File GRAPH_UNCONNECTED = new File("src/test/resources/GraphData/test-unconnected-graph.json");
     Dijkstra d;
     GXGraph g;
     List<Step> steps;
@@ -83,7 +84,34 @@ public class DijkstraTest {
         Assert.assertTrue(d.isCorrectDistance(g.getEndingVertex(), 4));
     }
 
+    /**
+     * Dijkstra should perform normal steps until there's no further vertex to reach. Distance to ending vertex is
+     * infinity then.
+     */
+    @Test
+    public void testUnconnectedGraph() throws WrongFileFormatException {
+        g = new GXGraph(GRAPH_UNCONNECTED);
+        steps = d.getSequence(g);
+
+        System.out.printf("===  Steps === \n");
+        assertEquals(2, steps.size());
+        //1
+        System.out.printf("=== Step" + (step + 1) + " === \n");
+        Assert.assertEquals("Vertex: ", 2, steps.get(step).getSelectedVertex().getId());
+        Assert.assertEquals("Edge: ", 2, steps.get(step).getSelectedEdge().getId());
+        step++;
+        //2
+        System.out.printf("=== Step" + (step + 1) + " === \n");
+        Assert.assertEquals("Vertex: ", 3, steps.get(step).getSelectedVertex().getId());
+        Assert.assertEquals("Edge: ", 3, steps.get(step).getSelectedEdge().getId());
+        step++;
+        System.out.printf("=== Distance === \n");
+        assertTrue(d.isCorrectDistance(g.getEndingVertex(), -1));
+    }
+
     @After
     public void tearDown() throws Exception {
+
+
     }
 }
