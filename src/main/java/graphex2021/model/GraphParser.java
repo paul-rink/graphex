@@ -180,6 +180,7 @@ public final class GraphParser {
             throw new WrongFileFormatException(input.getAbsolutePath() + "couldnt read.");
         } catch (NullPointerException r) {
             r.printStackTrace();
+            throw new WrongFileFormatException("File ist null.");
         }
         return output;
     }
