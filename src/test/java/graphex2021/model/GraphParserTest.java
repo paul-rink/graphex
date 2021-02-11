@@ -2,6 +2,7 @@ package graphex2021.model;
 
 
 import org.junit.*;
+import org.junit.internal.runners.statements.Fail;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,9 +17,8 @@ import java.util.Iterator;
 
 
 import java.util.Iterator.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
+import static org.junit.Assert.*;
 
 
 public class GraphParserTest {
@@ -68,7 +68,7 @@ public class GraphParserTest {
         try {
             verticesList = parser.parseVertices(copiedFile);
         } catch (WrongFileFormatException e) {
-            assertTrue(false);
+            fail();
         }
 
         Iterator<GXVertex> it = verticesList.iterator();
@@ -86,8 +86,7 @@ public class GraphParserTest {
     }
 
 
-    //@Test
-    @Ignore
+    @Test
     public void testParseEdges() {
         Collection<GXVertex> expectedVertices = createExpectedVertices();
         Collection<GXEdge> expectedEdges = createExpectedEdges(expectedVertices);
@@ -96,7 +95,7 @@ public class GraphParserTest {
         try {
             readEdges = parser.parseEdges(copiedFile, expectedVertices);
         } catch (WrongFileFormatException e) {
-            assertTrue(false);
+            fail();
         }
         assertEquals(expectedEdges.size(), readEdges.size());
         Iterator<GXEdge> it = readEdges.iterator();
@@ -104,7 +103,32 @@ public class GraphParserTest {
         while (it.hasNext() && ite.hasNext()) {
             assertTrue(sameEdge(ite.next(), it.next()));
         }
+    }
 
+    @Test
+    public void testParseStartingVertex() {
+        Collection expectedVertices = createExpectedVertices();
+        GXVertex expectedStartingVertex = getExpectedStart(expectedVertices);
+        GXVertex readStartingVertex = null;
+        try {
+            readStartingVertex = parser.parseStarting(copiedFile, expectedVertices);
+        } catch (WrongFileFormatException e) {
+            fail();
+        }
+        assertTrue(sameVertices(expectedStartingVertex, readStartingVertex));
+    }
+
+    @Test
+    public void testParseEndingVertex() {
+        Collection expectedVertices = createExpectedVertices();
+        GXVertex expectedEndingVertex = getExpectedEnd(expectedVertices);
+        GXVertex readEndingVertex = null;
+        try {
+            readEndingVertex = parser.parseEnding(copiedFile, expectedVertices);
+        } catch (WrongFileFormatException e) {
+            fail();
+        }
+        assertTrue(sameVertices(expectedEndingVertex, readEndingVertex));
     }
 
     private boolean sameEdge(GXEdge expectedEdge, GXEdge readEdge) {
@@ -151,12 +175,19 @@ public class GraphParserTest {
         return expectation;
     }
 
+    private GXVertex getExpectedStart(Collection<GXVertex> vertices){
+        return findMatchingVertex("A", vertices);
+    }
+
+    private GXVertex getExpectedEnd(Collection<GXVertex> vertices) {
+        return findMatchingVertex("B", vertices);
+    }
 
     private Collection<GXEdge> createExpectedEdges(Collection<GXVertex> expectedVertices) {
         Collection<GXEdge> expectation = new ArrayList<>();
         GXVertex firstVertex = findMatchingVertex("A", expectedVertices);
         GXVertex secondVertex = findMatchingVertex("B", expectedVertices);
-        GXEdge expectedEdge = new GXEdge(firstVertex, secondVertex, "0", 3, 0);
+        GXEdge expectedEdge = new GXEdge(firstVertex, secondVertex, "3", 3, 0);
         expectation.add(expectedEdge);
         return expectation;
     }
