@@ -27,6 +27,11 @@ public class GraphParserTest {
     private static final File originalFile = new File("src/test/resources/GraphData/testGraph.json");
     private static final File TEST_DIR = new File("src/test/resources/GraphData/test");
     private static final File copiedFile = new File("src/test/resources/GraphData/test/testFile.json");
+    private static final File GRAPH_MISSING_ATTRIBUTE = new File("src/test/resources/GraphData/wrongGXFormat.json");
+    private static final  File NOT_JSON = new File("src/test/resources/GraphData/noJson.json");
+    private static final File copy_GRAPH_MISSING_ATTRIBUTE = new File("src/test/resources/GraphData/test/wrongGXFormat.json");
+    private static final  File copy_NOT_JSON = new File("src/test/resources/GraphData/test/noJson.json");
+
     private static GraphParser parser;
 
     /**
@@ -49,10 +54,15 @@ public class GraphParserTest {
     @Before
     public void setUp() throws Exception {
         this.parser = GraphParser.getGraphParser();
-        Path copied = copiedFile.toPath();
-
-        Path originalPath = originalFile.toPath();
-        Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+        Path copiedCorrect = copiedFile.toPath();
+        Path originalPathCorrect = originalFile.toPath();
+        Path originalmissingAttribute = GRAPH_MISSING_ATTRIBUTE.toPath();
+        Path copiedMissingAttribute = copy_GRAPH_MISSING_ATTRIBUTE.toPath();
+        Path originalWrongJson = NOT_JSON.toPath();
+        Path copiedWrongJson = copy_NOT_JSON.toPath();
+        Files.copy(originalPathCorrect, copiedCorrect, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(originalmissingAttribute,copiedMissingAttribute, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(originalWrongJson, copiedWrongJson, StandardCopyOption.REPLACE_EXISTING);
     }
 
     //@Ignore
@@ -140,6 +150,31 @@ public class GraphParserTest {
                 fail();
             }
         }
+    }
+
+    @Test
+    public void testNotGXGraph() {
+        String expected = "required key";
+        try{
+            parser.parseVertices(copy_GRAPH_MISSING_ATTRIBUTE);
+            } catch (WrongFileFormatException e) {
+            if (!e.getMessage().contains(expected)) {
+                fail();
+            }
+        }
+    }
+
+    @Test
+    public void testNotAJson() {
+        String expected = "Expected";
+        try{
+            parser.parseVertices(copy_NOT_JSON);
+        } catch (WrongFileFormatException e) {
+            if(!e.getMessage().contains(expected)) {
+                fail();
+            }
+        }
+
     }
 
     private boolean sameEdge(GXEdge expectedEdge, GXEdge readEdge) {
