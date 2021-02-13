@@ -274,7 +274,8 @@ public class Controller {
     public void onSelectEdge(SmartGraphEdge e) {
         try {
             displayModel.markEdge((GXEdge) e.getUnderlyingEdge());
-            Platform.runLater(() -> { setActions();
+            Platform.runLater(() -> {
+                setActions();
             });
         } catch (ElementNotInGraphException elementNotInGraphException) {
             new ElementNotInGraphAlert().show();
@@ -292,7 +293,8 @@ public class Controller {
         new VertexDoubleClickAlert().show();
     }
 
-    /**()
+    /**
+     * ()
      * When the user requests a hint, the next step according to the selected algorithm should be shown.
      */
     public void hintRequest() {
@@ -344,18 +346,19 @@ public class Controller {
         displayModel.unregister(gxTable);
         graphView.removeListener();
         // The Pane that graphView is part of (In this case boder pane)
-        Group pane  = (Group) parent;
+        Group pane = (Group) parent;
         // Removing the graphView so that later a graphView with other properties can be added.
         pane.getChildren().remove(graphView);
     }
 
     /**
      * Will set the passed sizes for the parent and graphView.
-     * @param parent the parent pane you want to set the size for
-     * @param prefWidth preferred Width
+     *
+     * @param parent     the parent pane you want to set the size for
+     * @param prefWidth  preferred Width
      * @param prefHeight preferred Height
-     * @param minWidth minimum Width
-     * @param minHeight minimum Height
+     * @param minWidth   minimum Width
+     * @param minHeight  minimum Height
      */
     private void setSizes(Group parent, double prefWidth, double prefHeight, double minWidth, double minHeight) {
         graphView.setMinSize(minWidth, minHeight);
@@ -449,7 +452,7 @@ public class Controller {
     /**
      * Creates and adds a new {@link GraphView} to the pane.
      *
-     * @param parent parent the {@link GraphView} should be added to.
+     * @param parent    parent the {@link GraphView} should be added to.
      * @param graphView the {@link GraphView} you want to add
      */
     private void addToParent(Group parent, GraphView graphView) {
@@ -512,7 +515,6 @@ public class Controller {
 
     /**
      * When called the vertices are made moveable
-     *
      */
     public void verticesMovable() {
         Group parent = (Group) graphView.getParent();
@@ -602,7 +604,7 @@ public class Controller {
      * @param algo is the algorithm that is selected to be performed at the graph in the view.
      */
     public void onAlgorithmSelect(Algorithm algo) {
-    //TODO do something like the vorlagen where the program scans for available algorithms
+        //TODO do something like the vorlagen where the program scans for available algorithms
     }
 
     /**
@@ -730,7 +732,7 @@ public class Controller {
      * Calcs a min Height for the pane after an new graph was loaded. Uses the background images' side to side ratio to
      * calculate. As starting point for this it takes minWidth MIN_PANE_SIZE set to 1000.
      *
-     * @param width the width of the background image
+     * @param width  the width of the background image
      * @param height the height of the background image
      * @return the calc minHeight with width set to 1000, while maintaining aspect ratio
      */
