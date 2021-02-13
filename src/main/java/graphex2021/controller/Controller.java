@@ -9,6 +9,7 @@ import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 
 import graphex2021.view.ZoomableScrollPane;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
@@ -640,11 +641,14 @@ public class Controller {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
-                        double x = graphView.calcRelativeX(vert);
-                        double y = graphView.calcRelativeY(vert);
-                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = "
-                                + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
-
+                        //Making sure that the position will not be calculated at the same time as it is set by putting
+                        //this calculation in the Queue for the fx thread
+                        Platform.runLater(() -> {
+                            double x = graphView.calcRelativeX(vert);
+                            double y = graphView.calcRelativeY(vert);
+                            System.out.println(vert.getUnderlyingVertex().element().toString() + " x = "
+                                    + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
+                        });
                     }
                 });
             }

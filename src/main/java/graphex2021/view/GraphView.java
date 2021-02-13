@@ -2,6 +2,7 @@ package graphex2021.view;
 
 import com.brunomnsilva.smartgraph.graphview.*;
 import graphex2021.model.*;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -83,7 +84,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
         GXGraph visible = (GXGraph) s.getState();
         GraphAdapter underlyingGraph = (GraphAdapter) super.theGraph;
         underlyingGraph.setGXGraph(visible);
-        this.update();
+        Platform.runLater(this::update);
+
     }
 
     @Override
@@ -149,7 +151,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private double getBackgroundImageHeight() {
-        if(!this.getBackground().getImages().isEmpty()) {
+        if (!this.getBackground().getImages().isEmpty()) {
             return this.getBackground().getImages().get(0).getImage().getHeight();
         }
         return this.getPrefHeight();
@@ -312,14 +314,18 @@ public class GraphView extends SmartGraphPanel implements Observer {
         return relX;
     }
 
+
     /**
      * Saves the current coordinates of the vertex in the pane in the underlyingVertex.
      *
      * @param smartVertex of which the position should be saved.
      */
     public void setMovedCoordinates(SmartGraphVertexNode smartVertex) {
-        GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
-        vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
+        Platform.runLater(() -> {
+                GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
+                vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
+
+        });
     }
 
     /**
