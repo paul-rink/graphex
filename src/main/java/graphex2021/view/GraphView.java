@@ -50,19 +50,36 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         }
     }
 
+    /**
+     * Creates new GraphView with an empty graph using the standard stylesheet and and properties.
+     *
+     * @throws FileNotFoundException if either properties or css are not found
+     */
     public GraphView() throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(properties)),
                 STRAT, stylesheet.toURI());
         this.isMoveable = false;
     }
 
+    /**
+     * Creates a GraphView with an empty graph and using the standard stylesheet and moveable vertices
+     *
+     * @param isMoveable really not used. If you want a GraphView where vertices aren't moveable us constructor with no
+     *                   parameters. Should always be {@code true}!!
+     * @throws FileNotFoundException If stylesheet or properties are not found.
+     */
     public GraphView(boolean isMoveable) throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties
                 (new FileInputStream(moveableProperties)), STRAT, stylesheet.toURI());
         this.isMoveable = isMoveable;
     }
 
-
+    /**
+     * TODO use for random graphs?
+     *
+     * @param strategy
+     * @throws FileNotFoundException
+     */
     public GraphView(SmartPlacementStrategy strategy) throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(properties)),
                 strategy, stylesheet.toURI());
@@ -97,6 +114,7 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         } else if (!gxEdge.isMarked()) {
             edge.setStyleClass("edge");
         }
+        //Needs to override the other Styles if it is requested as a hint.
         if (gxEdge.isHint()) {
             edge.setStyleClass("hintEdge");
         }
@@ -154,6 +172,11 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         return this.getPrefHeight();
     }
 
+    /**
+     * Places vertices according to STRAT. Will use the coordinates stored in the underlying vertices.
+     * For them to be placed they are all put into a colection and then passed
+     * to the {@link SmartStaticPlacementStrategy}
+     */
     private void placeVertices() {
         Collection<SmartGraphVertexNode<String>> vertices = new LinkedHashSet<>();
         for (Node node : this.getChildren()) {
@@ -166,7 +189,6 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
         STRAT.place(this.getWidth(), this.getHeight(), super.theGraph, vertices);
-
     }
 
     private void iterChildren() {
@@ -199,6 +221,10 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         this.heightListener = heightListener;
     }
 
+    /**
+     * Removes the listeners set on this instance. Needs to be called if it is replaced later, so that there are no
+     * NPEs on the
+     */
     public void removeListener() {
         this.getScene().widthProperty().removeListener(widthListener);
         this.getScene().heightProperty().removeListener(heightListener);
@@ -247,9 +273,15 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         }
     }
 
+    /**
+     * Will create a context menu showing the current distance to this vertex.
+     *
+     * @param v Vertex for which the distance will be displayed.
+     * @param x x-position the vertex will be displayed in
+     * @param y y-position the vertex will be displayed in
+     */
     public void showVertexDistance(SmartGraphVertexNode v, double x, double y) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
-        Label label = new Label("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
         ContextMenu context = new ContextMenu();
         MenuItem item = new MenuItem();
         item.setText("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
@@ -259,6 +291,12 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         context.show(v, x + offsetX, y + offsetY);
     }
 
+    /**
+     * Will return the relative y-position of the vertex in relation to the {@link GraphView} height.
+     *
+     * @param smartVertex the position is to be calculated of
+     * @return the relative y position of this vertex
+     */
     public double calcRelativeY(SmartGraphVertexNode smartVertex) {
         double correction = STRAT.getCorrection();
         double relY;
@@ -274,6 +312,12 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         return relY;
     }
 
+    /**
+     * Will return the relative x-position of the vertex in relation to the {@link GraphView} height.
+     *
+     * @param smartVertex the position is to be calculated of
+     * @return the relative x position of this vertex
+     */
     public double calcRelativeX(SmartGraphVertexNode smartVertex) {
         double correction = STRAT.getCorrection();
         double relX;
@@ -288,10 +332,11 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         }
         return relX;
     }
-
-
+    
     /**
-     * Saves the current coordinates of the vertex in the pane in the underlyingVertex.
+     * Will set the coordinates of the underlying {@link GXVertex} to the positiion the {@link SmartGraphVertexNode} is
+     * currently in. The update will wait until the all the other events before it are done. Will mean that it is not
+     * guaranteed that it is updated immediately.
      *
      * @param smartVertex of which the position should be saved.
      */
