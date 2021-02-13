@@ -3,9 +3,13 @@ package graphex2021.model;
 import java.util.*;
 
 /**
- * This class simulates the Dijkstra-Algorithm.
- * TODO what should happen with help info, if shortest path is found, but Dijkstra would continue?
- * TODO get the distance to the goal vertex.
+ * This class simulates the Dijkstra-Algorithm. <br>
+ * <b> Important notes. </b>
+ * The algorithm works only for positive edge weights >0 correctly. If for a next step multiple vertices share the
+ * same distance, the vertex with the lowest id will be chosen. The same holds in case multiple edges to a vertex
+ * will result in the same distance. The edge with the smallest ID is chosen. <br>
+ *     Unreachable / unvisited vertices have infinity distance, represented by {@link Dijkstra#INFINITY_DIST}
+ *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
@@ -15,7 +19,8 @@ public class Dijkstra implements Algorithm {
     private GXVertex start;
     /**
      * Array that holds distances for all {@link GXVertex}s respectively as distance to given
-     * {@code start}-vertex. {@code -1} is for {@code infinity}. Only positive values for distances.
+     * {@code start}-vertex. {@link GXEdge#INVALID_DISTANCE} is for {@code infinity}.
+     * Only positive values for distances.
      */
     private int[] dist;
     /**
@@ -30,7 +35,7 @@ public class Dijkstra implements Algorithm {
     private LinkedList<Step> steps;
 
     /**
-     * This is a placeholder for telling the algorithmus that distance to a vertex is infinity, i.e. not known, or the
+     * This is a placeholder for telling the algorithm that distance to a vertex is infinity, i.e. not known, or the
      * vertex is unreachable at all.
      */
     public static final int INFINITY_DIST = -1;
@@ -89,24 +94,6 @@ public class Dijkstra implements Algorithm {
     @Override
     public boolean isCorrectDistance(GXVertex goal, int distance) {
         return distance == dist[goal.getId()];
-    }
-
-    @Override
-    public boolean isCorrectPath(GXVertex goal) {
-        GXVertex current = goal;
-        GXVertex previous = prev[goal.getId()];
-        while (previous != null) {
-            GXEdge edge;
-            try {
-                edge = g.getEdge(current, previous);
-                if (!edge.isMarked()) return false;
-            } catch (ElementNotInGraphException e) {
-                e.printStackTrace();
-            }
-            current = previous;
-            previous = prev[current.getId()];
-        }
-        return true;
     }
 
     /**
@@ -210,6 +197,14 @@ public class Dijkstra implements Algorithm {
                 unmarked.add(u);
 
                 prev[u.getId()] = selectedVertex;
+                //selected vertex results in a same distance to u as another vertex that is already stored in prev
+                //then the algo should always pick the vertex as prev that's edge weight to u is less
+            } else if (alternativeDist == dist[u.getId()] && prev[u.getId()] != null) {
+                GXEdge prevEdge = g.getEdge(u, prev[u.getId()]);
+                //if new found edge to u has lower id, choose this edge, else leave it as before
+                if (edge.getId() < prevEdge.getId()) {
+                    prev[u.getId()] = selectedVertex;
+                }
             }
         } catch (ElementNotInGraphException e) {
             e.printStackTrace();

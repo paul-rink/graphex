@@ -20,7 +20,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
@@ -167,7 +166,7 @@ public class Controller {
             alert.setContentText("Du musst noch die kürzeste Distanz zum Ziel im Textfeld eintragen.");
         } else {
             int finalDist = Integer.parseInt(finTextField.getText());
-            if (displayModel.checkFinishRequirements(finalDist)) {
+            if (displayModel.checkFoundShortestPath(finalDist)) {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Geschafft!");
                 alert.setContentText("Super! Du hast den kürzesten Weg gefunden!");

@@ -1,0 +1,74 @@
+{
+    "type" : "GXGraph",
+    "vertices" : [
+        {
+            "name" : "A",
+            "posx" : "200",
+            "posy" : "200",
+        },
+        {
+            "name" : "C",
+            "posx" : "400",
+            "posy" : "400",
+        },
+        {
+            "name" : "B",
+            "posx" : "200",
+            "posy" : "400",
+        },
+        {
+            "name" : "D",
+            "posx" : "400",
+            "posy" : "400",
+        },
+        {
+            "name" : "E",
+            "posx" : "600",
+            "posy" : "200",
+        },
+        {
+            "name" : "Z",
+            "posx" : "600",
+            "posy" : "400",
+        }
+    ],
+    "edges" : [
+        {
+            "vertex1" : "A",
+            "vertex2" : "B",
+            "weight" :  "1",
+        },
+        {
+            "vertex1" : "A",
+            "vertex2" : "C",
+            "weight" :  "1",
+        },
+        {
+            "vertex1" : "B",
+            "vertex2" : "D",
+            "weight" :  "1",
+        },
+        {
+            "vertex1" : "D",
+            "vertex2" : "C",
+            "weight" :  "1",
+        },
+        {
+            "vertex1" : "E",
+            "vertex2" : "C",
+            "weight" :  "2",
+        },
+        {
+            "vertex1" : "E",
+            "vertex2" : "Z",
+            "weight" :  "1",
+        },
+        {
+            "vertex1" : "D",
+            "vertex2" : "Z",
+            "weight" :  "2",
+        }
+    ],
+    "startVertex" : "A",
+    "endVertex" : "Z"
+}

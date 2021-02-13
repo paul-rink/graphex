@@ -53,11 +53,4 @@ public interface Algorithm {
      * @return {@code true} if distance is correct, {@code false} else.
      */
     boolean isCorrectDistance(GXVertex goal, int distance);
-
-    /**
-     * Checks if the found path doas match the path the algo would choose (regardless correct order)
-     * @param goal is the goal vertex
-     * @return true, if user found correct path but not necessary full correct algo, false otherwise
-     */
-    boolean isCorrectPath(GXVertex goal);
 }

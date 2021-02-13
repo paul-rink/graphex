@@ -330,6 +330,26 @@ public class GXGraph implements GraphInterface<String, String> {
         throw new ElementNotInGraphException("there is no Edge inbetween these vertices");
     }
 
+    /**
+     * Returns {@link GXEdge} of the graph with a specific id.
+     * @param id is the edge you're looking for
+     * @return the edge if the graph contains an edge with this id, if the graph does not contain an edge with this id
+     * it will return {@code null}
+     */
+    public GXEdge getEdge(int id) {
+        return edges.get(id);
+    }
+
+    /**
+     * Returns {@link GXVertex} of the graph with a specific id.
+     * @param id is the vertex you're looking for
+     * @return the vertex if the graph contains a vertex with this id, if the graph does not contain a vertex with this
+     * id it will return {@code null}
+     */
+    public GXVertex getVertex(int id) {
+        return vertices.get(id);
+    }
+
 
     private boolean edgeInGraph(Integer id) {
         return edges.containsKey(id);

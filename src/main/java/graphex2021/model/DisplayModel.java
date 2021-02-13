@@ -115,15 +115,16 @@ public class DisplayModel extends Subject {
     }
 
     /**
-     * Checks if the user steps do match all the algo steps. So the user needs the exact same number if steps in the
-     * same order.
+     * Checks if the user found the shortest path. Therefore a path to ending vertex must exist, i.e. the ending vertex
+     * is marked and the the distance from user and the distance in vertex does match shortest distance.
      * @param distance is the input distance from user
      * @return {@code true} if user steps do match algo steps, {@code false} otherwise.
      */
-    public boolean checkFinishRequirements(int distance) {
-        boolean correctDistance = algo.isCorrectDistance(graph.getEndingVertex(), distance);
-        boolean correctPath = algo.isCorrectPath(graph.getEndingVertex());
-        return correctDistance && correctPath;
+    public boolean checkFoundShortestPath(int distance) {
+        GXVertex endingVertex = graph.getEndingVertex();
+        boolean correctDistance = algo.isCorrectDistance(endingVertex, distance);
+        boolean shortestPath = algo.isCorrectDistance(endingVertex, endingVertex.getCurrentDistance());
+        return correctDistance && shortestPath && endingVertex.isMarked();
     }
 
     public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {
