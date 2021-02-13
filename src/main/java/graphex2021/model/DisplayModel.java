@@ -171,8 +171,8 @@ public class DisplayModel extends Subject {
             makeIncidentsInvisible(lastVertex, lastEdge);
             lastVertex.unmark();
             lastEdge.unmark();
-            updateCurrentDistance(lastVertex);
             graph.unblock(lastVertex);
+            updateCurrentDistance(lastVertex);
             this.notifyObservers();
         }
     }
@@ -360,13 +360,12 @@ public class DisplayModel extends Subject {
         if (vertex.equals(graph.getStartingVertex())) {
             vertex.setCurrentDistance(0);
         } else {
-            int oldDist = vertex.getCurrentDistance();
             for (GXEdge edge : graph.incidentEdges(vertex)) {
+                int oldDist = vertex.getCurrentDistance();
                 GXVertex incident = graph.opposite(vertex, edge);
                 int newDist = incident.getCurrentDistance() + edge.getWeight();
-                //TODO magic number
                 //if resulting distance from previous (marked) vertex is better, update
-                if (incident.isMarked() && (newDist < oldDist || oldDist == -1)) {
+                if (incident.isMarked() && (newDist < oldDist || oldDist == GXEdge.INVALID_DISTANCE)) {
                     vertex.setCurrentDistance(newDist);
                 }
             }
