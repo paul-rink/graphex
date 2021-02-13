@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.Pane;
 import javafx.scene.control.Tooltip;
 
 import java.io.File;
@@ -19,24 +18,30 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 
 
-public class GraphView extends SmartGraphPanel implements Observer {
+public class GraphView extends SmartGraphPanel<String, String> implements Observer {
 
     private static final SmartStaticPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
+    private static File moveableProperties;
 
-    //TODO check best Filepath separator
     private static File stylesheet;
 
     private static File properties;
+    private ChangeListener<Number> widthListener;
+    private ChangeListener<Number> heightListener;
+    private boolean isMoveable = false;
 
     static {
         try {
-            stylesheet = new File(new File(GraphView.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile(), "resources"
+            stylesheet = new File(new File(GraphView.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI()).getParentFile(), "resources"
                     + File.separator + "graphex2021"
                     + File.separator + "smartgraph.css");
-            properties = new File(new File(GraphView.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile(), "resources"
-                            + File.separator + "graphex2021"
-                            + File.separator + "smartgraph.properties");
-            moveableProperties = new File(new File(GraphView.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile(), "resources"
+            properties = new File(new File(GraphView.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI()).getParentFile(), "resources"
+                    + File.separator + "graphex2021"
+                    + File.separator + "smartgraph.properties");
+            moveableProperties = new File(new File(GraphView.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI()).getParentFile(), "resources"
                     + File.separator + "graphex2021"
                     + File.separator + "smartgraphmove.properties");
         } catch (URISyntaxException e) {
@@ -45,34 +50,19 @@ public class GraphView extends SmartGraphPanel implements Observer {
         }
     }
 
-
-    private static File moveableProperties;
-    private boolean isMoveable = false;
-
-    private ChangeListener listener;
-
-    private static File print(File s) {
-        System.out.println(s);
-        return s;
-    }
-
-
-    private ChangeListener<Number> widthListener;
-    private ChangeListener<Number> heightListener;
-
-
     public GraphView() throws FileNotFoundException {
-        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(print(properties))),
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(properties)),
                 STRAT, stylesheet.toURI());
         this.isMoveable = false;
     }
 
     public GraphView(boolean isMoveable) throws FileNotFoundException {
-        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(moveableProperties)), STRAT, stylesheet.toURI());
+        super(new GraphAdapter(), new SmartGraphProperties
+                (new FileInputStream(moveableProperties)), STRAT, stylesheet.toURI());
         this.isMoveable = isMoveable;
     }
 
-    //TODO how to get this load
+
     public GraphView(SmartPlacementStrategy strategy) throws FileNotFoundException {
         super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(properties)),
                 strategy, stylesheet.toURI());
@@ -158,7 +148,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private double getBackgroundImageWidth() {
-        if(!this.getBackground().getImages().isEmpty()) {
+        if (!this.getBackground().getImages().isEmpty()) {
             return this.getBackground().getImages().get(0).getImage().getWidth();
         }
         return this.getPrefHeight();
@@ -175,7 +165,6 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
-         Pane parent = (Pane) this.getParent().getParent();
         STRAT.place(this.getWidth(), this.getHeight(), super.theGraph, vertices);
 
     }
@@ -216,10 +205,10 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
 
-
     /**
      * Enables or disables tooltip for a vertex that contains its current distance to the start.
-     * @param v is the vertex
+     *
+     * @param v    is the vertex
      * @param type is the {@link TooltipType} that should be displayed, default is no tooltip
      */
     private void showVertexTooltip(SmartGraphVertexNode v, TooltipType type) {
@@ -234,13 +223,15 @@ public class GraphView extends SmartGraphPanel implements Observer {
                 t = new Tooltip("ID: " + vertex.getId());
                 Tooltip.install(v, t);
                 break;
-            default: Tooltip.uninstall(v, t);
+            default:
+                Tooltip.uninstall(v, t);
         }
     }
 
     /**
      * Tooltip for an edge that will display the resulting distance to the next vertex. This feature is only available
      * for unmarked and unblocked edges and with exact 1 marked vertex.
+     *
      * @param e is the hovered edge
      */
     private void showVertexTooltip(SmartGraphEdgeLine e) {
@@ -266,22 +257,6 @@ public class GraphView extends SmartGraphPanel implements Observer {
         double offsetX = this.getScene().getWindow().getX();
         double offsetY = this.getScene().getWindow().getY();
         context.show(v, x + offsetX, y + offsetY);
-    }
-
-    /**
-     * method that returns the width of the pane the graphView is in in pixels
-     * @return the width of the pane in pixels
-     */
-    public double getPaneWidth() {
-        return ((Pane) this.getParent()).getHeight();
-    }
-
-    /**
-     * method that returns the height of the pane the graphView is in in pixels
-     * @return the height of the pane in pixels
-     */
-    public double getPaneHeight() {
-        return ((Pane) this.getParent()).getHeight();
     }
 
     public double calcRelativeY(SmartGraphVertexNode smartVertex) {
@@ -322,8 +297,8 @@ public class GraphView extends SmartGraphPanel implements Observer {
      */
     public void setMovedCoordinates(SmartGraphVertexNode smartVertex) {
         Platform.runLater(() -> {
-                GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
-                vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
+            GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
+            vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
 
         });
     }
