@@ -8,8 +8,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * TODO JAVADOC
- *
+ * This class controls all logic behind the GUI. If something in the view is happening, the
+ * {@link graphex2021.controller.Controller} will tell the DisplayModel. Here everything will be calculated what should
+ * happen next. Then all observers are notified about the changes on the underlying model. Then its up to the observers
+ * to handle the changes.
  *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
@@ -24,6 +26,10 @@ public class DisplayModel extends Subject {
     private GXGraph graph;
     private GXGraph visibleGraph;
 
+    /**
+     * Standard constructor fpr DisplayModel. This will init a model with a standard graph {@code EXAMPLEGRAPH}.
+     * @throws WrongFileFormatException
+     */
     public DisplayModel() throws WrongFileFormatException {
         File jarPath = null;
         try {
@@ -34,12 +40,22 @@ public class DisplayModel extends Subject {
         loadGraph(new File(jarPath, EXAMPLEGRAPH));
 
     }
-  
+
+    /**
+     * Constructor for DisplayModel for a given {@link GXGraph}.
+     * @param graph is the graph the DisplayModel should be init for.
+     */
     public DisplayModel(GXGraph graph) {
         this.graph = graph;
         loadGraph();
     }
 
+    /**
+     * Will init a new DisplayModel for a given file that stores information to a graph. <br>
+     *     See {@link GraphParser} for more detail.
+     * @param inputFile is the input file that contains the graph data.
+     * @throws WrongFileFormatException
+     */
     public DisplayModel(File inputFile) throws WrongFileFormatException {
         loadGraph(inputFile);
     }
@@ -48,7 +64,6 @@ public class DisplayModel extends Subject {
         this.graph = new GXGraph(inputFile);
         loadGraph();
     }
-
 
 
     private void loadGraph() {
@@ -99,19 +114,21 @@ public class DisplayModel extends Subject {
         hintStep.getSelectedEdge().setHint(false);
     }
 
+    /**
+     * This will check, if steps performed by the user do correspond to the steps that the algorithm would perform.
+     * @return {@code true} if all steps do equal the steps by the algo in the correct order, {@code false} otherwise
+     */
     public boolean checkCorrect() {
-       Iterator iter = userSteps.iterator();
+        Iterator<Step> iter = userSteps.iterator();
 
-       for (Step step : algoSteps) {
-           if (!iter.hasNext() ) {
-               return true;
-           } else if (!iter.next().equals(step)) {
-               return false;
-           }
-       }
-
-       //TODO shouldn't happen
-       return false;
+        for (Step step : algoSteps) {
+            if (!iter.hasNext() ) {
+                return true;
+            } else if (!iter.next().equals(step)) {
+                return false;
+            }
+        }
+        return false;
     }
 
     /**
@@ -127,9 +144,18 @@ public class DisplayModel extends Subject {
         return correctDistance && shortestPath && endingVertex.isMarked();
     }
 
+    /**
+     * This will mark an {@link GXEdge} if it is not blocked already. When an edge is marked, the unmarked
+     * {@link GXVertex} will be marked as well and all distances that are influenced by this vertex are updated. Also
+     * a new userstep is generated, containing the marked edge and vertex. Circles are blocked and all incident
+     * edges and vertices of the new marked vertex are set visible.
+     * @param edge is the marked edge.
+     * @throws ElementNotInGraphException
+     * @throws EdgeCompletesACircleException
+     */
     public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {
         //check if edge is blocked because of circle -> create alert
-        if (edge.isBlocked()) throw new EdgeCompletesACircleException("");
+        if (edge.isBlocked()) throw new EdgeCompletesACircleException("Edge can not be marked, because its blocked");
         //get unmarked vertex of edge and mark both in graph
         GXVertex nextVertex = edge.getNextVertex();
         //this shouldn't happen: an edge can only be marked if exact one vertex of it is marked
@@ -149,10 +175,20 @@ public class DisplayModel extends Subject {
         this.notifyObservers();
     }
 
+    /**
+     * This method is used for marking a vertex. <br>
+     *     <b>Note.</b> Not implemented / needed right now.
+     * @param vertex is the marked vertex
+     */
+    @Deprecated
     public void markVertex(GXVertex vertex) {
 
     }
 
+    /**
+     * Returns all visible vertices and edges as a {@link GXGraph}.
+     * @return the graph containing all visible edges and vertices.
+     */
     public GXGraph getState() {
         return this.visibleGraph;
     }
@@ -240,14 +276,10 @@ public class DisplayModel extends Subject {
 
     /**
      * method that returns the FinalVertex of the underlying graph
-     * @return the FinalVertex of the graph
+     * @return the ending vertex of the graph
      */
-    private GXVertex getFinalVertex() {
+    private GXVertex getEndingVertex() {
         return this.graph.getEndingVertex();
-    }
-
-    private void updateVisibleGraph() {
-
     }
 
     /**
@@ -403,7 +435,10 @@ public class DisplayModel extends Subject {
         visibleGraph.setEndingVertex(end);
     }
 
-    //TODO be deleted
+    /**
+     * Returns all vertices the underlying {@link GXGraph} consists of.
+     * @return vertices the graph consist of.
+     */
     public Collection<GXVertex> getAllVertices() {
         return this.graph.vertices();
     }
