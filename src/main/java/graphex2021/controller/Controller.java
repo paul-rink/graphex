@@ -67,6 +67,8 @@ public class Controller {
 
     private GXTableView gxTable;
 
+    private boolean debugMode;
+
     @FXML
     private Menu templates;
 
@@ -134,6 +136,7 @@ public class Controller {
         Node parentPane = graphView.getParent();
         scrollPane.init(parentPane, group, graphView);
     }
+
     /**
      * Start/finish button has 2 states. In Start state, pressing will enable interactions with the graph. The button
      * then switches in finish state. This will be disabled until the "done" button is pressed with success. Then the
@@ -196,35 +199,41 @@ public class Controller {
         tableStage.show();
     }
 
-    public void setFreeModeActions() {
-        for (Node vertexNode : graphView.getChildren()) {
-            if (vertexNode.toString().contains("Circle")) {
-                vertexNode.setOnMouseReleased((MouseEvent mouseEvent) -> {
-                    this.onDragFinished((SmartGraphVertexNode) vertexNode);
-                });
-            }
-        }
+    public void setFreeModeActions(SmartGraphVertexNode vertexNode) {
+        vertexNode.setOnMouseReleased((MouseEvent mouseEvent) -> {
+            this.onDragFinished(vertexNode);
+        });
+
     }
 
-    public void setActions() {
+    private void setActions() {
         graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
         graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
 
 
+        /**
+         * Setting the actions for the Vertices
+         */
         for (Node vertexNode : graphView.getChildren()) {
             if (vertexNode.toString().contains("Circle")) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
+                //Action for clicking primary button
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                         onVertexClicked(vert, mouseEvent.getX(), mouseEvent.getY());
                     }
                 });
+                //Style change when hovering
                 vert.setOnMouseEntered(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
+                //Style change when hovering ends
                 vert.setOnMouseExited(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
+                if (debugMode) {
+                    displayCoordinates(vert);
+                }
+                if (verticesMoveable.isSelected()) {
+                    setFreeModeActions(vert);
+                }
             }
-        }
-        if (verticesMoveable.isSelected()) {
-            setFreeModeActions();
         }
     }
 
@@ -265,7 +274,8 @@ public class Controller {
     public void onSelectEdge(SmartGraphEdge e) {
         try {
             displayModel.markEdge((GXEdge) e.getUnderlyingEdge());
-            setActions();
+            Platform.runLater(() -> { setActions();
+            });
         } catch (ElementNotInGraphException elementNotInGraphException) {
             new ElementNotInGraphAlert().show();
         } catch (EdgeCompletesACircleException edgeCompletesACircleException) {
@@ -448,12 +458,14 @@ public class Controller {
     }
 
     private void reset() {
+        this.debugMode = false;
         finish.setText("Start");
         finish.setDisable(false);
     }
 
     /**
      * Loads a new graphview from the specified file
+     *
      * @param file json that the new view should be loaded from.
      */
     private void loadNewGraphView(File file) {
@@ -628,31 +640,27 @@ public class Controller {
                 check.setDisable(false);
                 tip.setDisable(false);
             } else if ("Test".equals(result.get())) {
-                displayCoordinates();
+                this.debugMode = true;
             } else {
                 new Alert(Alert.AlertType.INFORMATION, "Das war das falsche Passwort.").showAndWait();
             }
         }
     }
 
-    private void displayCoordinates() {
-        for (Node vertex : graphView.getChildren()) {
-            if (vertex.toString().contains("Circle")) {
-                SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
-                vert.setOnMousePressed((MouseEvent mouseEvent) -> {
-                    if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
-                        //Making sure that the position will not be calculated at the same time as it is set by putting
-                        //this calculation in the Queue for the fx thread
-                        Platform.runLater(() -> {
-                            double x = graphView.calcRelativeX(vert);
-                            double y = graphView.calcRelativeY(vert);
-                            System.out.println(vert.getUnderlyingVertex().element().toString() + " x = "
-                                    + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
-                        });
-                    }
+    private void displayCoordinates(SmartGraphVertexNode vertexNode) {
+        vertexNode.setOnMousePressed((MouseEvent mouseEvent) -> {
+            if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
+                //Making sure that the position will not be calculated at the same time as it is set by putting
+                //this calculation in the Queue for the fx thread
+                Platform.runLater(() -> {
+                    double x = graphView.calcRelativeX(vertexNode);
+                    double y = graphView.calcRelativeY(vertexNode);
+                    System.out.println(vertexNode.getUnderlyingVertex().element().toString() + " x = "
+                            + x + " , y = " + y + " Style:  " + vertexNode.getStyleClass());
                 });
             }
-        }
+        });
+
     }
 
     /**
