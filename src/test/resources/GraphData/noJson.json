@@ -1,0 +1,24 @@
+{ "type" : "GXGraph",
+    "vertices" : [
+        {
+            "name" : "A",
+            "posx" : "788",
+            "posy" : "360",
+        },
+        {
+            "name" : "B",
+            "posx" : "928",
+            "posy" : "429",
+        }
+    ]
+    "edges" : [
+
+        {
+            "vertex1" : "A",
+            "vertex2" : "B",
+            "weight" :  "3",
+        }
+
+    ],
+    "endVertex" : "Z"
+}

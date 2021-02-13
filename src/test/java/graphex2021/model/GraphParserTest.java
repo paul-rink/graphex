@@ -2,6 +2,8 @@ package graphex2021.model;
 
 
 import org.junit.*;
+import org.junit.internal.runners.statements.Fail;
+import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,9 +18,8 @@ import java.util.Iterator;
 
 
 import java.util.Iterator.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
+import static org.junit.Assert.*;
 
 
 public class GraphParserTest {
@@ -26,6 +27,11 @@ public class GraphParserTest {
     private static final File originalFile = new File("src/test/resources/GraphData/testGraph.json");
     private static final File TEST_DIR = new File("src/test/resources/GraphData/test");
     private static final File copiedFile = new File("src/test/resources/GraphData/test/testFile.json");
+    private static final File GRAPH_MISSING_ATTRIBUTE = new File("src/test/resources/GraphData/wrongGXFormat.json");
+    private static final  File NOT_JSON = new File("src/test/resources/GraphData/noJson.json");
+    private static final File copy_GRAPH_MISSING_ATTRIBUTE = new File("src/test/resources/GraphData/test/wrongGXFormat.json");
+    private static final  File copy_NOT_JSON = new File("src/test/resources/GraphData/test/noJson.json");
+
     private static GraphParser parser;
 
     /**
@@ -43,19 +49,20 @@ public class GraphParserTest {
             TEST_DIR.mkdirs();
         }
 
-        //String testPathFile = originalFile.getAbsolutePath();
-        //String testPathDir = TEST_DIR.getAbsolutePath();
-
-
 
     }
     @Before
     public void setUp() throws Exception {
         this.parser = GraphParser.getGraphParser();
-        Path copied = copiedFile.toPath();
-
-        Path originalPath = originalFile.toPath();
-        Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+        Path copiedCorrect = copiedFile.toPath();
+        Path originalPathCorrect = originalFile.toPath();
+        Path originalmissingAttribute = GRAPH_MISSING_ATTRIBUTE.toPath();
+        Path copiedMissingAttribute = copy_GRAPH_MISSING_ATTRIBUTE.toPath();
+        Path originalWrongJson = NOT_JSON.toPath();
+        Path copiedWrongJson = copy_NOT_JSON.toPath();
+        Files.copy(originalPathCorrect, copiedCorrect, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(originalmissingAttribute,copiedMissingAttribute, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(originalWrongJson, copiedWrongJson, StandardCopyOption.REPLACE_EXISTING);
     }
 
     //@Ignore
@@ -68,7 +75,7 @@ public class GraphParserTest {
         try {
             verticesList = parser.parseVertices(copiedFile);
         } catch (WrongFileFormatException e) {
-            assertTrue(false);
+            fail();
         }
 
         Iterator<GXVertex> it = verticesList.iterator();
@@ -86,8 +93,7 @@ public class GraphParserTest {
     }
 
 
-    //@Test
-    @Ignore
+    @Test
     public void testParseEdges() {
         Collection<GXVertex> expectedVertices = createExpectedVertices();
         Collection<GXEdge> expectedEdges = createExpectedEdges(expectedVertices);
@@ -96,13 +102,77 @@ public class GraphParserTest {
         try {
             readEdges = parser.parseEdges(copiedFile, expectedVertices);
         } catch (WrongFileFormatException e) {
-            assertTrue(false);
+            fail();
         }
         assertEquals(expectedEdges.size(), readEdges.size());
         Iterator<GXEdge> it = readEdges.iterator();
         Iterator<GXEdge> ite = expectedEdges.iterator();
         while (it.hasNext() && ite.hasNext()) {
             assertTrue(sameEdge(ite.next(), it.next()));
+        }
+    }
+
+    @Test
+    public void testParseStartingVertex() {
+        Collection expectedVertices = createExpectedVertices();
+        GXVertex expectedStartingVertex = getExpectedStart(expectedVertices);
+        GXVertex readStartingVertex = null;
+        try {
+            readStartingVertex = parser.parseStarting(copiedFile, expectedVertices);
+        } catch (WrongFileFormatException e) {
+            fail();
+        }
+        assertTrue(sameVertices(expectedStartingVertex, readStartingVertex));
+    }
+
+    @Test
+    public void testParseEndingVertex() {
+        Collection expectedVertices = createExpectedVertices();
+        GXVertex expectedEndingVertex = getExpectedEnd(expectedVertices);
+        GXVertex readEndingVertex = null;
+        try {
+            readEndingVertex = parser.parseEnding(copiedFile, expectedVertices);
+        } catch (WrongFileFormatException e) {
+            fail();
+        }
+        assertTrue(sameVertices(expectedEndingVertex, readEndingVertex));
+    }
+
+
+    @Test
+    public void testFileNullException() {
+        String expected = "File ist null.";
+        try {
+            parser.parseVertices(null);
+        } catch (WrongFileFormatException e) {
+            String message = e.getMessage();
+            if(!expected.equals(message)) {
+                fail();
+            }
+        }
+    }
+
+    @Test
+    public void testNotGXGraph() {
+        String expected = "required key";
+        try{
+            parser.parseVertices(copy_GRAPH_MISSING_ATTRIBUTE);
+            } catch (WrongFileFormatException e) {
+            if (!e.getMessage().contains(expected)) {
+                fail();
+            }
+        }
+    }
+
+    @Test
+    public void testNotAJson() {
+        String expected = "Expected";
+        try{
+            parser.parseVertices(copy_NOT_JSON);
+        } catch (WrongFileFormatException e) {
+            if(!e.getMessage().contains(expected)) {
+                fail();
+            }
         }
 
     }
@@ -151,12 +221,19 @@ public class GraphParserTest {
         return expectation;
     }
 
+    private GXVertex getExpectedStart(Collection<GXVertex> vertices){
+        return findMatchingVertex("A", vertices);
+    }
+
+    private GXVertex getExpectedEnd(Collection<GXVertex> vertices) {
+        return findMatchingVertex("B", vertices);
+    }
 
     private Collection<GXEdge> createExpectedEdges(Collection<GXVertex> expectedVertices) {
         Collection<GXEdge> expectation = new ArrayList<>();
         GXVertex firstVertex = findMatchingVertex("A", expectedVertices);
         GXVertex secondVertex = findMatchingVertex("B", expectedVertices);
-        GXEdge expectedEdge = new GXEdge(firstVertex, secondVertex, "0", 3, 0);
+        GXEdge expectedEdge = new GXEdge(firstVertex, secondVertex, "3", 3, 0);
         expectation.add(expectedEdge);
         return expectation;
     }
