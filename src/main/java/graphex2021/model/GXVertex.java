@@ -197,9 +197,12 @@ public class GXVertex implements Vertex<String> {
      */
     @Override
     public boolean equals(Object o) {
-        boolean isGXVertex = o.getClass().isInstance(this);
-        boolean hasSameID = this.id == ((GXVertex) o).getId();
-        return isGXVertex && hasSameID;
+        if(o!=null) {
+            boolean isGXVertex = o.getClass().isInstance(this);
+            boolean hasSameID = this.id == ((GXVertex) o).getId();
+            return isGXVertex && hasSameID;
+        }
+        return false;
     }
 
     /**
