@@ -38,6 +38,7 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
     private int prevMarked;
     private Map<String, String> lastEntries;
     private Map<String, Boolean> markedColumns;
+    private boolean initialized = false;
 
     /**
      * If this is true distances will only be put into the table if distance has changed from the previous one
@@ -117,6 +118,7 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
         }
         // The content of the table is now set to
         this.setItems(steps);
+        this.initialized = true;
     }
 
 
@@ -218,6 +220,15 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
                 this.markedColumns.replace(key, false);
             }
         }
+    }
+
+    /**
+     * Returns whether this table has been initialized.
+     *
+     * @return whether table is initalized
+     */
+    public boolean isInitialized() {
+        return this.initialized;
     }
 
 

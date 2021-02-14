@@ -188,7 +188,9 @@ public class Controller {
      * Initialize the table where user steps (according to algorithm) are displayed.
      */
     public void initTableView() {
-        gxTable.init(displayModel.getAllVertices());
+        if (!gxTable.isInitialized()) {
+            gxTable.init(displayModel.getAllVertices());
+        }
         displayModel.register(gxTable);
     }
 
@@ -541,7 +543,6 @@ public class Controller {
             }
             verticesMoveable.setSelected(true);
         } else {
-            //TODO make Graph load unmoveable
             verticesMoveable.setSelected(false);
             //Update with better constructor
             addToParent(parent);
