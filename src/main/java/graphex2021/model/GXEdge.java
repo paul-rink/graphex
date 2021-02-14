@@ -274,10 +274,14 @@ public class GXEdge implements Edge<String, String> {
      * @return the opposite vertex and {@code null} if given vertex is not part of this edge.
      */
     public GXVertex opposite(GXVertex vertex) {
-        if (vertex.equals(inboundVertex)) {
-            return outboundVertex;
-        } else if (vertex.equals(outboundVertex)) {
-            return inboundVertex;
+        if (vertex != null) {
+            if (vertex.equals(inboundVertex)) {
+                return outboundVertex;
+            } else if (vertex.equals(outboundVertex)) {
+                return inboundVertex;
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
