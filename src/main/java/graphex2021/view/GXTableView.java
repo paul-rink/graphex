@@ -205,17 +205,17 @@ public class GXTableView extends TableView<Map<String, String>> implements Obser
 
     private void updateMarkedVert(Collection<GXVertex> v) {
         Iterator<String> it = markedColumns.keySet().iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             String key = it.next();
             boolean found = false;
-            for(GXVertex vertex : v) {
-                if(vertex.element().equals(key)) {
+            for (GXVertex vertex : v) {
+                if (vertex.element().equals(key)) {
                     found = true;
-                    this.markedColumns.replace(vertex.element(),vertex.isMarked());
+                    this.markedColumns.replace(vertex.element(), vertex.isMarked());
                 }
             }
-            if(!found) {
-                this.markedColumns.replace(key,false);
+            if (!found) {
+                this.markedColumns.replace(key, false);
             }
         }
     }
