@@ -48,7 +48,8 @@ public class Controller {
     private static final int STANDARD_PANE_MIN_HEIGHT = 563;
     private static final String UNLOCKPASSWORD = "Algorithmus";
     private static final String PATTERN_FIN_TEXT = "-??[0-9]+";
-    private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
+    private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp", "JPEG", "JPG", "PNG"
+            , "BMP"};
     private static final int MIN_PANE_SIZE = 1000;
     private static final String PATH_TO_TEMPLATES = "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
