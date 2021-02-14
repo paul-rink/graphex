@@ -340,10 +340,12 @@ public class Controller {
      *
      * @param parent parent of the old {@link GraphView} that it should be removed from
      */
-    private void remove(Parent parent) {
+    private void remove(Parent parent, boolean remTable) {
         //uncoupling the old views from listeners and the observer.
         displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
+        if (remTable) {
+            displayModel.unregister(gxTable);
+        }
         graphView.removeListener();
         // The Pane that graphView is part of (In this case boder pane)
         Group pane = (Group) parent;
@@ -419,18 +421,22 @@ public class Controller {
      *
      * @param parent the parent pane that the graphView needs to be added to.
      */
-    private void initializeUpdatedView(Group parent) {
+    private void initializeUpdatedView(Group parent, boolean noTable) {
         // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
         parent.layout();
 
-        // new Tableview
-        this.gxTable = new GXTableView();
+        if (noTable) {
+            // new Tableview
+            this.gxTable = new GXTableView();
+        }
 
         //Reinitializing all the views
         init();
 
         displayModel.notifyObservers();
     }
+
+
 
     /**
      * Creates and adds a new {@link GraphView} to the pane.
@@ -484,7 +490,7 @@ public class Controller {
             e.printStackTrace();
             return;
         }
-        remove(parent);
+        remove(parent, true);
         this.displayModel = newModel;
 
         // Creating a new graphView and adding it to the pane
@@ -498,29 +504,30 @@ public class Controller {
 
         reset();
         // initialising the window again with the new graph view and updating once to display the graph
-        initializeUpdatedView(parent);
+        initializeUpdatedView(parent, false);
     }
 
     private void loadNewGraphView(GXGraph graph) {
         Group parent = (Group) graphView.getParent();
         //final Pane parent = (Pane) graphView.getParent();
-        remove(parent);
+        remove(parent, true);
         this.displayModel = new DisplayModel(graph);
         addToParent(parent);
         graphView.setBackground(Background.EMPTY);
         setSizes(parent, STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
         reset();
-        initializeUpdatedView(parent);
+        initializeUpdatedView(parent, false);
     }
 
     /**
      * When called the vertices are made moveable
      */
-    public void verticesMovable() {
+    @FXML
+    private void verticesMovable() {
         Group parent = (Group) graphView.getParent();
         //final Pane parent = (Pane) graphView.getParent();
         Background oldBackground = graphView.getBackground();
-        remove(parent);
+        remove(parent, false);
         GraphView movable;
         if (verticesMoveable.isSelected()) {
             try {
@@ -542,7 +549,7 @@ public class Controller {
 
         graphView.setBackground(oldBackground);
         setSizes(parent, oldBackground);
-        initializeUpdatedView(parent);
+        initializeUpdatedView(parent, false);
         if (!finish.getText().equals("Start")) {
             setActions();
         }
