@@ -8,13 +8,19 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * TODO JAVADOC
- *
+ * This class controls all logic behind the GUI. If something in the view is happening, the
+ * {@link graphex2021.controller.Controller} will tell the DisplayModel. Here everything will be calculated what should
+ * happen next. Then all observers are notified about the changes on the underlying model. Then its up to the observers
+ * to handle the changes.
  *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
 public class DisplayModel extends Subject {
+    /**
+     * This value can be used as initial distance for vertices, like the starting vertex.
+     */
+    public static final int INIT_DISTANCE = 0;
     private static final String EXAMPLEGRAPH = "resources" + File.separator + "graphex2021" + File.separator
             + "GraphData" + File.separator + "Templates" + File.separator + "Vorlage_(Karlsruhe).json";
 
@@ -24,8 +30,12 @@ public class DisplayModel extends Subject {
     private GXGraph graph;
     private GXGraph visibleGraph;
 
+    /**
+     * Standard constructor fpr DisplayModel. This will init a model with a standard graph {@code EXAMPLEGRAPH}.
+     * @throws WrongFileFormatException in case the default graph file does not match the correct format
+     */
     public DisplayModel() throws WrongFileFormatException {
-        File jarPath = null;
+        File jarPath;
         try {
             jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
         } catch (URISyntaxException e) {
@@ -34,12 +44,22 @@ public class DisplayModel extends Subject {
         loadGraph(new File(jarPath, EXAMPLEGRAPH));
 
     }
-  
+
+    /**
+     * Constructor for DisplayModel for a given {@link GXGraph}.
+     * @param graph is the graph the DisplayModel should be init for.
+     */
     public DisplayModel(GXGraph graph) {
         this.graph = graph;
         loadGraph();
     }
 
+    /**
+     * Will init a new DisplayModel for a given file that stores information to a graph. <br>
+     *     See {@link GraphParser} for more detail.
+     * @param inputFile is the input file that contains the graph data.
+     * @throws WrongFileFormatException in case the file does not match the correct format
+     */
     public DisplayModel(File inputFile) throws WrongFileFormatException {
         loadGraph(inputFile);
     }
@@ -50,7 +70,6 @@ public class DisplayModel extends Subject {
     }
 
 
-
     private void loadGraph() {
         this.visibleGraph = new GXGraph();
         initialVisibleGraph();
@@ -58,7 +77,7 @@ public class DisplayModel extends Subject {
         algoSteps = algo.getSequence(graph);
         //mark starting vertex from the beginning and update distances for incidents, if algo request a starting vertex
         if (algo.hasStartingVertex()) {
-            graph.getStartingVertex().mark();//TODO why mark here
+            graph.getStartingVertex().mark();
             try {
                 updateCurrentDistancesForIncidents(graph.getStartingVertex());
             } catch (ElementNotInGraphException e) {
@@ -78,7 +97,7 @@ public class DisplayModel extends Subject {
      *
      */
     public void nexStep() {
-        Iterator iter = userSteps.iterator();
+        Iterator<Step> iter = userSteps.iterator();
         Step hintStep = algoSteps.getFirst();
         for (Step step : algoSteps) {
             hintStep = step;
@@ -99,19 +118,21 @@ public class DisplayModel extends Subject {
         hintStep.getSelectedEdge().setHint(false);
     }
 
+    /**
+     * This will check, if steps performed by the user do correspond to the steps that the algorithm would perform.
+     * @return {@code true} if all steps do equal the steps by the algo in the correct order, {@code false} otherwise
+     */
     public boolean checkCorrect() {
-       Iterator iter = userSteps.iterator();
+        Iterator<Step> iter = userSteps.iterator();
 
-       for (Step step : algoSteps) {
-           if (!iter.hasNext() ) {
-               return true;
-           } else if (!iter.next().equals(step)) {
-               return false;
-           }
-       }
-
-       //TODO shouldn't happen
-       return false;
+        for (Step step : algoSteps) {
+            if (!iter.hasNext() ) {
+                return true;
+            } else if (!iter.next().equals(step)) {
+                return false;
+            }
+        }
+        return false;
     }
 
     /**
@@ -127,9 +148,18 @@ public class DisplayModel extends Subject {
         return correctDistance && shortestPath && endingVertex.isMarked();
     }
 
+    /**
+     * This will mark an {@link GXEdge} if it is not blocked already. When an edge is marked, the unmarked
+     * {@link GXVertex} will be marked as well and all distances that are influenced by this vertex are updated. Also
+     * a new userstep is generated, containing the marked edge and vertex. Circles are blocked and all incident
+     * edges and vertices of the new marked vertex are set visible.
+     * @param edge is the marked edge.
+     * @throws ElementNotInGraphException in case there was an edge ir vertex that is not part of the graph
+     * @throws EdgeCompletesACircleException if the marked edge would complete a circle
+     */
     public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {
         //check if edge is blocked because of circle -> create alert
-        if (edge.isBlocked()) throw new EdgeCompletesACircleException("");
+        if (edge.isBlocked()) throw new EdgeCompletesACircleException("Edge can not be marked, because its blocked");
         //get unmarked vertex of edge and mark both in graph
         GXVertex nextVertex = edge.getNextVertex();
         //this shouldn't happen: an edge can only be marked if exact one vertex of it is marked
@@ -149,10 +179,20 @@ public class DisplayModel extends Subject {
         this.notifyObservers();
     }
 
+    /**
+     * This method is used for marking a vertex. <br>
+     *     <b>Note.</b> Not implemented / needed right now.
+     * @param vertex is the marked vertex
+     */
+    @Deprecated
     public void markVertex(GXVertex vertex) {
-
+        vertex.mark();
     }
 
+    /**
+     * Returns all visible vertices and edges as a {@link GXGraph}.
+     * @return the graph containing all visible edges and vertices.
+     */
     public GXGraph getState() {
         return this.visibleGraph;
     }
@@ -168,11 +208,11 @@ public class DisplayModel extends Subject {
             GXEdge lastEdge = lastStep.getSelectedEdge();
             GXVertex lastVertex = lastStep.getSelectedVertex();
             removeLastUserStep();
-            makeIncidentsInvisible(lastVertex, lastEdge);
+            makeIncidentsInvisible(lastVertex);
             lastVertex.unmark();
             lastEdge.unmark();
-            updateCurrentDistance(lastVertex);
             graph.unblock(lastVertex);
+            updateCurrentDistance(lastVertex);
             this.notifyObservers();
         }
     }
@@ -226,30 +266,6 @@ public class DisplayModel extends Subject {
         }
     }
 
-    private void makeVisible(GXEdge edge) { }
-
-    private void makeVisible(GXVertex vertex) { }
-
-    /**
-     * method that returns the StartingVertex of the underlying graph
-     * @return the StartingVertex of the graph
-     */
-    private GXVertex getStartVertex() {
-        return this.graph.getStartingVertex();
-    }
-
-    /**
-     * method that returns the FinalVertex of the underlying graph
-     * @return the FinalVertex of the graph
-     */
-    private GXVertex getFinalVertex() {
-        return this.graph.getEndingVertex();
-    }
-
-    private void updateVisibleGraph() {
-
-    }
-
     /**
      * method to get the last step the user selected
      * @return the last step in the list of user steps
@@ -287,7 +303,7 @@ public class DisplayModel extends Subject {
         }
     }
 
-    private void makeIncidentsInvisible(GXVertex vertex, GXEdge originalEdge) throws ElementNotInGraphException {
+    private void makeIncidentsInvisible(GXVertex vertex) throws ElementNotInGraphException {
         //check all adjacent edges if vertex on the other side is marked it remains visible
         //otherwise the edge and the vertex at the other end should be invisible and removed
         //from the visible graph
@@ -302,17 +318,16 @@ public class DisplayModel extends Subject {
                     //additionally needs to check whether this vertex is also connected to another visible edge
                     //this would mean the vertex stays visible
                     boolean stayVisible = false;
-                    int i = graph.getEndingVertex().getId();
-                    int j = otherVertex.getId();
-                    if (graph.getEndingVertex().getId() == otherVertex.getId()
-                            || graph.getStartingVertex().getId() == otherVertex.getId()) {
+                    if (!otherVertex.equals(graph.getStartingVertex())
+                            && !otherVertex.equals(graph.getEndingVertex())) {
 
-                    } else {
                         for (GXEdge otherEdge : visibleGraph.incidentEdges(otherVertex)) {
                             if (otherEdge.isVisible()) {
                                 stayVisible = true;
+                                break;
                             }
                         }
+
                         if (!stayVisible) {
                             otherVertex.setVisible(false);
                             visibleGraph.removeVertex(otherVertex);
@@ -342,8 +357,8 @@ public class DisplayModel extends Subject {
             GXVertex incident = graph.opposite(markedVertex, edge);
             int oldDist = incident.getCurrentDistance();
             int uptDist = markedVertex.getCurrentDistance() + edge.getWeight();
-            //TODO need static variable for init values or infinite values, right now very inconsistent
-            if (!incident.isMarked() && (oldDist == -1 || oldDist == 0 || oldDist > uptDist)) {
+            if (!incident.isMarked() && (oldDist == Dijkstra.INFINITY_DIST
+                    || oldDist == INIT_DISTANCE || oldDist > uptDist)) {
                 incident.setCurrentDistance(uptDist);
             }
         }
@@ -354,19 +369,18 @@ public class DisplayModel extends Subject {
      * start to this vertex. The lowest distance of all incident vertices + edge weight is chosen as new distance. <br>
      *     Distance for <b>starting vertex</b> is always set to 0.
      * @param vertex is the vertex you want to update its distance.
-     * @throws ElementNotInGraphException
+     * @throws ElementNotInGraphException if a vertex or edge was not part of the graph
      */
     private void updateCurrentDistance(GXVertex vertex) throws ElementNotInGraphException {
         if (vertex.equals(graph.getStartingVertex())) {
-            vertex.setCurrentDistance(0);
+            vertex.setCurrentDistance(INIT_DISTANCE);
         } else {
-            int oldDist = vertex.getCurrentDistance();
             for (GXEdge edge : graph.incidentEdges(vertex)) {
+                int oldDist = vertex.getCurrentDistance();
                 GXVertex incident = graph.opposite(vertex, edge);
                 int newDist = incident.getCurrentDistance() + edge.getWeight();
-                //TODO magic number
                 //if resulting distance from previous (marked) vertex is better, update
-                if (incident.isMarked() && (newDist < oldDist || oldDist == -1)) {
+                if (incident.isMarked() && (newDist < oldDist || oldDist == Dijkstra.INFINITY_DIST)) {
                     vertex.setCurrentDistance(newDist);
                 }
             }
@@ -377,7 +391,7 @@ public class DisplayModel extends Subject {
         final GXVertex start = graph.getStartingVertex();
         start.mark();
         start.setVisible(true);
-        start.setCurrentDistance(0);
+        start.setCurrentDistance(INIT_DISTANCE);
         visibleGraph.insertVertex(start);
         visibleGraph.setStartingVertex(start);
         try {
@@ -385,7 +399,7 @@ public class DisplayModel extends Subject {
             for (GXEdge edge : graph.incidentEdges(start)) {
                 GXVertex toIns = edge.getNextVertex();
                 //shouldn't never be the case, at beginning only start is marked and no other vertex
-                if(toIns == null) continue;
+                if (toIns == null) continue;
                 //Setting the initial edge visible and the vertex at the other end
                 toIns.setVisible(true);
                 edge.setVisible(true);
@@ -394,7 +408,7 @@ public class DisplayModel extends Subject {
                 visibleGraph.insertEdge(edge);
             }
         } catch (ElementNotInGraphException eni) {
-            //TODO find better way it is kind of a different error
+            eni.printStackTrace();
         }
 
 
@@ -404,7 +418,10 @@ public class DisplayModel extends Subject {
         visibleGraph.setEndingVertex(end);
     }
 
-    //TODO be deleted
+    /**
+     * Returns all vertices the underlying {@link GXGraph} consists of.
+     * @return vertices the graph consist of.
+     */
     public Collection<GXVertex> getAllVertices() {
         return this.graph.vertices();
     }
