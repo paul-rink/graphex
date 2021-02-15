@@ -98,7 +98,51 @@ public class GXGraphTest {
     }
 
 
-   
+
+
+    /**
+     * Checks if the number of edges and vertices remains correct after they are added to an empty graph.
+     *
+     */
+    @Test
+    public void testNumVerticesEdgesAdding() {
+        GXGraph graph =  new GXGraph();
+        //Adding a new Vertex
+        graph.insertVertex(new GXVertex("1", 1, null));
+        assertEquals(1, graph.numVertices());
+        //Adding second vertex
+        graph.insertVertex(new GXVertex("2", 2, null));
+        assertEquals(2, graph.numVertices());
+        try {
+            //Adding an edge
+            graph.insertEdge(graph.getVertex(1), graph.getVertex(2), "1");
+        } catch (ElementNotInGraphException e) {
+            fail("vertex wasn't added correctly");
+        }
+        assertEquals(1, graph.numEdges());
+        graph.insertVertex(new GXVertex("3",3, null));
+        assertEquals(3, graph.numVertices());
+        //Adding second edge
+        try {
+            graph.insertEdge(graph.getVertex(1), graph.getVertex(3), "2");
+        } catch (ElementNotInGraphException e) {
+            fail("vertex wasn't added correctly");
+        }
+        assertEquals(2, graph.numEdges());
+        try {
+            graph.insertEdge(graph.getVertex(2), graph.getVertex(3), "2");
+        } catch (ElementNotInGraphException e) {
+            fail("vertex wasn't added correctly");
+        }
+        assertEquals(3, graph.numEdges());
+    }
+
+
+    @Test
+    public void testVerticesEmptyGraph() {
+
+    }
+
 
     @After
     public void tearDown() throws Exception {

@@ -165,7 +165,13 @@ public class GXGraph implements GraphInterface<String, String> {
     //TODO maybe different way to insert an edge
     @Override
     public GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException {
-        return null;
+        try {
+            return getEdge(u, v);
+        } catch (ElementNotInGraphException enig) {
+            GXEdge edge =  new GXEdge(u, v, edgeElement, Integer.parseInt(edgeElement), edges.size());
+            edges.put(edges.size(), edge);
+            return edge;
+        }
     }
 
     @Override

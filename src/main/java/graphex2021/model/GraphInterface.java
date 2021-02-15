@@ -93,7 +93,8 @@ public interface GraphInterface<V, E> {
      *
      * @param u first vertex
      * @param v second vertex
-     * @param edgeElement element of the newly created edge
+     * @param edgeElement element of the newly created edge. Will also get the edge weight from the element.
+     *                    Parsing String.
      * @return the edge that was inserted
      */
     GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException;
