@@ -34,7 +34,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Text>
-      <Text layoutX="14.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="min value: 1" wrappingWidth="181.6417694091797" />
+      <Text layoutX="14.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="min value: 2" wrappingWidth="181.6417694091797" />
       <Text layoutX="14.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="max value: 26" wrappingWidth="181.6417694091797" />
       <Text layoutX="14.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="min value: 1" wrappingWidth="181.6417694091797" />
       <Text layoutX="14.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="max value: 100" wrappingWidth="181.6417694091797" />

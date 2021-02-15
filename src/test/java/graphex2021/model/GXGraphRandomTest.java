@@ -25,37 +25,37 @@ public class GXGraphRandomTest {
         try {
             graph = new GXGraphRandom(GXGraphRandom.MAX_NUMBER_VERTICES + 1, 10, 10, true, true);
         } catch (IllegalArgumentException e) {
-            System.out.printf("Test1");
+            System.out.print("Test1");
             Assert.assertEquals("invalid number of vertices", e.getMessage());
         }
         try {
             graph = new GXGraphRandom(GXGraphRandom.MIN_NUMBER_VERTICES - 1, 10, 10, true, true);
         } catch (IllegalArgumentException e) {
-            System.out.printf("Test2");
+            System.out.print("Test2");
             Assert.assertEquals("invalid number of vertices", e.getMessage());
         }
         try {
             graph = new GXGraphRandom(10, GXGraphRandom.MAX_EDGE_WEIGHT + 1, 10, true, true);
         } catch (IllegalArgumentException e) {
-            System.out.printf("Test3");
+            System.out.print("Test3");
             Assert.assertEquals("Invalid edge weights", e.getMessage());
         }
         try {
             graph = new GXGraphRandom(10, GXGraphRandom.MIN_EDGE_WEIGHT - 1, 10, true, true);
         } catch (IllegalArgumentException e) {
-            System.out.printf("Test4");
+            System.out.print("Test4");
             Assert.assertEquals("Invalid edge weights", e.getMessage());
         }
         try {
             graph = new GXGraphRandom(10, 10, GXGraphRandom.MIN_EDGE_PROBABILITY - 1, true, true);
         } catch (IllegalArgumentException e) {
-            System.out.printf("Test5");
+            System.out.print("Test5");
             Assert.assertEquals("invalid probability", e.getMessage());
         }
         try {
             graph = new GXGraphRandom(10, 10, GXGraphRandom.MAX_EDGE_PROBABILITY + 1, true, true);
         } catch (IllegalArgumentException e) {
-            System.out.printf("Test6");
+            System.out.print("Test6");
             Assert.assertEquals("invalid probability", e.getMessage());
         }
     }
@@ -64,8 +64,25 @@ public class GXGraphRandomTest {
     public void testGenerateTotalConnectedRndGraph() {
         graph = new GXGraphRandom(5, 10, GXGraphRandom.MAX_EDGE_PROBABILITY, true, true);
         Assert.assertEquals(5, graph.vertices().size());
-        Assert.assertEquals(15, graph.edges().size());
+        Assert.assertEquals(10, graph.edges().size());
+        for (GXEdge edge : graph.edges()) {
+            Assert.assertTrue(edge.getWeight() <= 10);
+        }
     }
+
+    @Test
+    public void testMinConnectedRndGraph() {
+        graph = new GXGraphRandom(GXGraphRandom.MAX_NUMBER_VERTICES, GXGraphRandom.MAX_EDGE_WEIGHT, GXGraphRandom.MIN_EDGE_PROBABILITY, true, true);
+        Assert.assertEquals(GXGraphRandom.MAX_NUMBER_VERTICES, graph.vertices().size());
+    }
+
+    @Test
+    public void testMinVerticesMaxConnected() {
+        graph = new GXGraphRandom(GXGraphRandom.MIN_NUMBER_VERTICES, GXGraphRandom.MAX_EDGE_WEIGHT, GXGraphRandom.MAX_EDGE_PROBABILITY, true, true);
+        Assert.assertEquals(GXGraphRandom.MIN_NUMBER_VERTICES, graph.vertices().size());
+        Assert.assertEquals(0, graph.edges().size());
+    }
+
     @Ignore
     public void testGenerateEdges2() {
         GXGraph graph = new GXGraphRandom(4, 10, 60, true, true);

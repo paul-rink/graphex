@@ -7,6 +7,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
@@ -15,6 +16,9 @@ import javafx.stage.Stage;
  */
 public class PropWinController {
     private static final String PATTERN_INTEGER = "[0-9]+";
+
+    private static GXGraph rndGraph = null;
+    private static boolean ready = false;
 
     @FXML
     private TextField numVerticesText;
@@ -31,12 +35,10 @@ public class PropWinController {
     @FXML
     private CheckBox avoidClustering;
 
-    @FXML
-    private Button generateButton;
-
-    private static GXGraph rndGraph = null;
-    private static boolean ready = false;
-
+    /**
+     * Parses the user inputs from text fields that can then be used to generate a random graph. It is also checked,
+     * that user input does match requirements.
+     */
     public void onGenerate() {
         //current window needed for closing later
         Stage stage = (Stage) numVerticesText.getScene().getWindow();
@@ -80,7 +82,7 @@ public class PropWinController {
         return rndGraph;
     }
 
-    private class WrongInputFormatAlert extends Alert {
+    private static class WrongInputFormatAlert extends Alert {
         public WrongInputFormatAlert() {
             super(AlertType.ERROR);
             setTitle("Wrong input format");

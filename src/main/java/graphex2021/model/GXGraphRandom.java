@@ -12,9 +12,9 @@ public class GXGraphRandom extends GXGraph {
      */
     public static final int MAX_NUMBER_VERTICES = VertexLabel.values().length;
     /**
-     * is the maximal number of vertices a random graph can exist of depending on Labels existing for vertices.
+     * is the minimum number of vertices a random graph can exist of. 2 because of starting and ending vertex.
      */
-    public static final int MIN_NUMBER_VERTICES = 1;
+    public static final int MIN_NUMBER_VERTICES = 2;
     /**
      * Choose p between 0 and {@link GXGraphRandom#MAX_EDGE_PROBABILITY}
      */
