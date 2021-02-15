@@ -68,6 +68,13 @@ public class GXGraphRandomTest {
         for (GXEdge edge : graph.edges()) {
             Assert.assertTrue(edge.getWeight() <= 10);
         }
+
+        graph = new GXGraphRandom(26, 10, GXGraphRandom.MAX_EDGE_PROBABILITY, true, true);
+        Assert.assertEquals(26, graph.vertices().size());
+        Assert.assertEquals(325, graph.edges().size());
+        for (GXEdge edge : graph.edges()) {
+            Assert.assertTrue(edge.getWeight() <= 10);
+        }
     }
 
     @Test
@@ -77,21 +84,21 @@ public class GXGraphRandomTest {
     }
 
     @Test
-    public void testMinVerticesMaxConnected() {
+    public void testMinVertices() {
+        //totally connected because of p
         graph = new GXGraphRandom(GXGraphRandom.MIN_NUMBER_VERTICES, GXGraphRandom.MAX_EDGE_WEIGHT, GXGraphRandom.MAX_EDGE_PROBABILITY, true, true);
         Assert.assertEquals(GXGraphRandom.MIN_NUMBER_VERTICES, graph.vertices().size());
-        Assert.assertEquals(0, graph.edges().size());
+        Assert.assertEquals(1, graph.edges().size());
+        Assert.assertEquals(GXGraphRandom.MIN_NUMBER_VERTICES, graph.vertices().size());
+
+        //2 vertices are connected, because isolates are not allowed
+        graph = new GXGraphRandom(GXGraphRandom.MIN_NUMBER_VERTICES, GXGraphRandom.MAX_EDGE_WEIGHT, GXGraphRandom.MIN_EDGE_PROBABILITY, false, true);
+        Assert.assertEquals(GXGraphRandom.MIN_NUMBER_VERTICES, graph.vertices().size());
+        Assert.assertEquals(1, graph.edges().size());
+        Assert.assertEquals(GXGraphRandom.MIN_NUMBER_VERTICES, graph.vertices().size());
     }
 
-    @Ignore
-    public void testGenerateEdges2() {
-        GXGraph graph = new GXGraphRandom(4, 10, 60, true, true);
-        Assert.assertEquals(4, graph.vertices().size());
-    }
 
-    @Test
-    public void testGenerateEdges3() {
-        GXGraph graph = new GXGraphRandom(2, 10, 100, true, true);
-        Assert.assertEquals(2, graph.vertices().size());
-    }
+
+
 }
