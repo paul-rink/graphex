@@ -151,12 +151,15 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public GXVertex insertVertex(GXVertex vertex) {
-        if (vertexInGraph(vertex.getId())) {
-            return vertices.get(vertex.getId());
-        } else {
-            vertices.put(vertex.getId(), vertex);
+        if (vertex != null) {
+            if (vertexInGraph(vertex.getId())) {
+                return vertices.get(vertex.getId());
+            } else {
+                vertices.put(vertex.getId(), vertex);
+            }
+            return vertex;
         }
-        return vertex;
+        return null;
     }
 
     //TODO maybe different way to insert an edge

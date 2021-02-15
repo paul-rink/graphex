@@ -78,10 +78,12 @@ public interface GraphInterface<V, E> {
     boolean areAdjacent(GXVertex u, GXVertex v) throws ElementNotInGraphException;
 
     /**
-     * Adds the passed {@link GXVertex} to the graph, if there isn't already a {@link GXVertex} with the same ID
+     * Adds the passed {@link GXVertex} to the graph, if there isn't already a {@link GXVertex} with the same ID.
+     * If {@code null} is passed null will also be returned and the graph won't change
      *
      * @param vertex {@link GXVertex} to be inserted
      * @return the inserted vertex or the vertex that has the same ID as the passed vertex.
+     * {@code null} if null was passed
      */
     GXVertex insertVertex(GXVertex vertex);
 
