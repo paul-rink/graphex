@@ -2,6 +2,10 @@ package graphex2021.model;
 
 import org.junit.*;
 
+import javax.swing.*;
+
+import static junit.framework.TestCase.fail;
+
 /**
  * Some test classes for generating a random {@link GXGraph}.
  *
@@ -16,9 +20,44 @@ public class GXGraphRandomTest {
     }
 
     @Test
-    public void testGenerateVertices() {
-        GXGraph graph = new GXGraphRandom(5, 10, 0, true, true);
-        Assert.assertEquals(5, graph.vertices().size());
+    public void testGenerateInvalidRandomGraph() {
+        GXGraph graph;
+        try {
+            graph = new GXGraphRandom(GXGraphRandom.MAX_NUMBER_VERTICES + 1, 10, 10, true, true);
+        } catch (IllegalArgumentException e) {
+            System.out.printf("Test1");
+            Assert.assertEquals("invalid number of vertices", e.getMessage());
+        }
+        try {
+            graph = new GXGraphRandom(GXGraphRandom.MIN_NUMBER_VERTICES - 1, 10, 10, true, true);
+        } catch (IllegalArgumentException e) {
+            System.out.printf("Test2");
+            Assert.assertEquals("invalid number of vertices", e.getMessage());
+        }
+        try {
+            graph = new GXGraphRandom(10, GXGraphRandom.MAX_EDGE_WEIGHT + 1, 10, true, true);
+        } catch (IllegalArgumentException e) {
+            System.out.printf("Test3");
+            Assert.assertEquals("Invalid edge weights", e.getMessage());
+        }
+        try {
+            graph = new GXGraphRandom(10, GXGraphRandom.MIN_EDGE_WEIGHT - 1, 10, true, true);
+        } catch (IllegalArgumentException e) {
+            System.out.printf("Test4");
+            Assert.assertEquals("Invalid edge weights", e.getMessage());
+        }
+        try {
+            graph = new GXGraphRandom(10, 10, GXGraphRandom.MIN_EDGE_PROBABILITY - 1, true, true);
+        } catch (IllegalArgumentException e) {
+            System.out.printf("Test5");
+            Assert.assertEquals("invalid probability", e.getMessage());
+        }
+        try {
+            graph = new GXGraphRandom(10, 10, GXGraphRandom.MAX_EDGE_PROBABILITY + 1, true, true);
+        } catch (IllegalArgumentException e) {
+            System.out.printf("Test6");
+            Assert.assertEquals("invalid probability", e.getMessage());
+        }
     }
 
     @Test
