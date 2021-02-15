@@ -13,6 +13,7 @@ import static junit.framework.TestCase.fail;
  * @version 1.0 03.02.2021
  */
 public class GXGraphRandomTest {
+    GXGraph graph;
 
     @Before
     public void setUp() {
@@ -21,7 +22,6 @@ public class GXGraphRandomTest {
 
     @Test
     public void testGenerateInvalidRandomGraph() {
-        GXGraph graph;
         try {
             graph = new GXGraphRandom(GXGraphRandom.MAX_NUMBER_VERTICES + 1, 10, 10, true, true);
         } catch (IllegalArgumentException e) {
@@ -61,9 +61,10 @@ public class GXGraphRandomTest {
     }
 
     @Test
-    public void testGenerateEdges1() {
-        GXGraph graph = new GXGraphRandom(2, 10, 100, true, true);
-        Assert.assertEquals(1, graph.edges().size());
+    public void testGenerateTotalConnectedRndGraph() {
+        graph = new GXGraphRandom(5, 10, GXGraphRandom.MAX_EDGE_PROBABILITY, true, true);
+        Assert.assertEquals(5, graph.vertices().size());
+        Assert.assertEquals(15, graph.edges().size());
     }
     @Ignore
     public void testGenerateEdges2() {
