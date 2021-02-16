@@ -5,16 +5,21 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
 public class GXGraphTest {
     private static final File graphFile = new File("src/test/resources/GraphData/exampleGraph.json");
     GXGraph exampleGraph;
+    private static final File isolateGraphFile = new File("src/test/resources/GraphData/isolatesGraph.json");
+    GXGraph isolateExampleGraph;
 
     @Before
     public void setUp() throws Exception {
         exampleGraph = new GXGraph(graphFile);
+        isolateExampleGraph = new GXGraph(isolateGraphFile);
     }
 
     @Test
@@ -137,15 +142,80 @@ public class GXGraphTest {
         assertEquals(3, graph.numEdges());
     }
 
+    /**
+     * Checks whether the correct exception is thrown if, the vertex passed to the incidentEdges method is null.
+     * @throws ElementNotInGraphException expected since not in graph
+     */
+    @Test(expected = ElementNotInGraphException.class)
+    public void testIncidentEdgesNull() throws ElementNotInGraphException {
+        exampleGraph.incidentEdges(null);
+    }
+
+    /**
+     * Checks whether the correct Exception is thrown when calling incidentEdges with a vertex not in graph
+     * @throws ElementNotInGraphException expected since not in graph
+     */
+    @Test(expected = ElementNotInGraphException.class)
+    public void testIncidentEdgesNotInGraph() throws ElementNotInGraphException {
+        exampleGraph.incidentEdges(new GXVertex("AB", 100, null));
+    }
+
+    /**
+     * Incident edges should return empty collection if the vertex passed is an isolate vertex.
+     */
+    @Test
+    public void testIncidentEdgesNoIncidents() {
+        GXVertex isolate = isolateExampleGraph.getVertex(1);
+        assertNotNull(isolate);
+        try {
+            assertTrue(isolateExampleGraph.incidentEdges(isolate).isEmpty());
+        } catch (ElementNotInGraphException e) {
+            fail();
+        }
+    }
 
     @Test
-    public void testVerticesEmptyGraph() {
+    public void testIncidentEdgesAllEdges() {
+        //getting the first vertex. should not be null
+        GXVertex vert0 = isolateExampleGraph.getVertex(0);
+        assertNotNull(vert0);
+        //Adding edges to all other vertices.
+        for (GXVertex vertex : isolateExampleGraph.vertices()) {
+            try {
+                //TODO allow null as element
+               GXEdge newEdge = isolateExampleGraph.insertEdge(vert0, vertex, "1");
+                assertEquals(newEdge, isolateExampleGraph.getEdge(vertex, vert0));
+            } catch (ElementNotInGraphException e) {
+                fail(vertex.getId() + " not in graph");
+            }
+        }
+        //Same number of vertices as edges for each new vertices
+        assertEquals(isolateExampleGraph.numVertices(), isolateExampleGraph.numEdges());
+        try {
+            //correct number of incident edges
+            assertEquals(isolateExampleGraph.numVertices(),
+                    isolateExampleGraph.incidentEdges(vert0).size());
+        } catch (ElementNotInGraphException e) {
+            fail("vert not in Graph");
+        }
+        //TODO more checking
 
+    }
+
+    /**
+     * Checking that the returned vertices for an empty graph are actually an empty list and not null.
+     */
+    @Test
+    public void testVerticesEmptyGraph() {
+        GXGraph emptyGraph = new GXGraph();
+        LinkedList<GXVertex> vertices = new LinkedList<>();
+        assertEquals(vertices, emptyGraph.vertices() );
     }
 
 
     @After
     public void tearDown() throws Exception {
         exampleGraph = null;
+        isolateExampleGraph = null;
     }
 }
