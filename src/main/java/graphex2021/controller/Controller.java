@@ -560,6 +560,8 @@ public class Controller {
         propertyWindow.setTitle("Random Graph Generator");
         propertyWindow.initOwner(primaryStage);
         propertyWindow.setScene(newScene);
+        PropWinController ctr = loader.getController();
+        ctr.initText();
         propertyWindow.showAndWait();
         if (PropWinController.lastGenerationSuccessful()) {
             loadNewGraphView(PropWinController.getLastGeneratedGraph());
