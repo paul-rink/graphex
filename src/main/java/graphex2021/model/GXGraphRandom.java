@@ -12,15 +12,13 @@ public class GXGraphRandom extends GXGraph {
      */
     public static final int MAX_NUMBER_VERTICES = VertexLabel.values().length;
     /**
-     * is the maximal number of vertices a random graph can exist of depending on Labels existing for vertices.
+     * is the minimum number of vertices a random graph can exist of. 2 because of starting and ending vertex.
      */
-    public static final int MIN_NUMBER_VERTICES = 1;
+    public static final int MIN_NUMBER_VERTICES = 2;
     /**
      * Choose p between 0 and {@link GXGraphRandom#MAX_EDGE_PROBABILITY}
      */
     public static final int MAX_EDGE_PROBABILITY = 100;
-
-    public static final int MIN_EDGE_WEIGHT = 1;
 
     /**
      * Choose p between {@link GXGraphRandom#MIN_EDGE_PROBABILITY} and {@link GXGraphRandom#MAX_EDGE_PROBABILITY}
@@ -28,9 +26,18 @@ public class GXGraphRandom extends GXGraph {
     public static final int MIN_EDGE_PROBABILITY = 1;
 
     /**
+     * minimum weight for edges
+     */
+    public static final int MIN_EDGE_WEIGHT = 1;
+    /**
+     * maximum weight for edges
+     */
+    public static final int MAX_EDGE_WEIGHT = 100;
+
+    /**
      * maximum tries for searching for a position
      */
-    private static final int MAX_TRIES = 10000;
+    private static final int MAX_TRIES = 1000;
 
     private static int radiusSqr;
 
@@ -60,7 +67,13 @@ public class GXGraphRandom extends GXGraph {
     public GXGraphRandom(int numVertices, int maxWeight, int p, boolean isolatedAllowed, boolean avoidClustering) {
         super();
         if (numVertices > MAX_NUMBER_VERTICES || numVertices < MIN_NUMBER_VERTICES) {
-            throw new IllegalArgumentException("Maximum amount of vertices = " + MAX_NUMBER_VERTICES);
+            throw new IllegalArgumentException("invalid number of vertices");
+        }
+        if (maxWeight > MAX_EDGE_WEIGHT || maxWeight < MIN_EDGE_WEIGHT) {
+            throw new IllegalArgumentException("Invalid edge weights");
+        }
+        if (p > MAX_EDGE_PROBABILITY || p < MIN_EDGE_PROBABILITY) {
+            throw new IllegalArgumentException("invalid probability");
         }
         //very magic try to find a good pushing factor or make it possible to get it from user input
         int radius = GXPosition.POSITION_RANGE / 5;
