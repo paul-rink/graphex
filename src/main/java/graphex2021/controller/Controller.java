@@ -61,6 +61,7 @@ public class Controller {
     private DisplayModel displayModel;
 
     private GXTableView gxTable;
+    private Stage tableStage;
 
     private boolean debugMode;
 
@@ -191,14 +192,19 @@ public class Controller {
         displayModel.register(gxTable);
     }
 
+
     /**
      * Sets the table to be visible on the menuitem being pressed
      */
     @FXML
     private void showTable() {
+        //window of primary stage
+        Window primaryWindow = finish.getScene().getWindow();
         Stage tableStage = new Stage();
         tableStage.setTitle("Tabelle");
         tableStage.setScene(new Scene(new VBox(gxTable)));
+        //table window is bound to main window, so when main window closes, table window should close as well
+        tableStage.initOwner(primaryWindow);
         tableStage.show();
     }
 
@@ -498,6 +504,8 @@ public class Controller {
      * @param file json that the new view should be loaded from.
      */
     private void loadNewGraphView(File file) {
+        //close existing table view window
+        if (tableStage != null && tableStage.isShowing()) tableStage.close();
         Group parent = (Group) graphView.getParent();
         //final Pane parent = (Pane) graphView.getParent();
 
