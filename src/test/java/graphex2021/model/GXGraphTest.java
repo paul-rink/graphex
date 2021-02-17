@@ -174,6 +174,9 @@ public class GXGraphTest {
         }
     }
 
+    /**
+     * Testing whether all the edges that are incident to a vertex are correctly added returned here
+     */
     @Test
     public void testIncidentEdgesAllEdges() {
         //getting the first vertex. should not be null
@@ -184,7 +187,7 @@ public class GXGraphTest {
             try {
                 //TODO allow null as element
                GXEdge newEdge = isolateExampleGraph.insertEdge(vert0, vertex, "1");
-                assertEquals(newEdge, isolateExampleGraph.getEdge(vertex, vert0));
+               assertEquals(newEdge, isolateExampleGraph.getEdge(vertex, vert0));
             } catch (ElementNotInGraphException e) {
                 fail(vertex.getId() + " not in graph");
             }
@@ -198,9 +201,65 @@ public class GXGraphTest {
         } catch (ElementNotInGraphException e) {
             fail("vert not in Graph");
         }
-        //TODO more checking
-
+        //All the edges in incidents visible contain vert0
+        try {
+            for (GXEdge edge : isolateExampleGraph.incidentEdges(vert0)) {
+                assertTrue(edge.contains(vert0));
+            }
+        } catch (ElementNotInGraphException e) {
+            fail();
+        }
     }
+
+
+    /**
+     * Elements not in graph check adjacent
+      * @throws ElementNotInGraphException
+     */
+    @Test (expected = ElementNotInGraphException.class)
+    public void testAreAdjacentNotInGraph() throws ElementNotInGraphException {
+        GXVertex vertexA = new GXVertex("ABC", 1111, null);
+        GXVertex vertexB = exampleGraph.getVertex(1);
+        exampleGraph.areAdjacent(vertexA, vertexB);
+    }
+
+    /**
+     * Checks correctly throwing Exception when vertex is null
+     * @throws ElementNotInGraphException when vertex is null should be thrown
+     */
+    @Test (expected = ElementNotInGraphException.class)
+    public void testAreAdjacentNull() throws ElementNotInGraphException {
+        exampleGraph.areAdjacent(null, null);
+    }
+
+    /**
+     * A vertex should not be adjacent to itself.
+     */
+    @Test
+    public void testAreAdjacentSameVertex() {
+        GXVertex vertex = exampleGraph.getVertex(1);
+        try {
+            assertFalse(exampleGraph.areAdjacent(vertex, vertex));
+        } catch (ElementNotInGraphException e) {
+            fail();
+        }
+    }
+
+    /**
+     * Checks if for every edge the vertices are correctly marked as adjacent
+     */
+    @Test
+    public void testAreAdjacentAllEdges() {
+        for (GXEdge edge : exampleGraph.edges()) {
+            try {
+                assertTrue(exampleGraph.areAdjacent(edge.vertices()[0], edge.vertices()[1]));
+                assertTrue(exampleGraph.areAdjacent(edge.vertices()[1], edge.vertices()[0]));
+            } catch (ElementNotInGraphException e) {
+                fail();
+            }
+        }
+    }
+
 
     /**
      * Checking that the returned vertices for an empty graph are actually an empty list and not null.
@@ -210,6 +269,26 @@ public class GXGraphTest {
         GXGraph emptyGraph = new GXGraph();
         LinkedList<GXVertex> vertices = new LinkedList<>();
         assertEquals(vertices, emptyGraph.vertices() );
+    }
+
+    /**
+     * Checking for correct exception to be thrown whe the passed vertex is null
+     * @throws ElementNotInGraphException if element not in graph
+     */
+    @Test (expected = ElementNotInGraphException.class)
+    public void testOppositeVertexNull() throws ElementNotInGraphException {
+        GXEdge edge = exampleGraph.getEdge(1);
+        exampleGraph.opposite(null,edge);
+    }
+
+    /**
+     * Checking for correct behaviour if passed edge is null.
+     * @throws ElementNotInGraphException
+     */
+    @Test (expected = ElementNotInGraphException.class)
+    public void testOppositeVertexEdgeNull() throws ElementNotInGraphException {
+        GXVertex vertex = exampleGraph.getVertex(0);
+        exampleGraph.opposite(vertex, null);
     }
 
 
