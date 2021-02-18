@@ -17,10 +17,10 @@ public class InteractionDialog extends Dialog<Void> {
     }
 
     private String generateContextText() {
-        String text = "";
+        StringBuilder text = new StringBuilder();
         for (Interaction action : Interaction.values()) {
-            text += action.getAction() + " - " + action.getText() + "\n";
+            text.append(action.getAction()).append(" - ").append(action.getText()).append("\n");
         }
-        return text;
+        return text.toString();
     }
 }
