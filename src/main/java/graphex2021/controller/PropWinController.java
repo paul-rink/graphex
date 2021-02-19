@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  * @version 1.0 03.02.2021
  */
 public class PropWinController {
-    private static final String PATTERN_INTEGER = "[0-9]+";
+    private static final String PATTERN_INTEGER = "[^0-9][+-]?[0-9]{1,9}[^0-9]\n";
     private static GXGraph rndGraph = null;
     private static boolean ready = false;
 
