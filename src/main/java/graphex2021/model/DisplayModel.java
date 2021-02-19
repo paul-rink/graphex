@@ -30,6 +30,8 @@ public class DisplayModel extends Subject {
     private GXGraph graph;
     private GXGraph visibleGraph;
 
+    private boolean temporaryMarking = false;
+
     /**
      * Standard constructor fpr DisplayModel. This will init a model with a standard graph {@code EXAMPLEGRAPH}.
      * @throws WrongFileFormatException in case the default graph file does not match the correct format
@@ -112,10 +114,7 @@ public class DisplayModel extends Subject {
             }
         }
         notifyObservers();
-
-        // Reset the the components so that the they are not marked as hints after next selection.
-        hintStep.getSelectedVertex().setHint(false);
-        hintStep.getSelectedEdge().setHint(false);
+        temporaryMarking = true;
     }
 
     /**
@@ -194,7 +193,28 @@ public class DisplayModel extends Subject {
      * @return the graph containing all visible edges and vertices.
      */
     public GXGraph getState() {
+        if (temporaryMarking) {
+            resetHighlighted();
+            // Now all the temporary markings are removed
+            temporaryMarking = false;
+        }
         return this.visibleGraph;
+    }
+
+    /**
+     * Resets the state of vertices and edges that are temporarily marked or highlighted.
+     */
+    private void resetHighlighted() {
+        for (GXEdge edge : graph.edges()) {
+            if (edge.isHint() || edge.isHighlighted()) {
+                edge.setHint(false);
+                edge.setHighlighted(false);
+            }
+        }
+        for (GXVertex vertex : visibleGraph.vertices()) {
+            vertex.setHint(false);
+        }
+
     }
 
     /**
@@ -259,11 +279,7 @@ public class DisplayModel extends Subject {
             }
         }
         notifyObservers();
-
-        //reset vertex property, that they are no longer highlighted for further steps
-        for (GXEdge e: highlightedEdges) {
-            e.setHighlighted(false);
-        }
+        temporaryMarking = true;
     }
 
     /**
