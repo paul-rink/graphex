@@ -25,7 +25,7 @@
          <font>
             <Font name="System Bold" size="14.0" />
          </font></CheckBox>
-      <Button fx:id="generateButton" layoutX="103.0" layoutY="483.0" mnemonicParsing="false" onAction="#onGenerate" text="Generate Graph">
+      <Button fx:id="generateButton" layoutX="103.0" layoutY="483.0" mnemonicParsing="false" onAction="#onGenerate" text="Graph generieren">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>

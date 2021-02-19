@@ -165,7 +165,7 @@ public class Controller {
         if (!finText.matches(PATTERN_FIN_TEXT)) {
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Ungültige Eingabe!");
-            alert.setContentText("Du musst noch die kürzeste Distanz zum Ziel im Textfeld eintragen.");
+            alert.setContentText("Du musst noch die kürzeste Distanz zum Ziel eintragen.");
         } else {
             int finalDist = Integer.parseInt(finTextField.getText());
             if (displayModel.checkFoundShortestPath(finalDist)) {
@@ -176,7 +176,7 @@ public class Controller {
             } else {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Noch nicht!");
-                alert.setContentText("Du hast noch keinen kürzesten Weg zum Ziel gefunden, versuche es noch weiter!");
+                alert.setContentText("Du hast noch keinen kürzesten Weg zum Ziel gefunden,\nversuche es noch weiter!");
             }
         }
         alert.show();
