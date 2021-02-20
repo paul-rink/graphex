@@ -466,6 +466,41 @@ public class GXGraphTest {
         }
     }
 
+    @Test
+    public void testUnblock() {
+        int vertexID = new Random().nextInt(exampleGraph.numVertices());
+        GXVertex exampleGraphVertex = exampleGraph.getVertex(vertexID);
+        exampleGraphVertex.mark();
+        try {
+            //Neighbours are marked
+            for (GXVertex vertex : exampleGraph.getNeighbors(exampleGraphVertex)) {
+                vertex.mark();
+            }
+            exampleGraph.blockCircles(exampleGraphVertex);
+            for (GXVertex vertex : exampleGraph.getNeighbors(exampleGraphVertex)) {
+                //Asserting the edges are all blocked as they should be
+                assertTrue(exampleGraph.getEdge(vertex, exampleGraphVertex).isBlocked());
+            }
+            exampleGraph.unblock(exampleGraphVertex);
+            for (GXVertex vertex : exampleGraph.getNeighbors(exampleGraphVertex)) {
+                //Asserting the edges are now all correctly unblocked
+                assertFalse(exampleGraph.getEdge(vertex, exampleGraphVertex).isBlocked());
+            }
+        } catch (ElementNotInGraphException e) {
+            fail("randomVertex not in graph");
+        }
+    }
+
+    @Test (expected =  ElementNotInGraphException.class)
+    public void testUnblockNull() throws ElementNotInGraphException {
+        exampleGraph.unblock(null);
+    }
+
+    @Test (expected =  ElementNotInGraphException.class)
+    public void testUnblockNotInGraph() throws ElementNotInGraphException {
+        exampleGraph.unblock(new GXVertex(null, -1, null));
+    }
+
 
 
     @After

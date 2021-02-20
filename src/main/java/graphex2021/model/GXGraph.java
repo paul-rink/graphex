@@ -211,6 +211,7 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public void blockCircles(GXVertex vertex) throws ElementNotInGraphException {
+        checkVertex(vertex);
         if (vertex.isMarked()) {
             for (GXEdge edge : incidentEdges(vertex)) {
                 if (opposite(vertex, edge).isMarked()) {
@@ -227,7 +228,8 @@ public class GXGraph implements GraphInterface<String, String> {
      * @param vertex the vertex whose edges should be unblocked
      * @throws ElementNotInGraphException if the vertex is not in the graph
      */
-    public void unblock (GXVertex vertex) throws ElementNotInGraphException {
+    public void unblock(GXVertex vertex) throws ElementNotInGraphException {
+        checkVertex(vertex);
         for (GXEdge edge : incidentEdges(vertex)) {
             edge.setBlocked(false);
         }
