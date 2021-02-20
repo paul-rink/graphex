@@ -211,9 +211,11 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public void blockCircles(GXVertex vertex) throws ElementNotInGraphException {
-        for (GXEdge edge : incidentEdges(vertex)) {
-            if (opposite(vertex, edge).isMarked()) {
-                edge.setBlocked(true);
+        if (vertex.isMarked()) {
+            for (GXEdge edge : incidentEdges(vertex)) {
+                if (opposite(vertex, edge).isMarked()) {
+                    edge.setBlocked(true);
+                }
             }
         }
     }
