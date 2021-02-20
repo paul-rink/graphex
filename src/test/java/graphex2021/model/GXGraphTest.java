@@ -502,22 +502,22 @@ public class GXGraphTest {
     }
 
     @Test (expected = ElementNotInGraphException.class)
-    public void testSetStartingVertexNull() {
+    public void testSetStartingVertexNull() throws ElementNotInGraphException {
         exampleGraph.setStartingVertex(null);
     }
 
     @Test (expected = ElementNotInGraphException.class)
-    public void testSetStartingVertexNotInGraph() {
+    public void testSetStartingVertexNotInGraph() throws ElementNotInGraphException {
         exampleGraph.setStartingVertex(new GXVertex(null, -1, null));
     }
 
     @Test (expected = ElementNotInGraphException.class)
-    public void testSetEndingVertexNull() {
+    public void testSetEndingVertexNull() throws ElementNotInGraphException {
         exampleGraph.setEndingVertex(null);
     }
 
     @Test (expected = ElementNotInGraphException.class)
-    public void testSetEndingVertexNotInGraph() {
+    public void testSetEndingVertexNotInGraph() throws ElementNotInGraphException {
         exampleGraph.setEndingVertex(new GXVertex(null, -1, null));
     }
 

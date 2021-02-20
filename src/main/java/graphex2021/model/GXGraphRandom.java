@@ -112,8 +112,12 @@ public class GXGraphRandom extends GXGraph {
             s = new Random().nextInt(max);
             z = new Random().nextInt(max);
         }
-        setStartingVertex(vertices.get(s));
-        setEndingVertex(vertices.get(z));
+        try {
+            setStartingVertex(vertices.get(s));
+            setEndingVertex(vertices.get(z));
+        } catch (ElementNotInGraphException eni) {
+            eni.printStackTrace();
+        }
     }
 
     /**

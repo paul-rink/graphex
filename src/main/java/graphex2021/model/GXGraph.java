@@ -255,13 +255,15 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public void setStartingVertex(GXVertex v) {
+    public void setStartingVertex(GXVertex v) throws ElementNotInGraphException {
+        checkVertex(v);
         this.startingVertex = v;
         this.startingVertex.setType(GXVertexType.STARTING);
     }
 
     @Override
-    public void setEndingVertex(GXVertex v) {
+    public void setEndingVertex(GXVertex v) throws ElementNotInGraphException {
+        checkVertex(v);
         this.endingVertex = v;
         this.endingVertex.setType(GXVertexType.ENDING);
     }

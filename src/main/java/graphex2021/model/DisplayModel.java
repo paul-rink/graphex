@@ -393,8 +393,8 @@ public class DisplayModel extends Subject {
         start.setVisible(true);
         start.setCurrentDistance(INIT_DISTANCE);
         visibleGraph.insertVertex(start);
-        visibleGraph.setStartingVertex(start);
         try {
+            visibleGraph.setStartingVertex(start);
             updateCurrentDistancesForIncidents(start);
             for (GXEdge edge : graph.incidentEdges(start)) {
                 GXVertex toIns = edge.getNextVertex();
@@ -414,8 +414,12 @@ public class DisplayModel extends Subject {
 
         final GXVertex end =  graph.getEndingVertex();
         end.setVisible(true);
-        visibleGraph.insertVertex(end);
-        visibleGraph.setEndingVertex(end);
+        try {
+            visibleGraph.insertVertex(end);
+            visibleGraph.setEndingVertex(end);
+        } catch (ElementNotInGraphException eni) {
+            eni.printStackTrace();
+        }
     }
 
     /**

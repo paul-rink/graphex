@@ -165,13 +165,13 @@ public interface GraphInterface<V, E> {
      * Sets v as starting vertex of the graph. Is needed by some algos.
      * @param v is the vertex that should be the starting vertex.
      */
-    void setStartingVertex(GXVertex v);
+    void setStartingVertex(GXVertex v) throws ElementNotInGraphException;
 
     /**
      * Sets v as ending vertex of the graph. Is needed by some algos.
      * @param v is the vertex that should be the ending vertex.
      */
-    void setEndingVertex(GXVertex v);
+    void setEndingVertex(GXVertex v) throws ElementNotInGraphException;
 
 
 }
