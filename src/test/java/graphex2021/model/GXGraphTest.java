@@ -521,6 +521,31 @@ public class GXGraphTest {
         exampleGraph.setEndingVertex(new GXVertex(null, -1, null));
     }
 
+    @Test
+    public void testSetStartingVertex() {
+        int vertexID = new Random().nextInt(exampleGraph.numVertices());
+        GXVertex exampleGraphVertex = exampleGraph.getVertex(vertexID);
+        try {
+            exampleGraph.setStartingVertex(exampleGraphVertex);
+        } catch (ElementNotInGraphException e) {
+            fail("Vertex was wrong");
+        }
+        assertEquals(exampleGraphVertex, exampleGraph.getStartingVertex());
+    }
+
+    @Test
+    public void testSetEndingVertex() {
+        int vertexID = new Random().nextInt(exampleGraph.numVertices());
+        GXVertex exampleGraphVertex = exampleGraph.getVertex(vertexID);
+        try {
+            exampleGraph.setEndingVertex(exampleGraphVertex);
+        } catch (ElementNotInGraphException e) {
+            fail("Vertex was wrong");
+        }
+        assertEquals(exampleGraphVertex, exampleGraph.getEndingVertex());
+
+    }
+
 
 
 
