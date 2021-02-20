@@ -5,27 +5,32 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
 public class GXGraphTest {
-    private static final File graphFile = new File("src/test/resources/GraphData/exampleGraph.json");
-    GXGraph exampleGraph;
-    private static final File isolateGraphFile = new File("src/test/resources/GraphData/isolatesGraph.json");
-    GXGraph isolateExampleGraph;
+    private static final File GRAPH_FILE = new File("src/test/resources/GraphData/exampleGraph.json");
+    private static final File ISOLATE_GRAPH_FILE = new File("src/test/resources/GraphData/isolatesGraph.json");
+    private GXGraph exampleGraph;
+    private GXGraph isolateExampleGraph;
 
     @Before
     public void setUp() throws Exception {
-        exampleGraph = new GXGraph(graphFile);
-        isolateExampleGraph = new GXGraph(isolateGraphFile);
+        exampleGraph = new GXGraph(GRAPH_FILE);
+        isolateExampleGraph = new GXGraph(ISOLATE_GRAPH_FILE);
+    }
+
+
+    @Test (expected = WrongFileFormatException.class)
+    public void testGXGraphConstructorWrongFile() throws WrongFileFormatException {
+        GXGraph graph = new GXGraph(new File("src/test/resources/GraphData/noVertices.json"));
     }
 
     @Test
     public void testGXGraphConstructor() {
         try {
-            exampleGraph = new GXGraph(graphFile);
+            exampleGraph = new GXGraph(GRAPH_FILE);
         } catch (WrongFileFormatException e) {
             e.printStackTrace();
         }
@@ -96,14 +101,22 @@ public class GXGraphTest {
      * Checking whether the number of edges and vertices are correctly returned for an empty graph
      */
     @Test
-    public void testNumVerticesEdgesEmptyGraph(){
+    public void testNumVerticesEdgesEmptyGraph() {
         GXGraph test = new GXGraph();
         assertEquals(0, test.numVertices());
         assertEquals(0, test.numEdges());
     }
 
-
-
+    @Test
+    public void testInsertEdgeDuplicateID() {
+        GXEdge testInsert = new GXEdge(exampleGraph.getVertex(1)
+                , exampleGraph.getVertex(5), null, 5, 0 );
+        try {
+            assertEquals(exampleGraph.getEdge(0), exampleGraph.insertEdge(testInsert));
+        } catch (ElementNotInGraphException e) {
+            fail();
+        }
+    }
 
     /**
      * Checks if the number of edges and vertices remains correct after they are added to an empty graph.
@@ -289,6 +302,33 @@ public class GXGraphTest {
     public void testOppositeVertexEdgeNull() throws ElementNotInGraphException {
         GXVertex vertex = exampleGraph.getVertex(0);
         exampleGraph.opposite(vertex, null);
+    }
+
+    /**
+     * Checks whether null is correctly returned if the edge does not contain the vertex.
+     */
+    @Test
+    public void testOppositeVertexEdgeNotContainingVertex() {
+        try {
+            assertNull(exampleGraph.opposite(exampleGraph.getVertex(0), exampleGraph.getEdge(5)));
+        } catch (ElementNotInGraphException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void testOppositeVertexBothVertices() {
+        GXVertex vertex = exampleGraph.getVertex(0);
+        GXVertex vertex1 = exampleGraph.getVertex(1);
+
+        try {
+            GXEdge edge = exampleGraph.getEdge(vertex, vertex1);
+            assertEquals(vertex1, exampleGraph.opposite(vertex, edge));
+            assertEquals(vertex, exampleGraph.opposite(vertex1, edge));
+        } catch (ElementNotInGraphException e) {
+            fail("No edge between the vertices");
+        }
+
     }
 
 
