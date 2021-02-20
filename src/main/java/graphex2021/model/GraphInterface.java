@@ -160,15 +160,6 @@ public interface GraphInterface<V, E> {
      */
     Collection<GXVertex> getNeighbors(GXVertex v) throws ElementNotInGraphException;
 
-    /**
-     * Sets the passed edge invisible and checks which vertices and edges should now be invisible as well
-     *
-     *
-     * @param vertex that was made visible by the passed edge
-     * @param edge that will be set invisible f
-     * @throws ElementNotInGraphException if either vertex or edge are not in the vertex
-     */
-    void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException;
 
     /**
      * Sets v as starting vertex of the graph. Is needed by some algos.

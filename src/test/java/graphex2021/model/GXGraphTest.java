@@ -502,7 +502,6 @@ public class GXGraphTest {
     }
 
 
-
     @After
     public void tearDown() throws Exception {
         exampleGraph = null;

@@ -255,27 +255,6 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException {
-        //Also
-        checkEdge(edge);
-        checkVertex(vertex);
-        //Checking all the incident edges
-        for (GXEdge incidentEdge : incidentEdges(vertex)) {
-            //If the edge should not be visible the vertex at the other end needs to be checked
-            if (!shouldBeVisible(incidentEdge)) {
-                //Set the checked edge invisible
-                incidentEdge.setVisible(false);
-                //Now to check the opposite vertices of the unmarked vertex
-                GXVertex toCheck = opposite(vertex, incidentEdge);
-                if (!shouldBeVisible(toCheck)) {
-                    //Set the visibility to false, if the vertex has no opposite vertices, that is marked
-                    toCheck.setVisible(false);
-                }
-            }
-        }
-    }
-
-    @Override
     public void setStartingVertex(GXVertex v) {
         this.startingVertex = v;
         this.startingVertex.setType(GXVertexType.STARTING);
@@ -372,41 +351,6 @@ public class GXGraph implements GraphInterface<String, String> {
     private boolean vertexInGraph(Integer id) {
         return vertices.containsKey(id);
     }
-
-
-    /**
-     * Will chekc if an edge should bi visible in the current state of the graph
-     *
-     * @param edge the edge you want to check whether it should be visible
-     * @return true if it should be visible. False else
-     */
-    private boolean shouldBeVisible(GXEdge edge) throws ElementNotInGraphException {
-        checkEdge(edge);
-        //An edge can only be visible if at least one of the vertices is marked
-        return edge.vertices()[0].isMarked() && edge.vertices()[1].isMarked();
-    }
-
-    /**
-     * Will check if a vertex should be visible with the current graph state.
-     *
-     * @param vertex you want to check if it should be visible
-     * @return true if it should be visible, false if not
-     * @throws ElementNotInGraphException if the vertex was not part of the graph.
-     */
-    private boolean shouldBeVisible(GXVertex vertex) throws ElementNotInGraphException {
-        checkVertex(vertex);
-        if (vertex.isMarked()) {
-            return true;
-        }
-        // Checking all the incident edges. A vertex should be visible if it or the opposite vertex is marked
-        for (GXEdge edge : incidentEdges(vertex)) {
-            if (opposite(vertex, edge).isMarked()) {
-                return true;
-            }
-        }
-        // if no opposite vertex is marked it should not be visible
-        return false;
-    }
-
+    
 
 }
