@@ -97,6 +97,9 @@ public final class GraphParser {
                 int edgeId = getNextEdgeId();
                 GXEdge edge = new GXEdge(firstVertex, secondVertex, Integer.toString(edgeWeight), edgeWeight, edgeId);
                 edgeList.add(edge);
+            } else {
+                throw new WrongFileFormatException("JSON enthält Kante aus Knoten, die nicht im Graph sind."
+                        + " Kante zwischen: " + vertexOneName + " und " + vertexTwoName);
             }
         }
         return edgeList;
