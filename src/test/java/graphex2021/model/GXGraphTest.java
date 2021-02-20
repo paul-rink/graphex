@@ -393,12 +393,77 @@ public class GXGraphTest {
     }
 
 
+    /**
+     * Checks whether edges between a passed vertex and a marked neighbour are blocked
+     */
     @Test
     public void testBlockCircles() {
-        Random bool = new Random();
-        int vertex = new Random().nextInt(exampleGraph.numVertices());
-        GXVertex vert = exampleGraph.getVertex(vertex);
-        for ()
+        int vertexID = new Random().nextInt(exampleGraph.numVertices());
+        GXVertex vert = exampleGraph.getVertex(vertexID);
+        vert.mark();
+        try {
+            for (GXVertex vertex : exampleGraph.getNeighbors(vert)) {
+                if (new Random().nextInt(10000) % 2 == 0) {
+                    //Randomly marking adjacent vertices
+                    vertex.mark();
+                }
+            }
+            exampleGraph.blockCircles(vert);
+        } catch (ElementNotInGraphException e) {
+            fail("Random vertex not in graph");
+        }
+        // Checking whether all the edges between the two marked vertices are correctly blocked
+        try {
+            for (GXEdge edge : exampleGraph.incidentEdges(vert)) {
+                if (exampleGraph.opposite(vert, edge).isMarked()) {
+                    assertTrue(edge.isBlocked());
+                } else {
+                    assertFalse(edge.isBlocked());
+                }
+            }
+        } catch (ElementNotInGraphException e) {
+            fail("Vertices not correctly in graph");
+        }
+    }
+
+
+    @Test (expected = ElementNotInGraphException.class)
+    public void testBlockCirclePassedVertexNull() throws ElementNotInGraphException {
+        exampleGraph.blockCircles(null);
+    }
+
+    @Test (expected = ElementNotInGraphException.class)
+    public void testBlockCirclePassedVertexNotInGraph() throws ElementNotInGraphException {
+        exampleGraph.blockCircles(new GXVertex(null, -1, null));
+    }
+
+    /**
+     * If the passed vertex is not marked no adjacent edges should be blocked
+     */
+    @Test
+    public void testBLockCirclePassedVertexNotMarked() {
+        int vertexID = new Random().nextInt(exampleGraph.numVertices());
+        // Vertex itSelf is not marked
+        GXVertex vert = exampleGraph.getVertex(vertexID);
+        try {
+            for (GXVertex vertex : exampleGraph.getNeighbors(vert)) {
+                vertex.mark();
+            }
+            exampleGraph.blockCircles(vert);
+        } catch (ElementNotInGraphException e) {
+            fail("Random vertex not in graph");
+        }
+        // Checking whether all the edges between the two marked vertices are not blocked
+        // since the passed vertex is not marked
+        try {
+            for (GXEdge edge : exampleGraph.incidentEdges(vert)) {
+                if (exampleGraph.opposite(vert, edge).isMarked()) {
+                    assertFalse(edge.isBlocked());
+                }
+            }
+        } catch (ElementNotInGraphException e) {
+            fail("Vertices not correctly in graph");
+        }
     }
 
 
