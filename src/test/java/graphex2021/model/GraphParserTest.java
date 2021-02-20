@@ -146,7 +146,7 @@ public class GraphParserTest {
             parser.parseVertices(null);
         } catch (WrongFileFormatException e) {
             String message = e.getMessage();
-            if(!expected.equals(message)) {
+            if (!expected.equals(message)) {
                 fail();
             }
         }
@@ -155,7 +155,7 @@ public class GraphParserTest {
     @Test
     public void testNotGXGraph() {
         String expected = "required key";
-        try{
+        try {
             parser.parseVertices(copy_GRAPH_MISSING_ATTRIBUTE);
             } catch (WrongFileFormatException e) {
             if (!e.getMessage().contains(expected)) {
@@ -167,10 +167,10 @@ public class GraphParserTest {
     @Test
     public void testNotAJson() {
         String expected = "Expected";
-        try{
+        try {
             parser.parseVertices(copy_NOT_JSON);
         } catch (WrongFileFormatException e) {
-            if(!e.getMessage().contains(expected)) {
+            if (!e.getMessage().contains(expected)) {
                 fail();
             }
         }

@@ -74,7 +74,6 @@ public class GXGraphRandom extends GXGraph {
     /**
      * Generates random vertices and inserts them to the graph.
      * @param num number if vertices
-     * @return list of generated vertices
      */
     private void generateVertices(int num, boolean avoidClustering) {
         //array of all possible vertex labels, that are accessed via counter
@@ -106,7 +105,7 @@ public class GXGraphRandom extends GXGraph {
         ArrayList<GXVertex> vertices = new ArrayList<>();
         vertices.addAll(vertices());
         int max = vertices.size();
-        int s= 0;
+        int s = 0;
         int z = 0;
         //choose starting and ending vertex random and check that they are not the same
         while(s == z) {

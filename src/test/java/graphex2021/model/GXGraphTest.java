@@ -1,11 +1,14 @@
 package graphex2021.model;
 
+import com.brunomnsilva.smartgraph.graph.Vertex;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
@@ -107,6 +110,9 @@ public class GXGraphTest {
         assertEquals(0, test.numEdges());
     }
 
+    /**
+     * Tests if the edge with the id of the passed edge is returned if it was already in the graph
+     */
     @Test
     public void testInsertEdgeDuplicateID() {
         GXEdge testInsert = new GXEdge(exampleGraph.getVertex(1)
@@ -316,20 +322,85 @@ public class GXGraphTest {
         }
     }
 
+    @Test (expected = ElementNotInGraphException.class)
+    public void testOppositeEdgeNotInGraph() throws ElementNotInGraphException {
+        GXEdge edge = new GXEdge(exampleGraph.getVertex(0), exampleGraph.getVertex(10)
+                , null, 0, 10000);
+            exampleGraph.opposite(exampleGraph.getVertex(0), edge);
+    }
+
+    /**
+     * Tests whether two vertices on an edge are always opposite of each other
+     */
     @Test
     public void testOppositeVertexBothVertices() {
-        GXVertex vertex = exampleGraph.getVertex(0);
-        GXVertex vertex1 = exampleGraph.getVertex(1);
-
         try {
-            GXEdge edge = exampleGraph.getEdge(vertex, vertex1);
-            assertEquals(vertex1, exampleGraph.opposite(vertex, edge));
-            assertEquals(vertex, exampleGraph.opposite(vertex1, edge));
+            for (GXEdge edge : exampleGraph.edges()) {
+                GXVertex vertex = edge.vertices()[0];
+                GXVertex vertex1 = edge.vertices()[1];
+                assertEquals(vertex1, exampleGraph.opposite(vertex, edge));
+                assertEquals(vertex, exampleGraph.opposite(vertex1, edge));
+            }
         } catch (ElementNotInGraphException e) {
             fail("No edge between the vertices");
         }
-
     }
+
+    /**
+     * Tests whether a vertex is correctly removed from graph, as well as its incident edges
+     */
+    @Test
+    public void testRemoveVertex() {
+        ArrayList<Integer> removedEdges = new ArrayList<>();
+        int vertexToBeRemoved = new Random().nextInt(exampleGraph.numVertices());
+        GXVertex vertex = exampleGraph.getVertex(vertexToBeRemoved);
+        ArrayList<Integer> incidentEdges = new ArrayList<>();
+        try {
+            for (GXEdge edge : exampleGraph.incidentEdges(vertex)) {
+                incidentEdges.add(edge.getId());
+            }
+        } catch (ElementNotInGraphException e) {
+            fail("incidents somehow wrong");
+        }
+        try {
+            exampleGraph.removeVertex(vertex);
+        } catch (ElementNotInGraphException e) {
+            fail("vertex not in graph");
+        }
+        for (Integer id : incidentEdges) {
+            //Checking whether the adjacent edges are not in the graph anymore
+            assertNull(exampleGraph.getEdge(id));
+        }
+        //Vertex to be removed not in graph anymore
+        assertNull(exampleGraph.getVertex(vertexToBeRemoved));
+    }
+    /**
+     * Checks whether the correct exception is thrown when the removed vertex is null
+     * @throws ElementNotInGraphException if the vertex null or not in graph
+     */
+    @Test (expected = ElementNotInGraphException.class)
+    public void testRemoveVertexNull() throws ElementNotInGraphException {
+        exampleGraph.removeVertex(null);
+    }
+
+    /**
+     * Checks whether the correct exception is thrown when the removed vertex is not in the graph
+     * @throws ElementNotInGraphException if the vertex null or not in graph
+     */
+    @Test (expected = ElementNotInGraphException.class)
+    public void testRemoveVertexNotInGraph() throws ElementNotInGraphException {
+        exampleGraph.removeVertex(new GXVertex("0", -1, null));
+    }
+
+
+    @Test
+    public void testBlockCircles() {
+        Random bool = new Random();
+        int vertex = new Random().nextInt(exampleGraph.numVertices());
+        GXVertex vert = exampleGraph.getVertex(vertex);
+        for ()
+    }
+
 
 
     @After
