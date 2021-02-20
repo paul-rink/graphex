@@ -141,9 +141,11 @@ public class GXGraph implements GraphInterface<String, String> {
     public boolean areAdjacent(GXVertex vertex, GXVertex vertex1) throws ElementNotInGraphException {
         checkVertex(vertex);
         checkVertex(vertex1);
-        for (GXEdge edge : edges.values()) {
-            if (edge.contains(vertex) && edge.contains(vertex1))  {
-                return true;
+        if (vertex.getId() != vertex1.getId()) {
+            for (GXEdge edge : edges.values()) {
+                if (edge.contains(vertex) && edge.contains(vertex1)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -250,8 +252,6 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException {
-        //TODO test this. Really unsure if correct. Unblock edges here? Also check start and finish still stay visible
-        //TODO can be deleted after implementation in DisplayModel
         //Also
         checkEdge(edge);
         checkVertex(vertex);
