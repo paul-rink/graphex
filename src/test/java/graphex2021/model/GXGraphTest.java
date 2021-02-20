@@ -501,6 +501,28 @@ public class GXGraphTest {
         exampleGraph.unblock(new GXVertex(null, -1, null));
     }
 
+    @Test (expected = ElementNotInGraphException.class)
+    public void testSetStartingVertexNull() {
+        exampleGraph.setStartingVertex(null);
+    }
+
+    @Test (expected = ElementNotInGraphException.class)
+    public void testSetStartingVertexNotInGraph() {
+        exampleGraph.setStartingVertex(new GXVertex(null, -1, null));
+    }
+
+    @Test (expected = ElementNotInGraphException.class)
+    public void testSetEndingVertexNull() {
+        exampleGraph.setEndingVertex(null);
+    }
+
+    @Test (expected = ElementNotInGraphException.class)
+    public void testSetEndingVertexNotInGraph() {
+        exampleGraph.setEndingVertex(new GXVertex(null, -1, null));
+    }
+
+
+
 
     @After
     public void tearDown() throws Exception {
