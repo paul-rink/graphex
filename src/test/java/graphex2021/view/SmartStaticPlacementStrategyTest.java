@@ -6,12 +6,10 @@ import graphex2021.model.GXPosition;
 import graphex2021.model.GXVertex;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -19,7 +17,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
@@ -27,7 +24,7 @@ import static org.mockito.Mockito.verify;
 public class SmartStaticPlacementStrategyTest {
     private static final int WIDTH = 1500;
     private static final int HEIGHT = 1000;
-    private static final int MIN_Width = 1000;
+    private static final int MIN_WIDTH = 1000;
     private static final int MIN_HEIGHT = 667;
 
     private SmartStaticPlacementStrategy strat;
@@ -49,7 +46,7 @@ public class SmartStaticPlacementStrategyTest {
     public void setUp() {
         Random randomPos = new Random();
         strat = new SmartStaticPlacementStrategy();
-        strat.setSizes(WIDTH, HEIGHT, MIN_Width, MIN_HEIGHT);
+        strat.setSizes(WIDTH, HEIGHT, MIN_WIDTH, MIN_HEIGHT);
         //mocking Vertices and the pposition to be returned
         vertexList.add(vertexA);
         Mockito.when(position.getPosition()).thenReturn(
@@ -81,8 +78,32 @@ public class SmartStaticPlacementStrategyTest {
 
         strat.place(width, height, null, vertexList);
 
-        Assert.assertEquals(calcVertexMinXPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_Width), doubleXArgumentCaptor.getValue(), 0.05);
-        Assert.assertEquals(calcVertexMinYPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_HEIGHT), doubleYArgumentCaptor.getValue(), 0.05);
+        Assert.assertEquals(calcVertexMinXPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_WIDTH)
+                , doubleXArgumentCaptor.getValue(), 0.05);
+        Assert.assertEquals(calcVertexMinYPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_HEIGHT)
+                , doubleYArgumentCaptor.getValue(), 0.05);
+    }
+
+    @Test
+    public void testPlaceWindowWide() {
+        final double width = 1600;
+        final double height = 1000;
+
+        final double correctionFactor = (width / height) / ((double) WIDTH / (double) HEIGHT);
+        double xPos = ((gxVertexA.getPosition().getPosition()[0] / 1000.)) * width;
+        double yPos = (gxVertexA.getPosition().getPosition()[1] / 1000.) * height * correctionFactor;
+
+        ArgumentCaptor<Double>  doubleXArgumentCaptor = ArgumentCaptor.forClass(Double.class);
+        ArgumentCaptor<Double>  doubleYArgumentCaptor = ArgumentCaptor.forClass(Double.class);
+
+        doNothing().when(vertexA).setPosition(doubleXArgumentCaptor.capture(), doubleYArgumentCaptor.capture());
+
+        strat.place(width, height, null, vertexList);
+
+        Assert.assertEquals(xPos, doubleXArgumentCaptor.getValue(), 0.05);
+        Assert.assertEquals(yPos, doubleYArgumentCaptor.getValue(), 0.05);
+
+
     }
 
     private double calcVertexMinXPos(GXVertex vertex, double minWidth) {
