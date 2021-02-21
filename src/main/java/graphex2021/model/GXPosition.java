@@ -60,10 +60,10 @@ public class GXPosition {
 
     private void checkValidCoordinates(int x, int y) throws NonValidCoordinatesException{
         if(x < 0 || x > POSITION_RANGE) {
-            throw new NonValidCoordinatesException("Die Koordinate "+ x + "ist nicht erlaubt");
+            throw new NonValidCoordinatesException("Die Koordinate "+ x + " ist nicht erlaubt");
         }
         if(y < 0 || y > POSITION_RANGE) {
-            throw new NonValidCoordinatesException("Die Koordinate "+ y + "ist nicht erlaubt");
+            throw new NonValidCoordinatesException("Die Koordinate "+ y + " ist nicht erlaubt");
         }
     }
 }
