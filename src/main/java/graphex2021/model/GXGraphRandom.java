@@ -39,7 +39,7 @@ public class GXGraphRandom extends GXGraph {
      */
     private static final int MAX_TRIES = 1000;
 
-    private static int radiusSqr;
+    private static int radiusSquare;
 
     /**
      * Holds all generated positions.
@@ -77,7 +77,7 @@ public class GXGraphRandom extends GXGraph {
         }
         //very magic try to find a good pushing factor or make it possible to get it from user input
         int radius = GXPosition.POSITION_RANGE / 5;
-        radiusSqr = radius * radius;
+        radiusSquare = radius * radius;
         generateVertices(numVertices, avoidClustering);
         setStartingAndEndingVertex();
         if (!isolatedAllowed) generateRndTree(maxWeight);
@@ -245,7 +245,7 @@ public class GXGraphRandom extends GXGraph {
      */
     private boolean conflicts(GXPosition rndPosition) {
         for (GXPosition pos : positionSet) {
-            if (calcSquDistance(rndPosition, pos) < radiusSqr) {
+            if (calcSquDistance(rndPosition, pos) < radiusSquare) {
                 return true;
             }
         }
@@ -263,12 +263,13 @@ public class GXGraphRandom extends GXGraph {
         int y1 = p1.getPosition()[1];
         int x2 = p2.getPosition()[0];
         int y2 = p2.getPosition()[1];
-        return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 -y1);
+        int distance = ((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1));
+        return distance;
     }
 
     private int randomCoordinateGenerator() {
-        // margin to border of window 1% of total window
-        int margin = GXPosition.POSITION_RANGE / 100;
+        // margin to border of window 5% of total window
+        int margin = GXPosition.POSITION_RANGE / 20;
         return new Random().nextInt(GXPosition.POSITION_RANGE - 2 * margin) + margin;
     }
 
