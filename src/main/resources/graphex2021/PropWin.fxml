@@ -7,13 +7,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="537.0" prefWidth="321.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.PropWinController">
+<AnchorPane prefHeight="537.0" prefWidth="333.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.PropWinController">
    <children>
       <TextField fx:id="numVerticesText" layoutX="227.0" layoutY="20.0" prefHeight="26.0" prefWidth="59.0" text="10">
          <font>
             <Font name="System Italic" size="12.0" />
          </font></TextField>
-      <Text layoutX="14.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Number of vertices " wrappingWidth="181.6417694091797">
+      <Text layoutX="14.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Knotenanzahl" wrappingWidth="181.6417694091797">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Text>
@@ -21,42 +21,43 @@
          <font>
             <Font name="System Italic" size="12.0" />
          </font></TextField>
-      <CheckBox fx:id="allowIsolates" layoutX="14.0" layoutY="393.0" mnemonicParsing="false" text="Allow isolates">
+      <CheckBox fx:id="allowIsolates" layoutX="14.0" layoutY="409.0" mnemonicParsing="false" text="Erlaube isolierte Knoten">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></CheckBox>
-      <Button fx:id="generateButton" layoutX="90.0" layoutY="471.0" mnemonicParsing="false" onAction="#onGenerate" text="Generate Graph">
+      <Button fx:id="generateButton" layoutX="103.0" layoutY="483.0" mnemonicParsing="false" onAction="#onGenerate" text="Graph generieren">
          <font>
             <Font name="System Bold" size="14.0" />
          </font></Button>
-      <Text layoutX="14.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edge density (%)" wrappingWidth="181.6417694091797">
+      <Text layoutX="14.0" layoutY="184.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kantendichte (%)" wrappingWidth="181.6417694091797">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Text>
-      <Text layoutX="14.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="min value: 1" wrappingWidth="181.6417694091797" />
-      <Text layoutX="14.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="max value: 26" wrappingWidth="181.6417694091797" />
-      <Text layoutX="14.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="min value: 1" wrappingWidth="181.6417694091797" />
-      <Text layoutX="14.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="max value: 100" wrappingWidth="181.6417694091797" />
-      <Text layoutX="14.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Choose values between 5 and 20. Higher values might result in very complex graphs." wrappingWidth="276.9751281738281" />
-      <Text layoutX="14.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Max. weight" wrappingWidth="181.6417694091797">
+      <Text fx:id="numVerticesMinText" layoutX="14.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimum: 2" wrappingWidth="181.6417694091797" />
+      <Text fx:id="numVerticesMaxText" layoutX="14.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maximum 26" wrappingWidth="181.6417694091797" />
+      <Text fx:id="pMinText" layoutX="14.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimum: 1" wrappingWidth="181.6417694091797" />
+      <Text fx:id="pMaxText" layoutX="14.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maximum: 100" wrappingWidth="181.6417694091797" />
+      <Text layoutX="14.0" layoutY="245.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hinweis: Große Werte (&gt;15) können in sehr komplexen Graphen resultieren." wrappingWidth="276.9751281738281" />
+      <Text layoutX="14.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maximales Kantengewicht" wrappingWidth="181.6417694091797">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </Text>
-      <Text layoutX="14.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: This will set the maximum possible weight of an edge. Weights are chosen randomly between 1 and the set value." wrappingWidth="276.9751281738281" />
-      <Text layoutX="14.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" text="min value: 1" wrappingWidth="181.6417694091797" />
-      <TextField fx:id="maxWeightText" layoutX="227.0" layoutY="279.0" prefHeight="26.0" prefWidth="59.0" text="10">
+      <Text fx:id="weightNoteText" layoutX="14.0" layoutY="355.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hinweis: Kantengewichte werden zufällig zwischen 1 und dem gewählten Wert gewählt." wrappingWidth="276.9751281738281" />
+      <Text fx:id="weightMinText" layoutX="14.0" layoutY="315.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Minimum: 1" wrappingWidth="181.6417694091797" />
+      <TextField fx:id="maxWeightInput" layoutX="227.0" layoutY="279.0" prefHeight="26.0" prefWidth="59.0" text="10">
          <font>
             <Font name="System Italic" size="12.0" />
          </font>
       </TextField>
-      <Text layoutX="44.0" layoutY="426.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Tick this, then the generated graph might not be connected." wrappingWidth="276.9751281738281" />
-      <CheckBox fx:id="avoidClustering" layoutX="12.0" layoutY="95.0" mnemonicParsing="false" text="Avoid clustering">
+      <Text layoutX="44.0" layoutY="442.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hinweis: Wenn auch unzusammenhängende Graphen erlaubt sein sollen, setze hier einen Haken." wrappingWidth="276.9751281738281" />
+      <CheckBox fx:id="avoidClustering" layoutX="12.0" layoutY="95.0" mnemonicParsing="false" text="Verhindere Clusterbildung">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
       </CheckBox>
-      <Text layoutX="42.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Note: Tick this, if vertices should be spread without clusting near to each other." wrappingWidth="276.9751281738281" />
+      <Text layoutX="42.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hinweis: Verhindert, dass Knoten sehr nah aneinander platziert werden." wrappingWidth="276.9751281738281" />
+      <Text fx:id="weightMaxText" layoutX="14.0" layoutY="331.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Maximum: 100" wrappingWidth="181.6417694091797" />
    </children>
 </AnchorPane>

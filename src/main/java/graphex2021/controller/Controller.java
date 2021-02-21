@@ -1,21 +1,20 @@
 package graphex2021.controller;
 
 import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
-import com.brunomnsilva.smartgraph.graphview.SmartGraphVertex;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
-import com.brunomnsilva.smartgraph.graphview.SmartRandomPlacementStrategy;
 import graphex2021.Main;
 import graphex2021.model.*;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 
+import graphex2021.view.ZoomableScrollPane;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
+import javafx.scene.*;
 
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
@@ -29,11 +28,11 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.Random;
 
 public class Controller {
 
@@ -48,11 +47,13 @@ public class Controller {
     private static final int STANDARD_PANE_MIN_WIDTH = 1000;
     private static final int STANDARD_PANE_MIN_HEIGHT = 563;
     private static final String UNLOCKPASSWORD = "Algorithmus";
-    private static final String PATTERN_FIN_TEXT = "[0-9]+";
-    private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp"};
+    private static final String PATTERN_FIN_TEXT = "-??[0-9]{1,9}";
+    private static final String[] IMAGE_FILE_ENDINGS = new String[]{"jpeg", "jpg", "png", "bmp", "JPEG", "JPG", "PNG"
+            , "BMP"};
     private static final int MIN_PANE_SIZE = 1000;
-    private static final String PATH_TO_TEMPLATES = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "graphex2021"
+    private static final String PATH_TO_TEMPLATES = "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
+
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -60,13 +61,21 @@ public class Controller {
     private DisplayModel displayModel;
 
     private GXTableView gxTable;
+    private Stage tableStage;
+
+    private boolean debugMode;
 
     @FXML
     private Menu templates;
 
     @FXML
+    private Group group;
+
+    @FXML
     private GraphView graphView;
 
+    @FXML
+    private ZoomableScrollPane scrollPane;
     @FXML
     private MenuItem check;
 
@@ -79,6 +88,9 @@ public class Controller {
     @FXML
     private TextField finTextField;
 
+    @FXML
+    private CheckMenuItem verticesMoveable;
+
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
      * by using the standard {@link graphex2021.model.GXGraph}690
@@ -87,28 +99,38 @@ public class Controller {
         try {
             this.displayModel = new DisplayModel();
         } catch (WrongFileFormatException e) {
-            //TODO handle this error by displaying a message box
+            Alert error = new FileAlert(e.getMessage());
+            error.showAndWait();
             e.printStackTrace();
+            return;
         }
 
         this.gxTable = new GXTableView();
     }
 
     public void init() {
-
         loadTemplates();
         initGraphView();
+        initScrollPane();
         initTableView();
+        graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
+        graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
         displayModel.notifyObservers();
     }
 
     /**
      * When program is launched this can be called to notify the model that graphview is about to be initialized.
      */
-    public void initGraphView() {
+    private void initGraphView() {
         displayModel.register(graphView);
         graphView.setAutomaticLayout(false);
+        this.verticesMoveable.setSelected(graphView.isMoveable());
         graphView.init();
+    }
+
+    private void initScrollPane() {
+        Node parentPane = graphView.getParent();
+        scrollPane.init(parentPane, group, graphView);
     }
 
     /**
@@ -118,7 +140,8 @@ public class Controller {
      * into start state) exiting the program.
      * the
      */
-    public void onStartPressed() {
+    @FXML
+    private void onStartPressed() {
         setActions();
         if (finish.getText().equals("Start")) {
             finish.setText("Beenden");
@@ -135,16 +158,17 @@ public class Controller {
      * When user presses finish button, it has to be checked, if end vertex was reached and the distance is correct.
      * Then the user will get a feedback.
      */
-    public void onFinishedPressed() {
+    @FXML
+    private void onFinishedPressed() {
         Alert alert;
         String finText = finTextField.getText();
         if (!finText.matches(PATTERN_FIN_TEXT)) {
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Ungültige Eingabe!");
-            alert.setContentText("Du musst noch die kürzeste Distanz zum Ziel im Textfeld eintragen.");
+            alert.setContentText("Du musst noch die kürzeste Distanz zum Ziel eintragen.");
         } else {
             int finalDist = Integer.parseInt(finTextField.getText());
-            if (displayModel.checkFinishRequirements(finalDist)) {
+            if (displayModel.checkFoundShortestPath(finalDist)) {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Geschafft!");
                 alert.setContentText("Super! Du hast den kürzesten Weg gefunden!");
@@ -152,7 +176,7 @@ public class Controller {
             } else {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Noch nicht!");
-                alert.setContentText("Du hast noch keinen kürzesten Weg zum Ziel gefunden, versuche es noch weiter!");
+                alert.setContentText("Du hast noch keinen kürzesten Weg zum Ziel gefunden,\nversuche es noch weiter!");
             }
         }
         alert.show();
@@ -161,51 +185,106 @@ public class Controller {
     /**
      * Initialize the table where user steps (according to algorithm) are displayed.
      */
-    public void initTableView() {
-        gxTable.init(displayModel.getAllVertices());
+    private void initTableView() {
+        if (!gxTable.isInitialized()) {
+            gxTable.init(displayModel.getAllVertices());
+        }
         displayModel.register(gxTable);
     }
 
-    public void showTable() {
+
+    /**
+     * Sets the table to be visible on the menuitem being pressed
+     */
+    @FXML
+    private void showTable() {
+        //window of primary stage
+        Window primaryWindow = finish.getScene().getWindow();
         Stage tableStage = new Stage();
         tableStage.setTitle("Tabelle");
         tableStage.setScene(new Scene(new VBox(gxTable)));
+        //table window is bound to main window, so when main window closes, table window should close as well
+        tableStage.initOwner(primaryWindow);
         tableStage.show();
+    }
 
+    /**
+     * Sets the additional actions for a vertex if free mode is activated
+     *
+     * @param vertexNode the {@link SmartGraphVertexNode} that the free mode actions should be set for
+     */
+    private void setFreeModeActions(SmartGraphVertexNode vertexNode) {
+        vertexNode.setOnMouseReleased((MouseEvent mouseEvent) -> {
+            this.onDragFinished(vertexNode);
+        });
 
     }
 
-    public void setActions() {
-        graphView.setEdgeDoubleClickAction(e -> onSelectEdge((SmartGraphEdge) e));
-        graphView.setVertexDoubleClickAction(v -> onSelectVertex((SmartGraphVertex) v));
+    /**
+     * Sets the actions for all the nodes and edges of the {@link GraphView}.
+     * ALl the elements of the view will have actions for double click, single click, drag and so on.
+     */
+    private void setActions() {
+        graphView.setEdgeDoubleClickAction(e -> onSelectEdge(e));
+        graphView.setVertexDoubleClickAction(v -> onSelectVertex());
 
-        //TODO WIPauf de
+
+        /*
+          Setting the actions for the Vertices
+         */
         for (Node vertexNode : graphView.getChildren()) {
             if (vertexNode.toString().contains("Circle")) {
                 SmartGraphVertexNode vert = (SmartGraphVertexNode) vertexNode;
+                //Action for clicking primary button
                 vert.setOnMousePressed((MouseEvent mouseEvent) -> {
                     if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                        onVertexClicked(vert);
+                        onVertexClicked(vert, mouseEvent.getX(), mouseEvent.getY());
                     }
                 });
-            }
-        }
-
-        for (Node node : graphView.getChildren()) {
-            if (node instanceof SmartGraphVertexNode) {
-                SmartGraphVertexNode vert = (SmartGraphVertexNode) node;
-                vert.setOnMouseEntered(s -> onHoverEdge((SmartGraphVertexNode) s.getSource()));
-                vert.setOnMouseExited(s -> onLeaveEdge((SmartGraphVertexNode) s.getSource()));
+                //Style change when hovering
+                vert.setOnMouseEntered(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
+                //Style change when hovering ends
+                vert.setOnMouseExited(s -> onHoverVertex((SmartGraphVertexNode) s.getSource(), s));
+                if (debugMode) {
+                    displayCoordinates(vert);
+                }
+                if (verticesMoveable.isSelected()) {
+                    setFreeModeActions(vert);
+                }
             }
         }
     }
 
-    public void onHoverEdge(SmartGraphVertexNode e) {
-        e.setStyleClass("testClass");
+    /**
+     * Sets coordinates after a vertex was dragged around. Updates the coordinates for the underlying vertex.
+     *
+     * @param vertexNode the vertex that was dragged.
+     */
+    private void onDragFinished(SmartGraphVertexNode vertexNode) {
+        graphView.setMovedCoordinates(vertexNode);
     }
 
-    public void onLeaveEdge(SmartGraphVertexNode e) {
-        e.setStyleClass("vertex");
+    /**
+     * Changes the style class while the mouse is on a vertex to indicate it being hovered
+     *
+     * @param vertex     that is being hovered
+     * @param mouseEvent whether the vertex was entered or exited
+     */
+    private void onHoverVertex(SmartGraphVertexNode vertex, MouseEvent mouseEvent) {
+        if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_ENTERED)) {
+            vertex.setStyleClass("hoverVertex");
+        } else if (mouseEvent.getEventType().equals(MouseEvent.MOUSE_EXITED)) {
+            GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
+            if (!vert.getStartOrEnd().equals(GXVertexType.NORMAL)) {
+                vertex.setStyleClass(vert.getStartOrEnd().toString());
+            } else {
+                if (vert.isMarked()) {
+                    vertex.setStyleClass("markedVertex");
+                } else {
+                    vertex.setStyleClass("vertex");
+                }
+            }
+        }
     }
 
     /**
@@ -213,10 +292,12 @@ public class Controller {
      *
      * @param e is the edge the user selected.
      */
-    public void onSelectEdge(SmartGraphEdge e) {
+    private void onSelectEdge(SmartGraphEdge e) {
         try {
             displayModel.markEdge((GXEdge) e.getUnderlyingEdge());
-            setActions();
+            Platform.runLater(() -> {
+                setActions();
+            });
         } catch (ElementNotInGraphException elementNotInGraphException) {
             new ElementNotInGraphAlert().show();
         } catch (EdgeCompletesACircleException edgeCompletesACircleException) {
@@ -227,23 +308,24 @@ public class Controller {
     /**
      * Is called when the user selects a vertex.
      *
-     * @param v is the selected vertex.
      */
-    public void onSelectVertex(SmartGraphVertex v) {
+    private void onSelectVertex() {
         new VertexDoubleClickAlert().show();
     }
 
-    /**()
+    /**
      * When the user requests a hint, the next step according to the selected algorithm should be shown.
      */
-    public void hintRequest() {
+    @FXML
+    private void hintRequest() {
         displayModel.nexStep();
     }
 
     /**
      * Checks, if the user input corresponds to the steps the selected algorithm would perform.
      */
-    public void onCheck() {
+    @FXML
+    private void onCheck() {
         Alert check = new Alert(Alert.AlertType.INFORMATION);
         check.setTitle("Check");
         if (displayModel.checkCorrect()) {
@@ -257,8 +339,10 @@ public class Controller {
 
     /**
      * Will give the user the ability to load a new graph via a json file.
+     * Opens a Filechooser window allowing the selection of a Json file containing the graph data
      */
-    public void onLoadGraph() {
+    @FXML
+    private void onLoadGraph() {
         Stage browserStage = new Stage();
         browserStage.setTitle("FileBrowser");
         FileChooser fileChooser = new FileChooser();
@@ -268,133 +352,239 @@ public class Controller {
         fileChooser.getExtensionFilters().add(jsonFilter);
         File file = fileChooser.showOpenDialog(browserStage);
         if (!(file == null)) {
-            initNewGraph(file);
+            loadNewGraphView(file);
         }
     }
 
-    private void initNewGraph(File file) {
+
+    /**
+     * When loading a new graph view the old graph view needs to be correctly unlinked from the window and listeners.
+     * Also the {@link GraphView} needs to be removed from the parent pane it was part of.
+     *
+     * @param parent parent of the old {@link GraphView} that it should be removed from
+     */
+    private void remove(Parent parent, boolean remTable) {
+        //uncoupling the old views from listeners and the observer.
         displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
-        graphView.removeListener();
-
-        try {
-            this.displayModel = new DisplayModel(file);
-        } catch (WrongFileFormatException e) {
-            Alert formatError = new FileFormatError(e);
-            formatError.showAndWait();
+        if (remTable) {
+            displayModel.unregister(gxTable);
         }
+        graphView.removeListener();
+        // The Pane that graphView is part of (In this case boder pane)
+        Group pane = (Group) parent;
+        // Removing the graphView so that later a graphView with other properties can be added.
+        pane.getChildren().remove(graphView);
+    }
 
-        // The height of the pane in case there is no background image is set to.
-        double height = graphView.getHeight();
-        double width = graphView.getWidth();
+    /**
+     * Will set the passed sizes for the parent and graphView.
+     *
+     * @param prefWidth  preferred Width
+     * @param prefHeight preferred Height
+     * @param minWidth   minimum Width
+     * @param minHeight  minimum Height
+     */
+    private void setSizes(double prefWidth, double prefHeight, double minWidth, double minHeight) {
+        graphView.setMinSize(minWidth, minHeight);
+        graphView.setPrefSize(prefWidth, prefHeight);
+        graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
+        graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
+    }
 
-        // Loading the new BackgroundImage if there is a file with the same name as
+    /**
+     * Will set the size of the graphview pane according to its background.
+     *
+     * @param background background the size will be calculated from
+     */
+    private void setSizes(Background background) {
+        if (!background.getImages().isEmpty()) {
+            Image backgroundImage = background.getImages().get(0).getImage();
+            double width = backgroundImage.getWidth();
+            double height = backgroundImage.getHeight();
+            setSizes(width, height, MIN_PANE_SIZE, calcMinHeight(width, height));
+        } else {
+            setSizes(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT
+                    , STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        }
+    }
+
+
+    /**
+     * Loads a background for a pane. If the file is an image the image will be used as background. If the file
+     * isn't an image an empty background will be returned. The size of the background will be the size of the passed
+     * image and it will be set to cover.
+     *
+     * @param file you want the background created from
+     * @return the background either from the image or empty
+     */
+    private Background loadBackground(File file) {
+
         File imageFile = findBackgroundImage(file);
-        BufferedImage image = null;
+        BufferedImage image;
         if (imageFile != null) {
             image = checkIfImage(imageFile);
-            if (image != null) {
-                // If a background image exists these values should be used to set the params for the new Window
-                height = image.getHeight();
-                width = image.getWidth();
-            }
-        }
-
-        // The Pane that graphView is part of (In this case boder pane)
-        Pane parent = (Pane) graphView.getParent();
-
-        // Removing the graphView so that later a graphView with other properties can be added.
-        parent.getChildren().remove(graphView);
-
-        //TODO maybe add reset buttons method to reset the button state for all since it is needed more tha once.
-        finish.setText("Start");
-        finish.setDisable(false);
-
-        try {
-            this.graphView = new GraphView();
-            graphView.setPrefSize(width, height);
-            // Adding the new graphView to the pane
-            parent.getChildren().add(graphView);
-            if (image != null) {
-                //Creates ne BackgroundImage if there was an image found.
-                Image background = new Image(imageFile.toURI().toString());
-                BackgroundSize size = new BackgroundSize(background.getWidth(), background.getHeight()
-                        , false, false, false, true);
-                parent.setBackground(new Background(
-                        new BackgroundImage(background,
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundRepeat.NO_REPEAT,
-                                BackgroundPosition.DEFAULT,
-                               size)));
-                parent.setMinSize(MIN_PANE_SIZE, calcMinHeight(width, height));
-                parent.setPrefSize(width, height);
-            } else {
-                //No Image found empty Background
+            if (image == null) {
                 new Alert(Alert.AlertType.INFORMATION, "Kein Hintergrundbild gefunden").showAndWait();
-                parent.setMinSize(STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
-                parent.setPrefSize(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT);
-                parent.setBackground(Background.EMPTY);
+                return Background.EMPTY;
+            } else {
+                //Creates ne BackgroundImage if there was an image found.
+                Image back = new Image(imageFile.toURI().toString());
+                //Creating the new background with all its parameters
+                BackgroundSize size = new BackgroundSize(back.getWidth(), back.getHeight()
+                        , false, false, false, true);
+                BackgroundImage backgroundImage = new BackgroundImage(back, BackgroundRepeat.NO_REPEAT,
+                        BackgroundRepeat.NO_REPEAT,
+                        BackgroundPosition.DEFAULT,
+                        size);
+                return new Background(backgroundImage);
             }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
+        return Background.EMPTY;
+    }
+
+    /**
+     * Adds the {@link GraphView} to the pane and initializes the {@link GXTableView}. Then correctly initializes
+     * all the features of the Graphex window
+     *
+     * @param parent the parent pane that the graphView needs to be added to.
+     */
+    private void initializeUpdatedView(Group parent, boolean newTable) {
         // Layouting the pane ==> all the children get layouted as well ==> graphView gets height and width
         parent.layout();
 
-        // new Tableview
-        this.gxTable = new GXTableView();
+        if (newTable) {
+            // new Tableview
+            this.gxTable = new GXTableView();
+        }
 
         //Reinitializing all the views
         init();
+
         displayModel.notifyObservers();
     }
 
-    //TODO better way to compromise this
-    private void initNewGraph(GXGraph graph) {
-        displayModel.unregister(graphView);
-        displayModel.unregister(gxTable);
-        graphView.removeListener();
-        this.displayModel = new DisplayModel(graph);
 
-        // The Pane that graphView is part of (In this case boder pane)
-        Pane parent = (Pane) graphView.getParent();
+    /**
+     * Creates and adds a new {@link GraphView} to the pane.
+     *
+     * @param parent parent the {@link GraphView} should be added to.
+     */
+    private void addToParent(Group parent) {
+        try {
+            this.graphView = new GraphView();
+        } catch (FileNotFoundException e) {
+            Alert fileAlert = new FileAlert(e.getMessage() + "\n wurde nicht gefunden");
+            fileAlert.showAndWait();
+            e.printStackTrace();
+            return;
+        }
+        parent.getChildren().add(graphView);
+    }
 
-        // Removing the graphView so that later a graphView with other properties can be added.
-        parent.getChildren().remove(graphView);
+    /**
+     * Creates and adds a new {@link GraphView} to the pane.
+     *
+     * @param parent    parent the {@link GraphView} should be added to.
+     * @param graphView the {@link GraphView} you want to add
+     */
+    private void addToParent(Group parent, GraphView graphView) {
+        this.graphView = graphView;
+        parent.getChildren().add(graphView);
+    }
+
+    private void reset() {
+        this.debugMode = false;
         finish.setText("Start");
         finish.setDisable(false);
+    }
 
-        // TODO check how height is set
-        double height = graphView.getHeight();
-        double width = graphView.getWidth();
+    /**
+     * Loads a new graphview from the specified file
+     *
+     * @param file json that the new view should be loaded from.
+     */
+    private void loadNewGraphView(File file) {
+        //close existing table view window
+        if (tableStage != null && tableStage.isShowing()) tableStage.close();
+        Group parent = (Group) graphView.getParent();
+        //final Pane parent = (Pane) graphView.getParent();
 
+        DisplayModel newModel = null;
         try {
-            // TODO propably needs to be done like this, so that properties can be changed as well.
-            this.graphView = new GraphView(new SmartRandomPlacementStrategy());
-
-            //TODO Check what needs to happen for this to work correctly
-            graphView.setPrefSize(width, height);
-            // Adding the new graphView to the pane
-            parent.getChildren().add(graphView);
-            graphView.getParent();
-            parent.layout();
-        } catch (FileNotFoundException e) {
+            newModel = new DisplayModel(file);
+        } catch (WrongFileFormatException e) {
+            Alert formatError = new FileFormatError(e);
+            formatError.showAndWait();
             e.printStackTrace();
+            return;
+        }
+        remove(parent, true);
+        this.displayModel = newModel;
+
+        // Creating a new graphView and adding it to the pane
+        addToParent(parent);
+
+        // creating the background if one is in the same folder as the json
+        Background background = loadBackground(file);
+        graphView.setBackground(background);
+        // Setting the sizes to either standard if there was no background image or to the size of the background image.
+        setSizes(background);
+
+        reset();
+        // initialising the window again with the new graph view and updating once to display the graph
+        initializeUpdatedView(parent, true);
+    }
+
+    private void loadNewGraphView(GXGraph graph) {
+        Group parent = (Group) graphView.getParent();
+        //final Pane parent = (Pane) graphView.getParent();
+        remove(parent, true);
+        this.displayModel = new DisplayModel(graph);
+        addToParent(parent);
+        graphView.setBackground(Background.EMPTY);
+        setSizes(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        reset();
+        initializeUpdatedView(parent, true);
+    }
+
+    /**
+     * When called the vertices are made moveable
+     */
+    @FXML
+    private void verticesMovable() {
+        Group parent = (Group) graphView.getParent();
+        Background oldBackground = graphView.getBackground();
+        remove(parent, false);
+        GraphView movable;
+        if (verticesMoveable.isSelected()) {
+            try {
+                movable = new GraphView(true);
+                addToParent(parent, movable);
+            } catch (FileNotFoundException e) {
+                // Properties not found
+                e.printStackTrace();
+            }
+            verticesMoveable.setSelected(true);
+        } else {
+            verticesMoveable.setSelected(false);
+            //Update with better constructor
+            addToParent(parent);
         }
 
-        // new Tableview
-        this.gxTable = new GXTableView();
+        graphView.setBackground(oldBackground);
+        setSizes(oldBackground);
+        initializeUpdatedView(parent, false);
+        if (!finish.getText().equals("Start")) {
+            setActions();
+        }
 
-        //Reinitializing all the views
-        init();
-        displayModel.notifyObservers();
     }
 
     /**
      * When this is called, a random Graph will be created an load in the view.
      */
-    public void onGenerateRandom() throws IOException {
+    @FXML
+    private void onGenerateRandom() throws IOException {
         Window primaryStage = graphView.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("PropWin.fxml"));
         Scene newScene = new Scene(loader.load());
@@ -402,31 +592,43 @@ public class Controller {
         propertyWindow.setTitle("Random Graph Generator");
         propertyWindow.initOwner(primaryStage);
         propertyWindow.setScene(newScene);
+        PropWinController ctr = loader.getController();
+        ctr.initText();
         propertyWindow.showAndWait();
         if (PropWinController.lastGenerationSuccessful()) {
-            initNewGraph(PropWinController.getLastGeneratedGraph());
+            loadNewGraphView(PropWinController.getLastGeneratedGraph());
         }
     }
 
     /**
      * When a vertex is clicked with single mouse click, shortest path to the vertex is displayed, depending on the
-     * selected edges by the user.
+     * selected edges by the user. Additionally a context menu opens, showing the current shortest distance to the
+     * clicked vertex.
      *
-     * @param v
+     * @param v vertex node
+     * @param x coordinate of mouse event
+     * @param y coordinate of mouse event
      */
-    public void onVertexClicked(SmartGraphVertexNode v) {
+    private void onVertexClicked(SmartGraphVertexNode v, double x, double y) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
-        displayModel.highlightShortestPathTo(vertex);
+        //context menu that displays current distance
+        if (vertex.isMarked()) {
+            graphView.showVertexDistance(v, x, y);
+            displayModel.highlightShortestPathTo(vertex);
+        }
     }
 
     /**
      * This is called, when the user wants to revert a step, i.e. unmark the last selected edge or vertex and
      * everything that comes along with this.
      */
-    public void onUndoPressed() {
+    @FXML
+    private void onUndoPressed() {
         try {
             displayModel.undo();
         } catch (ElementNotInGraphException e) {
+            Alert a = new ElementNotInGraphAlert();
+            a.showAndWait();
             e.printStackTrace();
         }
     }
@@ -436,32 +638,42 @@ public class Controller {
      *
      * @param algo is the algorithm that is selected to be performed at the graph in the view.
      */
-    public void onAlgorithmSelect(Algorithm algo) {
-
+    private void onAlgorithmSelect(Algorithm algo) {
+        //TODO do something like the vorlagen where the program scans for available algorithms
     }
 
     /**
      * Will show some information on the selected algorithm in the view.
      */
-    public void onDisplayAlgorithmExplanation() {
-
+    @FXML
+    private void onDisplayAlgorithmExplanation() {
+        Dialog<Void> dialog = new InfoDialog(AlgorithmName.DIJKSTRA);
+        dialog.showAndWait();
     }
 
     /**
      * Will show some information on interaction options in the view.
      */
-    public void onDisplayInteractionHelp() {
-
+    @FXML
+    private void onDisplayInteractionHelp() {
+        Dialog iaDialog = new InteractionDialog();
+        iaDialog.showAndWait();
     }
 
     /**
      * Called on the reset button being pressed
      */
-    public void onResetPressed() {
+    @FXML
+    private void onResetPressed() {
         displayModel.reset();
     }
 
-    public void unlockHints() {
+    /**
+     * Will open a texInputDialog to input the password for help and for the debugmode
+     *
+     */
+    @FXML
+    private void unlockHints() {
         TextInputDialog dialog = new TextInputDialog("");
         dialog.setHeaderText("Gib das Passwort ein um die"
                 + " Hilfefunktionen freizuschalten");
@@ -473,28 +685,32 @@ public class Controller {
                 check.setDisable(false);
                 tip.setDisable(false);
             } else if ("Test".equals(result.get())) {
-                displayCoordinates();
+                this.debugMode = true;
             } else {
-                new Alert(Alert.AlertType.ERROR, "Das war das falsche Passwort.").showAndWait();
+                new Alert(Alert.AlertType.INFORMATION, "Das war das falsche Passwort.").showAndWait();
             }
         }
     }
 
-    private void displayCoordinates() {
-        for (Node vertex : graphView.getChildren()) {
-            if (vertex.toString().contains("Circle")) {
-                SmartGraphVertexNode vert = (SmartGraphVertexNode) vertex;
-                vert.setOnMousePressed((MouseEvent mouseEvent) -> {
-                    if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
-                        double x = vert.getPositionCenterX() / graphView.getSceneWidth();
-                        double y = vert.getPositionCenterY() / graphView.getSceneHeight();
-                        System.out.println(vert.getUnderlyingVertex().element().toString() + " x = "
-                                + x + " , y = " + y + " Style:  " + vertex.getStyleClass());
-
-                    }
+    /**
+     * Will output a string containing the current relative coordinates as well as the style class of the passed node
+     *
+     * @param vertexNode the node the coordinates and styl class should be printed of
+     */
+    private void displayCoordinates(SmartGraphVertexNode vertexNode) {
+        vertexNode.setOnMousePressed((MouseEvent mouseEvent) -> {
+            if (mouseEvent.getButton().equals(MouseButton.MIDDLE)) {
+                //Making sure that the position will not be calculated at the same time as it is set by putting
+                //this calculation in the Queue for the fx thread
+                Platform.runLater(() -> {
+                    double x = graphView.calcRelativeX(vertexNode);
+                    double y = graphView.calcRelativeY(vertexNode);
+                    System.out.println(vertexNode.getUnderlyingVertex().element().toString() + " x = "
+                            + x + " , y = " + y + " Style:  " + vertexNode.getStyleClass());
                 });
             }
-        }
+        });
+
     }
 
     /**
@@ -527,13 +743,21 @@ public class Controller {
                 }
                 dirStream.close();
             } catch (IOException e) {
-                //TODO
+                Alert fileAlert = new FileAlert(pathToDir.toString() + e.getMessage());
+                fileAlert.showAndWait();
                 e.printStackTrace();
+                return null;
             }
         }
         return null;
     }
 
+    /**
+     * Takes a file that could potentially an image and checks if it actually is one.
+     *
+     * @param imageFile the file that could potentially be an image
+     * @return {@code null} if the file wasn't an image. Else the image will be returned as a {@link BufferedImage}
+     */
     private BufferedImage checkIfImage(File imageFile) {
         // Check whether it isn't just an image by name but also an image file
         // Try with resources so that the stream is correctly closed if something goes wrong
@@ -544,9 +768,15 @@ public class Controller {
                     return image;
                 }
             } catch (IOException ioe) {
+                Alert fileAlert = new FileAlert(imageFile.getAbsolutePath() + ioe.getMessage());
+                fileAlert.showAndWait();
+                ioe.printStackTrace();
                 return null;
             }
         } catch (IOException e) {
+            Alert fileAlert = new FileAlert(imageFile.getAbsolutePath() + e.getMessage());
+            fileAlert.showAndWait();
+            e.printStackTrace();
             return null;
         }
         return null;
@@ -556,7 +786,7 @@ public class Controller {
      * Calcs a min Height for the pane after an new graph was loaded. Uses the background images' side to side ratio to
      * calculate. As starting point for this it takes minWidth MIN_PANE_SIZE set to 1000.
      *
-     * @param width the width of the background image
+     * @param width  the width of the background image
      * @param height the height of the background image
      * @return the calc minHeight with width set to 1000, while maintaining aspect ratio
      */
@@ -565,12 +795,23 @@ public class Controller {
         return (int) (MIN_PANE_SIZE * ratio);
     }
 
+    /**
+     * Loads all the templates in the template folder as entries for the "Vorlagen" menu
+     *
+     */
     private void loadTemplates() {
         File templateFolder = null;
 
-        templateFolder = new File(PATH_TO_TEMPLATES);
+        try {
+            templateFolder = new File(new File(getClass().getProtectionDomain().getCodeSource()
+                    .getLocation().toURI()).getParentFile(), PATH_TO_TEMPLATES);
+        } catch (URISyntaxException e) {
+            new FileFormatError(new WrongFileFormatException(e.getMessage()));
+        }
         if (!templateFolder.isDirectory()) {
-            //TODO Generic Error
+            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath() + "\n An diesem Pfad ist kein Ordner.");
+            fileAlert.showAndWait();
+            return;
         }
 
 
@@ -584,16 +825,17 @@ public class Controller {
                     MenuItem item = new MenuItem(name);
                     String finalName = name;
                     if (templates.getItems().isEmpty()
-                            || templates.getItems().stream().noneMatch(menuItem -> menuItem.getText().equals(finalName))) {
+                            || templates.getItems().stream().
+                            noneMatch(menuItem -> menuItem.getText().equals(finalName))) {
                         templates.getItems().add(item);
-                        item.setOnAction(e -> initNewGraph(graphTemplate));
+                        item.setOnAction(e -> loadNewGraphView(graphTemplate));
                     }
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace(); //TODO Generic error
+            Alert fileAlert = new FileAlert(templateFolder.getAbsolutePath());
+            fileAlert.showAndWait();
+            e.printStackTrace();
         }
-
-
     }
 }

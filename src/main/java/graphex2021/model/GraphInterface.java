@@ -78,10 +78,12 @@ public interface GraphInterface<V, E> {
     boolean areAdjacent(GXVertex u, GXVertex v) throws ElementNotInGraphException;
 
     /**
-     * Adds the passed {@link GXVertex} to the graph, if there isn't already a {@link GXVertex} with the same ID
+     * Adds the passed {@link GXVertex} to the graph, if there isn't already a {@link GXVertex} with the same ID.
+     * If {@code null} is passed null will also be returned and the graph won't change
      *
      * @param vertex {@link GXVertex} to be inserted
      * @return the inserted vertex or the vertex that has the same ID as the passed vertex.
+     * {@code null} if null was passed
      */
     GXVertex insertVertex(GXVertex vertex);
 
@@ -91,7 +93,8 @@ public interface GraphInterface<V, E> {
      *
      * @param u first vertex
      * @param v second vertex
-     * @param edgeElement element of the newly created edge
+     * @param edgeElement element of the newly created edge. Will also get the edge weight from the element.
+     *                    Parsing String.
      * @return the edge that was inserted
      */
     GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException;
@@ -157,27 +160,18 @@ public interface GraphInterface<V, E> {
      */
     Collection<GXVertex> getNeighbors(GXVertex v) throws ElementNotInGraphException;
 
-    /**
-     * Sets the passed edge invisible and checks which vertices and edges should now be invisible as well
-     *
-     *
-     * @param vertex that was made visible by the passed edge
-     * @param edge that will be set invisible f
-     * @throws ElementNotInGraphException if either vertex or edge are not in the vertex
-     */
-    void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException;
 
     /**
      * Sets v as starting vertex of the graph. Is needed by some algos.
      * @param v is the vertex that should be the starting vertex.
      */
-    void setStartingVertex(GXVertex v);
+    void setStartingVertex(GXVertex v) throws ElementNotInGraphException;
 
     /**
      * Sets v as ending vertex of the graph. Is needed by some algos.
      * @param v is the vertex that should be the ending vertex.
      */
-    void setEndingVertex(GXVertex v);
+    void setEndingVertex(GXVertex v) throws ElementNotInGraphException;
 
 
 }

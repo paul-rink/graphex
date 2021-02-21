@@ -2,6 +2,7 @@ package graphex2021.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.*;
 
@@ -17,10 +18,11 @@ import org.everit.json.schema.loader.*;
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
-public class GraphParser {
+public final class GraphParser {
 
-    private static final GraphParser singleInstance = new GraphParser();
-    private static final String GraphTypeFile = "src/main/resources/graphex2021/GraphData/graph-scheme.json";
+    private static final GraphParser SINGLE_INSTANCE = new GraphParser();
+    private static final String GRAPH_TYPE_FILE = "resources" + File.separator + "graphex2021" + File.separator
+            + "GraphData" + File.separator + "graph-scheme.json";
     private int freeVertexId;
     private  int freeEdgeId;
 
@@ -28,7 +30,7 @@ public class GraphParser {
     /**
      * private constructor for the singleton
      */
-    private GraphParser () {
+    private GraphParser() {
         freeEdgeId = 0;
         freeVertexId = 0;
     }
@@ -38,7 +40,7 @@ public class GraphParser {
      * @return the instance
      */
     public static GraphParser getGraphParser() {
-        return singleInstance;
+        return SINGLE_INSTANCE;
     }
 
     /**
@@ -48,7 +50,6 @@ public class GraphParser {
      * @return a collection of GXVertex specified in the file
      */
     public Collection<GXVertex> parseVertices(File input) throws WrongFileFormatException {
-        //TODO actually handle the exception in the controller if the file has the wrong format
         freeVertexId = 0;
         freeEdgeId = 0;
         Collection<GXVertex> vertexList = new <GXVertex>ArrayList();
@@ -77,7 +78,6 @@ public class GraphParser {
      * @return a Collection of edges for the graph
      */
     public Collection<GXEdge> parseEdges(File input, Collection<GXVertex> vertices) throws WrongFileFormatException {
-        //TODO actually handle the exception in the controller if the file has the wrong format
         Collection<GXEdge> edgeList = new ArrayList<>();
 
         JSONObject graphObject = null;
@@ -97,6 +97,9 @@ public class GraphParser {
                 int edgeId = getNextEdgeId();
                 GXEdge edge = new GXEdge(firstVertex, secondVertex, Integer.toString(edgeWeight), edgeWeight, edgeId);
                 edgeList.add(edge);
+            } else {
+                throw new WrongFileFormatException("JSON enthält Kante aus Knoten, die nicht im Graph sind."
+                        + " Kante zwischen: " + vertexOneName + " und " + vertexTwoName);
             }
         }
         return edgeList;
@@ -109,7 +112,6 @@ public class GraphParser {
      * @return GXVertex that should be the designated starting vertex
      */
     public GXVertex parseStarting(File input, Collection<GXVertex> vertices)  throws WrongFileFormatException {
-        //TODO actually handle the exception in the controller if the file has the wrong format
         JSONObject graphObject = null;
         graphObject = getJsonObject(input);
 
@@ -123,8 +125,7 @@ public class GraphParser {
      * @param vertices the list of vertices in the graph
      * @return GXVertex that should be the designated ending vertex
      */
-    public GXVertex parseEnding(File input, Collection<GXVertex> vertices) throws WrongFileFormatException{
-        //TODO actually handle the exception in the controller if the file has the wrong format
+    public GXVertex parseEnding(File input, Collection<GXVertex> vertices) throws WrongFileFormatException {
         JSONObject graphObject = null;
         graphObject = getJsonObject(input);
 
@@ -140,7 +141,12 @@ public class GraphParser {
     private JSONObject getJsonObject(File input) throws WrongFileFormatException {
         String inputFile = readFromFile(input);
 
-        JSONObject object = new JSONObject(inputFile);
+        JSONObject object = null;
+        try {
+            object = new JSONObject(inputFile);
+        } catch (JSONException e) {
+            throw new WrongFileFormatException(e.getMessage());
+        }
         try {
             checkFileFormat(object);
         } catch (ValidationException e) {
@@ -149,8 +155,16 @@ public class GraphParser {
         return object;
     }
 
-    private void checkFileFormat(JSONObject input) throws ValidationException {
-        String jsonSchemaString = readFromFile(new File(GraphTypeFile));
+    private void checkFileFormat(JSONObject input) throws ValidationException, WrongFileFormatException {
+        File graphType = null;
+        try {
+            graphType = new File(getClass().getProtectionDomain().getCodeSource()
+                    .getLocation().toURI()).getParentFile();
+        } catch (URISyntaxException e) {
+            graphType = null;
+            throw new WrongFileFormatException(e.getMessage());
+        }
+        String jsonSchemaString = readFromFile(new File(graphType, GRAPH_TYPE_FILE));
         JSONObject jsonSchema = new JSONObject(jsonSchemaString);
         Schema schema = SchemaLoader.load(jsonSchema);
         schema.validate(input);
@@ -161,12 +175,15 @@ public class GraphParser {
      * @param input the File the string should be read from
      * @return a String with the contents of the File
      */
-    private String readFromFile(File input) {
+    private String readFromFile(File input) throws WrongFileFormatException {
         String output = "";
         try {
             output = Files.readString(input.toPath());
         } catch (IOException e) {
-            //TODO shouldnt happen. think when Controller is ready
+            throw new WrongFileFormatException(input.getAbsolutePath() + "couldnt read.");
+        } catch (NullPointerException r) {
+            r.printStackTrace();
+            throw new WrongFileFormatException("File ist null.");
         }
         return output;
     }

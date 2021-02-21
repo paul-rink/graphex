@@ -3,8 +3,6 @@ package graphex2021.controller;
 import javafx.scene.control.Alert;
 
 /**
- * TODO JAVADOC
- *
  *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 26.01.2021
@@ -12,7 +10,7 @@ import javafx.scene.control.Alert;
 public class VertexDoubleClickAlert extends Alert {
     public VertexDoubleClickAlert() {
         super(AlertType.INFORMATION);
-        this.setTitle("Interaction information");
-        this.setContentText("You double clicked a vertex. \n Double click an edge to continue.");
+        this.setTitle("Information");
+        this.setContentText("Du hast einen Knoten mit Doppelklick gewählt.\nWähle eine Kante mit Doppelklick um weiter zu machen.");
     }
 }

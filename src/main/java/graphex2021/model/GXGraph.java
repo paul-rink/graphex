@@ -42,18 +42,26 @@ public class GXGraph implements GraphInterface<String, String> {
         this.endingVertex = null;
     }
 
-    public GXGraph(File file) throws ElementNotInGraphException, WrongFileFormatException {
+    public GXGraph(File file) throws WrongFileFormatException {
         this.vertices = new HashMap<>();
         this.edges = new HashMap<>();
         GraphParser parser = GraphParser.getGraphParser();
         for (GXVertex vertex : parser.parseVertices(file)) {
             insertVertex(vertex);
         }
+
         for (GXEdge edge : parser.parseEdges(file, vertices())) {
-            insertEdge(edge);
+            try {
+                insertEdge(edge);
+            } catch (ElementNotInGraphException e) {
+                throw new WrongFileFormatException("Wrong edges in file: "+ file.getAbsolutePath());
+            }
         }
         this.startingVertex = parser.parseStarting(file, vertices());
         this.endingVertex = parser.parseEnding(file, vertices());
+
+        startingVertex.setType(GXVertexType.STARTING);
+        endingVertex.setType(GXVertexType.ENDING);
 
     }
 
@@ -133,9 +141,11 @@ public class GXGraph implements GraphInterface<String, String> {
     public boolean areAdjacent(GXVertex vertex, GXVertex vertex1) throws ElementNotInGraphException {
         checkVertex(vertex);
         checkVertex(vertex1);
-        for (GXEdge edge : edges.values()) {
-            if (edge.contains(vertex) && edge.contains(vertex1))  {
-                return true;
+        if (vertex.getId() != vertex1.getId()) {
+            for (GXEdge edge : edges.values()) {
+                if (edge.contains(vertex) && edge.contains(vertex1)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -143,18 +153,27 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public GXVertex insertVertex(GXVertex vertex) {
-        if (vertexInGraph(vertex.getId())) {
-            return vertices.get(vertex.getId());
-        } else {
-            vertices.put(vertex.getId(), vertex);
+        if (vertex != null) {
+            if (vertexInGraph(vertex.getId())) {
+                return vertices.get(vertex.getId());
+            } else {
+                vertices.put(vertex.getId(), vertex);
+            }
+            return vertex;
         }
-        return vertex;
+        return null;
     }
 
     //TODO maybe different way to insert an edge
     @Override
     public GXEdge insertEdge(GXVertex u, GXVertex v, String edgeElement) throws ElementNotInGraphException {
-        return null;
+        try {
+            return getEdge(u, v);
+        } catch (ElementNotInGraphException enig) {
+            GXEdge edge =  new GXEdge(u, v, edgeElement, Integer.parseInt(edgeElement), edges.size());
+            edges.put(edges.size(), edge);
+            return edge;
+        }
     }
 
     @Override
@@ -192,9 +211,12 @@ public class GXGraph implements GraphInterface<String, String> {
 
     @Override
     public void blockCircles(GXVertex vertex) throws ElementNotInGraphException {
-        for (GXEdge edge : incidentEdges(vertex)) {
-            if (opposite(vertex, edge).isMarked()) {
-                edge.setBlocked(true);
+        checkVertex(vertex);
+        if (vertex.isMarked()) {
+            for (GXEdge edge : incidentEdges(vertex)) {
+                if (opposite(vertex, edge).isMarked()) {
+                    edge.setBlocked(true);
+                }
             }
         }
     }
@@ -206,7 +228,8 @@ public class GXGraph implements GraphInterface<String, String> {
      * @param vertex the vertex whose edges should be unblocked
      * @throws ElementNotInGraphException if the vertex is not in the graph
      */
-    public void unblock (GXVertex vertex) throws ElementNotInGraphException {
+    public void unblock(GXVertex vertex) throws ElementNotInGraphException {
+        checkVertex(vertex);
         for (GXEdge edge : incidentEdges(vertex)) {
             edge.setBlocked(false);
         }
@@ -232,36 +255,17 @@ public class GXGraph implements GraphInterface<String, String> {
     }
 
     @Override
-    public void setVertexInvisible(GXVertex vertex, GXEdge edge) throws ElementNotInGraphException {
-        //TODO test this. Really unsure if correct. Unblock edges here? Also check start and finish still stay visible
-        //TODO can be deleted after implementation in DisplayModel
-        //Also
-        checkEdge(edge);
-        checkVertex(vertex);
-        //Checking all the incident edges
-        for (GXEdge incidentEdge : incidentEdges(vertex)) {
-            //If the edge should not be visible the vertex at the other end needs to be checked
-            if (!shouldBeVisible(incidentEdge)) {
-                //Set the checked edge invisible
-                incidentEdge.setVisible(false);
-                //Now to check the opposite vertices of the unmarked vertex
-                GXVertex toCheck = opposite(vertex, incidentEdge);
-                if (!shouldBeVisible(toCheck)) {
-                    //Set the visibility to false, if the vertex has no opposite vertices, that is marked
-                    toCheck.setVisible(false);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void setStartingVertex(GXVertex v) {
+    public void setStartingVertex(GXVertex v) throws ElementNotInGraphException {
+        checkVertex(v);
         this.startingVertex = v;
+        this.startingVertex.setType(GXVertexType.STARTING);
     }
 
     @Override
-    public void setEndingVertex(GXVertex v) {
+    public void setEndingVertex(GXVertex v) throws ElementNotInGraphException {
+        checkVertex(v);
         this.endingVertex = v;
+        this.endingVertex.setType(GXVertexType.ENDING);
     }
 
     /**
@@ -320,6 +324,26 @@ public class GXGraph implements GraphInterface<String, String> {
         throw new ElementNotInGraphException("there is no Edge inbetween these vertices");
     }
 
+    /**
+     * Returns {@link GXEdge} of the graph with a specific id.
+     * @param id is the edge you're looking for
+     * @return the edge if the graph contains an edge with this id, if the graph does not contain an edge with this id
+     * it will return {@code null}
+     */
+    public GXEdge getEdge(int id) {
+        return edges.get(id);
+    }
+
+    /**
+     * Returns {@link GXVertex} of the graph with a specific id.
+     * @param id is the vertex you're looking for
+     * @return the vertex if the graph contains a vertex with this id, if the graph does not contain a vertex with this
+     * id it will return {@code null}
+     */
+    public GXVertex getVertex(int id) {
+        return vertices.get(id);
+    }
+
 
     private boolean edgeInGraph(Integer id) {
         return edges.containsKey(id);
@@ -329,41 +353,6 @@ public class GXGraph implements GraphInterface<String, String> {
     private boolean vertexInGraph(Integer id) {
         return vertices.containsKey(id);
     }
-
-
-    /**
-     * Will chekc if an edge should bi visible in the current state of the graph
-     *
-     * @param edge the edge you want to check whether it should be visible
-     * @return true if it should be visible. False else
-     */
-    private boolean shouldBeVisible(GXEdge edge) throws ElementNotInGraphException {
-        checkEdge(edge);
-        //An edge can only be visible if at least one of the vertices is marked
-        return edge.vertices()[0].isMarked() && edge.vertices()[1].isMarked();
-    }
-
-    /**
-     * Will check if a vertex should be visible with the current graph state.
-     *
-     * @param vertex you want to check if it should be visible
-     * @return true if it should be visible, false if not
-     * @throws ElementNotInGraphException if the vertex was not part of the graph.
-     */
-    private boolean shouldBeVisible(GXVertex vertex) throws ElementNotInGraphException {
-        checkVertex(vertex);
-        if (vertex.isMarked()) {
-            return true;
-        }
-        // Checking all the incident edges. A vertex should be visible if it or the opposite vertex is marked
-        for (GXEdge edge : incidentEdges(vertex)) {
-            if (opposite(vertex, edge).isMarked()) {
-                return true;
-            }
-        }
-        // if no opposite vertex is marked it should not be visible
-        return false;
-    }
-
+    
 
 }

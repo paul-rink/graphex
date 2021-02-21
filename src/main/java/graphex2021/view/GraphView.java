@@ -2,42 +2,88 @@ package graphex2021.view;
 
 import com.brunomnsilva.smartgraph.graphview.*;
 import graphex2021.model.*;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
-import javax.tools.Tool;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
 
-public class GraphView extends SmartGraphPanel implements Observer {
+public class GraphView extends SmartGraphPanel<String, String> implements Observer {
 
     private static final SmartStaticPlacementStrategy STRAT = new SmartStaticPlacementStrategy();
+    private static File moveableProperties;
 
-    //TODO check best Filepath separator
-    private static final File STYLESHEET = new File("src" + File.separator + "main"
-            + File.separator + "resources" + File.separator + "graphex2021"
-            + File.separator + "smartgraph.css");
-    private static final File PROPERTIES = new File("src" + File.separator + "main"
-            + File.separator + "resources" + File.separator + "graphex2021"
-            + File.separator + "smartgraph.properties");
+    private static File stylesheet;
 
-    private ChangeListener listener;
+    private static File properties;
+    private ChangeListener<Number> widthListener;
+    private ChangeListener<Number> heightListener;
+    private boolean isMoveable = false;
 
-    public GraphView() throws FileNotFoundException {
-        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
-                STRAT, STYLESHEET.toURI());
+    static {
+        try {
+            stylesheet = new File(new File(GraphView.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI()).getParentFile(), "resources"
+                    + File.separator + "graphex2021"
+                    + File.separator + "smartgraph.css");
+            properties = new File(new File(GraphView.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI()).getParentFile(), "resources"
+                    + File.separator + "graphex2021"
+                    + File.separator + "smartgraph.properties");
+            moveableProperties = new File(new File(GraphView.class.getProtectionDomain()
+                    .getCodeSource().getLocation().toURI()).getParentFile(), "resources"
+                    + File.separator + "graphex2021"
+                    + File.separator + "smartgraphmove.properties");
+        } catch (URISyntaxException e) {
+            //TODO what here
+            e.getMessage();
+        }
     }
 
-    //TODO how to get this load
+    /**
+     * Creates new GraphView with an empty graph using the standard stylesheet and and properties.
+     *
+     * @throws FileNotFoundException if either properties or css are not found
+     */
+    public GraphView() throws FileNotFoundException {
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(properties)),
+                STRAT, stylesheet.toURI());
+        this.isMoveable = false;
+    }
+
+    /**
+     * Creates a GraphView with an empty graph and using the standard stylesheet and moveable vertices
+     *
+     * @param isMoveable really not used. If you want a GraphView where vertices aren't moveable us constructor with no
+     *                   parameters. Should always be {@code true}!!
+     * @throws FileNotFoundException If stylesheet or properties are not found.
+     */
+    public GraphView(boolean isMoveable) throws FileNotFoundException {
+        super(new GraphAdapter(), new SmartGraphProperties
+                (new FileInputStream(moveableProperties)), STRAT, stylesheet.toURI());
+        this.isMoveable = isMoveable;
+    }
+
+    /**
+     * TODO use for random graphs?
+     *
+     * @param strategy
+     * @throws FileNotFoundException
+     */
     public GraphView(SmartPlacementStrategy strategy) throws FileNotFoundException {
-        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(PROPERTIES)),
-                strategy, STYLESHEET.toURI());
+        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(properties)),
+                strategy, stylesheet.toURI());
+        this.isMoveable = false;
     }
 
     @Override
@@ -45,17 +91,12 @@ public class GraphView extends SmartGraphPanel implements Observer {
         GXGraph visible = (GXGraph) s.getState();
         GraphAdapter underlyingGraph = (GraphAdapter) super.theGraph;
         underlyingGraph.setGXGraph(visible);
-        this.update();
+        Platform.runLater(this::update);
+
     }
 
     @Override
     public void update() {
-        //TODO possible fix for vertices now being placed correctly immediately.
-        // Not sure what all the implications of this change are.
-        if (this.getScene() == null) {
-            throw new IllegalStateException("You must call this method after the instance was added to a scene.");
-        }
-
         super.updateNodes();
         iterChildren();
     }
@@ -73,13 +114,14 @@ public class GraphView extends SmartGraphPanel implements Observer {
         } else if (!gxEdge.isMarked()) {
             edge.setStyleClass("edge");
         }
+        //Needs to override the other Styles if it is requested as a hint.
         if (gxEdge.isHint()) {
             edge.setStyleClass("hintEdge");
         }
         if (gxEdge.isHighlighted()) {
             edge.setStyleClass("highlightedEdge");
         }
-        showDistanceTooltip(edge);
+        showVertexTooltip(edge);
     }
 
     private void styleVertex(SmartGraphVertexNode vertex) {
@@ -87,25 +129,54 @@ public class GraphView extends SmartGraphPanel implements Observer {
 
         if (gxVertex.isMarked()) {
             vertex.setStyleClass("markedVertex");
-            showDistanceTooltip(vertex, true);
+            showVertexTooltip(vertex, TooltipType.DISTANCE);
         } else if (!gxVertex.isMarked()) {
             vertex.setStyleClass("vertex");
-            showDistanceTooltip(vertex, false);
+            showVertexTooltip(vertex, TooltipType.ID);
         }
         //TODO rethink the order here
         if (gxVertex.isHint()) {
             vertex.setStyleClass("hintVertex");
         }
+
+        if (gxVertex.getStartOrEnd() == GXVertexType.STARTING) {
+            vertex.setStyleClass("startingVertex");
+        } else if (gxVertex.getStartOrEnd() == GXVertexType.ENDING) {
+            vertex.setStyleClass("endingVertex");
+        }
+
+
     }
 
 
     @Override
     public void init() {
-        STRAT.setSizes(this.getWidth(), this.getHeight(), this.getMinWidth(), this.getMinHeight());
+        double prefWidth = getBackgroundImageWidth();
+        double prefHeight = getBackgroundImageHeight();
+        STRAT.setSizes(prefWidth, prefHeight, this.getMinWidth(), this.getMinHeight());
         super.init();
         graphViewSizeListener();
     }
 
+    private double getBackgroundImageHeight() {
+        if (!this.getBackground().getImages().isEmpty()) {
+            return this.getBackground().getImages().get(0).getImage().getHeight();
+        }
+        return this.getPrefHeight();
+    }
+
+    private double getBackgroundImageWidth() {
+        if (!this.getBackground().getImages().isEmpty()) {
+            return this.getBackground().getImages().get(0).getImage().getWidth();
+        }
+        return this.getPrefHeight();
+    }
+
+    /**
+     * Places vertices according to STRAT. Will use the coordinates stored in the underlying vertices.
+     * For them to be placed they are all put into a colection and then passed
+     * to the {@link SmartStaticPlacementStrategy}
+     */
     private void placeVertices() {
         Collection<SmartGraphVertexNode<String>> vertices = new LinkedHashSet<>();
         for (Node node : this.getChildren()) {
@@ -117,10 +188,7 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private void placeVertices(Collection<SmartGraphVertexNode<String>> vertices) {
-        // start reacting correctly to changes below min size
-        Pane parent = (Pane) this.getParent();
-        STRAT.place(parent.getWidth(), parent.getHeight(), super.theGraph, vertices);
-
+        STRAT.place(this.getWidth(), this.getHeight(), super.theGraph, vertices);
     }
 
     private void iterChildren() {
@@ -137,45 +205,67 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     private void graphViewSizeListener() {
-        ChangeListener<Number> listener = ((observable, oldValue, newValue) -> this.placeVertices());
-
-        this.getScene().widthProperty().addListener(listener);
-        this.getScene().heightProperty().addListener(listener);
-        this.listener = listener;
+        ChangeListener<Number> widthListener = ((observable, oldValue, newValue) -> {
+            this.setWidth(newValue.doubleValue());
+            this.placeVertices();
+        }
+        );
+        ChangeListener<Number> heightListener = ((observable, oldValue, newValue) -> {
+            this.setHeight(newValue.doubleValue());
+            this.placeVertices();
+        }
+        );
+        this.getScene().widthProperty().addListener(widthListener);
+        this.getScene().heightProperty().addListener(heightListener);
+        this.widthListener = widthListener;
+        this.heightListener = heightListener;
     }
 
+    /**
+     * Removes the listeners set on this instance. Needs to be called if it is replaced later, so that there are no
+     * NPEs on the
+     */
     public void removeListener() {
-        this.getScene().widthProperty().removeListener(listener);
-        this.getScene().heightProperty().removeListener(listener);
+        this.getScene().widthProperty().removeListener(widthListener);
+        this.getScene().heightProperty().removeListener(heightListener);
     }
 
 
     /**
      * Enables or disables tooltip for a vertex that contains its current distance to the start.
-     * @param v is the vertex
-     * @param show is {@code true} if tooltip should be displayed, {@code false} otherwise.
+     *
+     * @param v    is the vertex
+     * @param type is the {@link TooltipType} that should be displayed, default is no tooltip
      */
-    private void showDistanceTooltip(SmartGraphVertexNode v, boolean show) {
+    private void showVertexTooltip(SmartGraphVertexNode v, TooltipType type) {
         GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
-        Tooltip t = new Tooltip("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
-        if (show) {
-            Tooltip.install(v, t);
-        } else {
-            Tooltip.uninstall(v, t);
+        Tooltip t = new Tooltip();
+        switch (type) {
+            case DISTANCE:
+                t = new Tooltip("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+                Tooltip.install(v, t);
+                break;
+            case ID:
+                t = new Tooltip("ID: " + vertex.getId());
+                Tooltip.install(v, t);
+                break;
+            default:
+                Tooltip.uninstall(v, t);
         }
     }
 
     /**
      * Tooltip for an edge that will display the resulting distance to the next vertex. This feature is only available
      * for unmarked and unblocked edges and with exact 1 marked vertex.
+     *
      * @param e is the hovered edge
      */
-    private void showDistanceTooltip(SmartGraphEdgeLine e) {
+    private void showVertexTooltip(SmartGraphEdgeLine e) {
         GXEdge gxEdge = (GXEdge) e.getUnderlyingEdge();
         GXVertex unmarkedVertex = gxEdge.getNextVertex();
         Tooltip t = new Tooltip();
         if (gxEdge.getNextDistance() != GXEdge.INVALID_DISTANCE) {
-            t.setText("Distanz nach " + unmarkedVertex.element()
+            t.setText("[ID: " + gxEdge.getId() + "] Distanz nach " + unmarkedVertex.element()
                     + " über " + gxEdge.opposite(unmarkedVertex).element() + " = " + gxEdge.getNextDistance());
             Tooltip.install(e, t);
         } else {
@@ -184,18 +274,97 @@ public class GraphView extends SmartGraphPanel implements Observer {
     }
 
     /**
-     * method that returns the width of the scene the graphView is in in pixels
-     * @return the width of the scene in pixels
+     * Will create a context menu showing the current distance to this vertex.
+     *
+     * @param v Vertex for which the distance will be displayed.
+     * @param x x-position the vertex will be displayed in
+     * @param y y-position the vertex will be displayed in
      */
-    public double getSceneWidth() {
-        return this.getScene().getWidth();
+    public void showVertexDistance(SmartGraphVertexNode v, double x, double y) {
+        GXVertex vertex = (GXVertex) v.getUnderlyingVertex();
+        ContextMenu context = new ContextMenu();
+        MenuItem item = new MenuItem();
+        item.setText("Distanz nach " + vertex.element() + " = " + vertex.getCurrentDistance());
+        context.getItems().add(item);
+        double offsetX = this.getScene().getWindow().getX();
+        double offsetY = this.getScene().getWindow().getY();
+        context.show(v, x + offsetX, y + offsetY);
     }
 
     /**
-     * method that returns the height of the scene the graphView is in in pixels
-     * @return the height of the scene in pixels
+     * Will return the relative y-position of the vertex in relation to the {@link GraphView} height.
+     *
+     * @param smartVertex the position is to be calculated of
+     * @return the relative y position of this vertex
      */
-    public double getSceneHeight() {
-        return this.getScene().getHeight();
+    public double calcRelativeY(SmartGraphVertexNode smartVertex) {
+        double correction = STRAT.getCorrection();
+        double relY;
+        if (this.getWidth() > this.getMinWidth() && this.getHeight() > this.getMinHeight()) {
+            if (correction > 1) {
+                relY = (smartVertex.getPositionCenterY() * 1000) / (correction * this.getHeight());
+            } else {
+                relY = (smartVertex.getPositionCenterY() * 1000) / this.getHeight();
+            }
+        } else {
+            relY = (smartVertex.getPositionCenterY() / this.getMinHeight()) * 1000.;
+        }
+        return relY;
+    }
+
+    /**
+     * Will return the relative x-position of the vertex in relation to the {@link GraphView} height.
+     *
+     * @param smartVertex the position is to be calculated of
+     * @return the relative x position of this vertex
+     */
+    public double calcRelativeX(SmartGraphVertexNode smartVertex) {
+        double correction = STRAT.getCorrection();
+        double relX;
+        if (this.getWidth() > this.getMinWidth() && this.getWidth() > this.getMinWidth()) {
+            if (correction < 1) {
+                relX = (smartVertex.getPositionCenterX() * 1000. * correction) / (this.getWidth());
+            } else {
+                relX = (smartVertex.getPositionCenterX() * 1000.) / this.getWidth();
+            }
+        } else {
+            relX = (smartVertex.getPositionCenterX() / this.getMinWidth()) * 1000.;
+        }
+        return relX;
+    }
+    
+    /**
+     * Will set the coordinates of the underlying {@link GXVertex} to the positiion the {@link SmartGraphVertexNode} is
+     * currently in. The update will wait until the all the other events before it are done. Will mean that it is not
+     * guaranteed that it is updated immediately.
+     *
+     * @param smartVertex of which the position should be saved.
+     */
+    public void setMovedCoordinates(SmartGraphVertexNode smartVertex) {
+        Platform.runLater(() -> {
+            GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
+            vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
+
+        });
+    }
+
+    /**
+     * Returns whether the vertices are moveable in this graph view
+     *
+     * @return whether vertices are moveable
+     */
+    public boolean isMoveable() {
+        return isMoveable;
+    }
+
+    public enum TooltipType {
+        /**
+         * Tooltip will contain information to distances.
+         */
+        DISTANCE,
+        /**
+         * Tooltip should display ID of element
+         */
+        ID
     }
 }

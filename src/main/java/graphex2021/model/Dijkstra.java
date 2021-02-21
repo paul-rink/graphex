@@ -3,9 +3,13 @@ package graphex2021.model;
 import java.util.*;
 
 /**
- * This class simulates the Dijkstra-Algorithm.
- * TODO what should happen with help info, if shortest path is found, but Dijkstra would continue?
- * TODO get the distance to the goal vertex.
+ * This class simulates the Dijkstra-Algorithm. <br>
+ * <b> Important notes. </b>
+ * The algorithm works only for positive edge weights >0 correctly. If for a next step multiple vertices share the
+ * same distance, the vertex with the lowest id will be chosen. The same holds in case multiple edges to a vertex
+ * will result in the same distance. The edge with the smallest ID is chosen. <br>
+ *     Unreachable / unvisited vertices have infinity distance, represented by {@link Dijkstra#INFINITY_DIST}
+ *
  * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 14.01.2021
  */
@@ -15,7 +19,8 @@ public class Dijkstra implements Algorithm {
     private GXVertex start;
     /**
      * Array that holds distances for all {@link GXVertex}s respectively as distance to given
-     * {@code start}-vertex. {@code -1} is for {@code infinity}. Only positive values for distances.
+     * {@code start}-vertex. {@link GXEdge#INVALID_DISTANCE} is for {@code infinity}.
+     * Only positive values for distances.
      */
     private int[] dist;
     /**
@@ -30,18 +35,25 @@ public class Dijkstra implements Algorithm {
     private LinkedList<Step> steps;
 
     /**
+     * This is a placeholder for telling the algorithm that distance to a vertex is infinity, i.e. not known, or the
+     * vertex is unreachable at all.
+     */
+    public static final int INFINITY_DIST = -1;
+
+    /**
      * Creates a new Dijkstra instance for a given {@link GXGraph}. Initializes the PriorityQueue for distance
      * comparison.
      */
     public Dijkstra() {
          //This comparator is used for comparing two vertices by their current distance to the start vertex.
         Comparator<GXVertex> vertexDistanceComparator = (v, u) -> {
-            //case u and v are unvisited and therefore distance infinity (-1)
-            if (dist[v.getId()] == dist[u.getId()]) return 0;
+            //case u and v are unvisited and therefore distance infinity (-1) or have same distance then choose
+            //the one with lower id
+            if (dist[v.getId()] == dist[u.getId()]) return (v.getId() - u.getId());
             //case v is unvisited and therefore distance infinity (-1), u is better than v
-            else if (dist[v.getId()] == -1) return 1;
+            else if (dist[v.getId()] == INFINITY_DIST) return 1;
             //case u is unvisited and therefore distance infinity (-1), v is better than u
-            else if (dist[u.getId()] == -1) return -1;
+            else if (dist[u.getId()] == INFINITY_DIST) return -1;
             //both are visited, then calc difference of dist, v -> less, then v -> choose first
             else return dist[v.getId()] - dist[u.getId()];
         };
@@ -84,24 +96,6 @@ public class Dijkstra implements Algorithm {
         return distance == dist[goal.getId()];
     }
 
-    @Override
-    public boolean isCorrectPath(GXVertex goal) {
-        GXVertex current = goal;
-        GXVertex previous = prev[goal.getId()];
-        while (previous != null) {
-            GXEdge edge;
-            try {
-                edge = g.getEdge(current, previous);
-                if (!edge.isMarked()) return false;
-            } catch (ElementNotInGraphException e) {
-                e.printStackTrace();
-            }
-            current = previous;
-            previous = prev[current.getId()];
-        }
-        return true;
-    }
-
     /**
      * Resets the dijkstra instance for a new given graph. Sets starting vertex, arrays for dist and prev and clears
      * unmarked PQ as well steps.
@@ -126,7 +120,7 @@ public class Dijkstra implements Algorithm {
         for (GXVertex v : vertices) {
             if (!v.equals(start)) {
                 int vId = v.getId();
-                dist[vId] = -1;             //set all distances to infinity (-1)
+                dist[vId] = INFINITY_DIST;             //set all distances to infinity (-1)
                 prev[vId] = null;           //set all predecessor undefined
             }
             unmarked.add(v);
@@ -141,6 +135,14 @@ public class Dijkstra implements Algorithm {
     private void createSteps() throws ElementNotInGraphException {
         while (!unmarked.isEmpty()) {
             GXVertex v = unmarked.remove();     //this is the next chosen vertex
+
+            //if the next vertex that would be marked has infinity distance this means that zhe graph is not connected
+            // and that all remaining vertices are not reachable from start vertex
+            if ((dist[v.getId()] == INFINITY_DIST)) {
+                //all remaining vertices can be removed from the unmarked list, since the algo can stop here
+                unmarked.clear();
+                break;
+            }
 
             //create a step with this vertex, but don't create a step for starting vertex
             if (!v.equals(start)) {
@@ -187,7 +189,7 @@ public class Dijkstra implements Algorithm {
             //the resulting distance if the new path would go over v to u
             int alternativeDist = dist[selectedVertex.getId()] + edge.getWeight();
             //if u is not visited yet (dist infinity/-1) or new distance is less than old distance, update distance
-            if (dist[u.getId()] == -1 || alternativeDist < dist[u.getId()]) {
+            if (dist[u.getId()] == INFINITY_DIST || alternativeDist < dist[u.getId()]) {
                 dist[u.getId()] = alternativeDist;
 
                 //because the distance of u changed, insert it again to queue to update its priority
@@ -195,6 +197,14 @@ public class Dijkstra implements Algorithm {
                 unmarked.add(u);
 
                 prev[u.getId()] = selectedVertex;
+                //selected vertex results in a same distance to u as another vertex that is already stored in prev
+                //then the algo should always pick the vertex as prev that's edge weight to u is less
+            } else if (alternativeDist == dist[u.getId()] && prev[u.getId()] != null) {
+                GXEdge prevEdge = g.getEdge(u, prev[u.getId()]);
+                //if new found edge to u has lower id, choose this edge, else leave it as before
+                if (edge.getId() < prevEdge.getId()) {
+                    prev[u.getId()] = selectedVertex;
+                }
             }
         } catch (ElementNotInGraphException e) {
             e.printStackTrace();

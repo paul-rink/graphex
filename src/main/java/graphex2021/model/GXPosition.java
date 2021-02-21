@@ -32,6 +32,17 @@ public class GXPosition {
         this.yPosition = y;
     }
 
+
+    /**
+     * Sets the the positions x and y values.
+     *  @param x position
+     * @param y position
+     */
+    public void setPosition(double x, double y) {
+        this.xPosition = (int) Math.round(x);
+        this.yPosition = (int) Math.round(y);
+    }
+
     /**
      * Returns array containing the x value and thge y value of the position
      *
