@@ -343,8 +343,11 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
     public void setMovedCoordinates(SmartGraphVertexNode smartVertex) {
         Platform.runLater(() -> {
             GXVertex vert = (GXVertex) smartVertex.getUnderlyingVertex();
-            vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
-
+            try {
+                vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
+            } catch (NonValidCoordinatesException e) {
+                e.printStackTrace(); //TODO is this a problem?
+                }
         });
     }
 

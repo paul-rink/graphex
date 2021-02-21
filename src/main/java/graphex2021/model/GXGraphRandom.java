@@ -103,7 +103,11 @@ public class GXGraphRandom extends GXGraph {
             } if (rndPosition == null) {
                 int x = new Random().nextInt(GXPosition.POSITION_RANGE);
                 int y = new Random().nextInt(GXPosition.POSITION_RANGE);
-                rndPosition = new GXPosition(x, y);
+                try {
+                    rndPosition = new GXPosition(x, y);
+                } catch (NonValidCoordinatesException e) {
+                    e.printStackTrace(); //TODO cant happen
+                }
             }
             GXVertex newVertex = new GXVertex(labels[counter].toString(), counter, rndPosition);
             insertVertex(newVertex);
@@ -227,11 +231,15 @@ public class GXGraphRandom extends GXGraph {
      */
     private GXPosition generatePushingPositions(int maxTries) {
         int n = maxTries;
-        GXPosition rndPosition;
+        GXPosition rndPosition = null;
         do {
             int rndX = randomCoordinateGenerator();
             int rndY = randomCoordinateGenerator();
-            rndPosition = new GXPosition(rndX, rndY);
+            try {
+                rndPosition = new GXPosition(rndX, rndY);
+            } catch (NonValidCoordinatesException e) {
+                e.printStackTrace(); //TODO cant happen
+            }
             n--;
         } while (conflicts(rndPosition) && n > 0);
         positionSet.add(rndPosition);
