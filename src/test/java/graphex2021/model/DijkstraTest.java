@@ -47,27 +47,27 @@ public class DijkstraTest {
 
         steps = d.getSequence(g);
         //1
-        System.out.printf("=== Step" + (step + 1) + " === \n");
+
         Assert.assertEquals("Vertex: ", 1, steps.get(step).getSelectedVertex().getId());
         Assert.assertEquals("Edge: ", 1, steps.get(step).getSelectedEdge().getId());
         step++;
         //2
-        System.out.printf("=== Step" + (step + 1) + " === \n");
+
         Assert.assertEquals("Vertex: ", 2, steps.get(step).getSelectedVertex().getId());
         Assert.assertEquals("Edge: ", 0, steps.get(step).getSelectedEdge().getId());
         step++;
         //3
-        System.out.printf("=== Step" + (step + 1) + " === \n");
+
         Assert.assertEquals("Vertex: ", 3, steps.get(step).getSelectedVertex().getId());
         Assert.assertEquals("Edge: ", 2, steps.get(step).getSelectedEdge().getId());
         step++;
         //4
-        System.out.printf("=== Step" + (step + 1) + " === \n");
+
         Assert.assertEquals("Vertex: ", 4, steps.get(step).getSelectedVertex().getId());
         Assert.assertEquals("Edge: ", 4, steps.get(step).getSelectedEdge().getId());
         step++;
         //5
-        System.out.printf("=== Step" + (step + 1) + " === \n");
+
         Assert.assertEquals("Vertex: ", 5, steps.get(step).getSelectedVertex().getId());
         Assert.assertEquals("Edge: ", 5, steps.get(step).getSelectedEdge().getId());
         step++;
@@ -93,19 +93,19 @@ public class DijkstraTest {
         g = new GXGraph(GRAPH_UNCONNECTED);
         steps = d.getSequence(g);
 
-        System.out.printf("===  Steps === \n");
+
         assertEquals(2, steps.size());
         //1
-        System.out.printf("=== Step" + (step + 1) + " === \n");
+
         Assert.assertEquals("Vertex: ", 2, steps.get(step).getSelectedVertex().getId());
         Assert.assertEquals("Edge: ", 2, steps.get(step).getSelectedEdge().getId());
         step++;
         //2
-        System.out.printf("=== Step" + (step + 1) + " === \n");
+
         Assert.assertEquals("Vertex: ", 3, steps.get(step).getSelectedVertex().getId());
         Assert.assertEquals("Edge: ", 3, steps.get(step).getSelectedEdge().getId());
         step++;
-        System.out.printf("=== Distance === \n");
+
         assertTrue(d.isCorrectDistance(g.getEndingVertex(), -1));
     }
 
