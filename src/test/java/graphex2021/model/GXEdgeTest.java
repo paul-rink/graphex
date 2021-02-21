@@ -17,10 +17,14 @@ public class GXEdgeTest {
 
     @Before
     public void setUp() {
-        testVertex1Position = new GXPosition(1,1);
-        testVertex1 = new GXVertex("A", 1,testVertex1Position);
-        testVertex2Position = new GXPosition(2,2);
-        testVertex2 = new GXVertex("B",2, testVertex2Position);
+        try {
+            testVertex1Position = new GXPosition(1, 1);
+            testVertex1 = new GXVertex("A", 1, testVertex1Position);
+            testVertex2Position = new GXPosition(2, 2);
+            testVertex2 = new GXVertex("B", 2, testVertex2Position);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
         testID = 1;
         testWeight = 4;
         testEdge = new GXEdge(testVertex1, testVertex2, String.valueOf(testWeight), testWeight,testID);
@@ -132,7 +136,13 @@ public class GXEdgeTest {
 
     @Test
     public void testContainsNotContained () throws ElementNotInGraphException {
-        assertFalse(testEdge.contains(new GXVertex("C", 3, new GXPosition(4,5))));
+        GXPosition pos = null;
+        try {
+            pos = new GXPosition(4,5);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
+        assertFalse(testEdge.contains(new GXVertex("C", 3, pos)));
     }
 
     @Test(expected = ElementNotInGraphException.class)
@@ -214,7 +224,13 @@ public class GXEdgeTest {
         }
 
     private void markVertexOne() {
-        GXVertex prevVertex1 = new GXVertex("C", 4, new GXPosition(3, 4));
+        GXPosition pos = null;
+        try {
+            pos = new GXPosition(3, 4);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
+        GXVertex prevVertex1 = new GXVertex("C", 4, pos);
         GXEdge prevEdge = new GXEdge(prevVertex1, testVertex1, "3", 3, 4);
         testVertex1.mark(5,prevEdge);
     }
@@ -236,7 +252,13 @@ public class GXEdgeTest {
 
     @Test
     public void testOppositeWrongVertex() {
-        GXVertex otherVertex = new GXVertex("C", 4, new GXPosition(3, 4));
+        GXPosition pos = null;
+        try {
+            pos = new GXPosition(3, 4);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
+        GXVertex otherVertex = new GXVertex("C", 4, pos);
         assertNull(testEdge.opposite(otherVertex));
     }
 
@@ -263,9 +285,19 @@ public class GXEdgeTest {
     }
 
     private GXEdge createIdenticalEdge() {
-        GXPosition pos1 = new GXPosition(1,1);
+        GXPosition pos1 = null;
+        try {
+            pos1 = new GXPosition(1,1);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
         GXVertex v1 = new GXVertex("A", 1, pos1);
-        GXPosition pos2 = new GXPosition(2,2);
+        GXPosition pos2 = null;
+        try {
+            pos2 = new GXPosition(2,2);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
         GXVertex v2 = new GXVertex("B",2, pos2);
         int id = 1;
         int weight = 4;
@@ -273,9 +305,19 @@ public class GXEdgeTest {
     }
 
     private GXEdge createOtherEdge() {
-        GXPosition pos1 = new GXPosition(1,1);
+        GXPosition pos1 = null;
+        try {
+            pos1 = new GXPosition(1,1);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
         GXVertex v1 = new GXVertex("C", 3, pos1);
-        GXPosition pos2 = new GXPosition(2,2);
+        GXPosition pos2 = null;
+        try {
+            pos2 = new GXPosition(2,2);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
         GXVertex v2 = new GXVertex("D",4, pos2);
         int id = 5;
         int weight = 3;
