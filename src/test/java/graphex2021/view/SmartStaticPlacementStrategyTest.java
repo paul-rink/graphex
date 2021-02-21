@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
@@ -78,9 +79,9 @@ public class SmartStaticPlacementStrategyTest {
 
         strat.place(width, height, null, vertexList);
 
-        Assert.assertEquals(calcVertexMinXPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_WIDTH)
+        assertEquals(calcVertexMinXPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_WIDTH)
                 , doubleXArgumentCaptor.getValue(), 0.05);
-        Assert.assertEquals(calcVertexMinYPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_HEIGHT)
+        assertEquals(calcVertexMinYPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_HEIGHT)
                 , doubleYArgumentCaptor.getValue(), 0.05);
     }
 
@@ -90,6 +91,7 @@ public class SmartStaticPlacementStrategyTest {
         final double height = 1000;
 
         final double correctionFactor = (width / height) / ((double) WIDTH / (double) HEIGHT);
+
         double xPos = ((gxVertexA.getPosition().getPosition()[0] / 1000.)) * width;
         double yPos = (gxVertexA.getPosition().getPosition()[1] / 1000.) * height * correctionFactor;
 
@@ -99,9 +101,34 @@ public class SmartStaticPlacementStrategyTest {
         doNothing().when(vertexA).setPosition(doubleXArgumentCaptor.capture(), doubleYArgumentCaptor.capture());
 
         strat.place(width, height, null, vertexList);
+        assertEquals(correctionFactor, strat.getCorrection(), 0.05);
 
-        Assert.assertEquals(xPos, doubleXArgumentCaptor.getValue(), 0.05);
-        Assert.assertEquals(yPos, doubleYArgumentCaptor.getValue(), 0.05);
+        assertEquals(xPos, doubleXArgumentCaptor.getValue(), 0.05);
+        assertEquals(yPos, doubleYArgumentCaptor.getValue(), 0.05);
+
+
+    }
+
+
+    @Test
+    public void testPlaceWindowHigh() {
+        final double width = 1500;
+        final double height = 1100;
+
+        final double correctionFactor = (width / height) / ((double) WIDTH / (double) HEIGHT);
+        double xPos = ((gxVertexA.getPosition().getPosition()[0] / 1000.)) * width * (1 / correctionFactor);
+        double yPos = (gxVertexA.getPosition().getPosition()[1] / 1000.) * height;
+
+        ArgumentCaptor<Double>  doubleXArgumentCaptor = ArgumentCaptor.forClass(Double.class);
+        ArgumentCaptor<Double>  doubleYArgumentCaptor = ArgumentCaptor.forClass(Double.class);
+
+        doNothing().when(vertexA).setPosition(doubleXArgumentCaptor.capture(), doubleYArgumentCaptor.capture());
+
+        strat.place(width, height, null, vertexList);
+        assertEquals(correctionFactor, strat.getCorrection(), 0.05);
+
+        assertEquals(xPos, doubleXArgumentCaptor.getValue(), 0.05);
+        assertEquals(yPos, doubleYArgumentCaptor.getValue(), 0.05);
 
 
     }
