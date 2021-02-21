@@ -13,9 +13,19 @@ public class GXVertexTest {
     @Before
     public void setup() {
         //create a Vertex with expected values
-        testPosition = new GXPosition(3,5);
+        try {
+            testPosition = new GXPosition(3, 5);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
         testVertex = new GXVertex("A", 5,testPosition);
-        secondVertex = new GXVertex("B", 3, new GXPosition(2,3));
+        GXPosition pos2 = null;
+        try {
+            pos2 = new GXPosition(2,3);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
+        secondVertex = new GXVertex("B", 3, pos2);
         prevEdge = new GXEdge(testVertex, secondVertex, "4", 4, 1);
     }
 
@@ -123,7 +133,13 @@ public class GXVertexTest {
 
     @Test
     public void testEquals() {
-        assertTrue(testVertex.equals(new GXVertex("A", 5, new GXPosition(3,3))));
+        GXPosition pos = null;
+        try {
+            pos = new GXPosition(3,3);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
+        assertTrue(testVertex.equals(new GXVertex("A", 5, pos)));
     }
 
     @Test
