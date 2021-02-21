@@ -83,9 +83,6 @@ public class SmartStaticPlacementStrategyTest {
 
         Assert.assertEquals(calcVertexMinXPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_Width), doubleXArgumentCaptor.getValue(), 0.05);
         Assert.assertEquals(calcVertexMinYPos((GXVertex) vertexA.getUnderlyingVertex(), MIN_HEIGHT), doubleYArgumentCaptor.getValue(), 0.05);
-
-
-
     }
 
     private double calcVertexMinXPos(GXVertex vertex, double minWidth) {

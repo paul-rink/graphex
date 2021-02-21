@@ -25,9 +25,7 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
     @Override
     public <V, E> void place(double width, double height, Graph<V, E> theGraph, Collection<?
             extends SmartGraphVertex<V>> vertices) {
-        //TODO find way to get rid of magic numbers
-        //TODO find way to get the actual height of the Pane and not the size of the window
-        double startingRatio = this.startWidth / (this.startHeight );
+        double startingRatio = this.startWidth / (this.startHeight);
         double currentRatio = width / height;
 
         /*
@@ -42,7 +40,7 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
         double correctionFactor = currentRatio / startingRatio;
         this.correction = correctionFactor;
 
-        if (width < minWidth &&  height < minHeight) {
+        if (width < minWidth && height < minHeight) {
             for (SmartGraphVertex<V> vertex : vertices) {
 
                 GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
@@ -52,19 +50,7 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
             }
 
         } else {
-
-            if (correctionFactor == 1) {
-
-                for (SmartGraphVertex<V> vertex : vertices) {
-
-                    GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
-                    double x = calcFromRelative(width, vert.getPosition().getPosition()[0]);
-                    double y = calcFromRelative(height, vert.getPosition().getPosition()[1]);
-
-                    vertex.setPosition(x, y);
-
-                }
-            } else if (correctionFactor > 1) {
+            if (correctionFactor >= 1) {
                 //height relatively bigger than Width
                 for (SmartGraphVertex<V> vertex : vertices) {
 
@@ -90,7 +76,6 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
                 }
             }
         }
-
     }
 
     public void setSizes(double width, double height, double minWidth, double minHeight) {
