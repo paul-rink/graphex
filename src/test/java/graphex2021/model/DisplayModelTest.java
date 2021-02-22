@@ -44,10 +44,19 @@ public class DisplayModelTest {
     }
 
     private void addGraph(GXGraph graph) {
-        GXPosition posS = new GXPosition(0,0);
-        GXPosition posA = new GXPosition(1,1);
-        GXPosition posB = new GXPosition(2,2);
-        GXPosition posZ = new GXPosition(4,3);
+        GXPosition posA = null;
+        GXPosition posS = null;
+        GXPosition posB = null;
+        GXPosition posZ = null;
+        try {
+            posA = new GXPosition(1,1);
+            posS = new GXPosition(0,0);
+            posB = new GXPosition(2,2);
+            posZ = new GXPosition(4,3);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
+
         S = Mockito.spy(new GXVertex("S", 0, posS));
         A = Mockito.spy(new GXVertex("A", 1, posA));
         B = Mockito.spy(new GXVertex("B", 2, posB));
