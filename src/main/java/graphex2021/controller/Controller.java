@@ -539,7 +539,11 @@ public class Controller {
         Group parent = (Group) graphView.getParent();
         //final Pane parent = (Pane) graphView.getParent();
         remove(parent, true);
-        this.displayModel = new DisplayModel(graph);
+        try {
+            this.displayModel = new DisplayModel(graph);
+        } catch (WrongFileFormatException e) {
+            new FileAlert(e.getMessage()).showAndWait();
+        }
         addToParent(parent);
         graphView.setBackground(Background.EMPTY);
         setSizes(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
