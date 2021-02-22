@@ -356,4 +356,11 @@ public class DisplayModelTest {
         assertFalse(SB.isHighlighted());
     }
 
+    @Test
+    public void testGetAllVertices() {
+        Collection<GXVertex> vertices = testModel.getAllVertices();
+        assertTrue(vertices.contains(S) && vertices.contains(A) &&
+                vertices.contains(B) && vertices.contains(Z));
+        assertEquals(4, vertices.size());
+    }
 }
