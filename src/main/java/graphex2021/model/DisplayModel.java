@@ -141,7 +141,7 @@ public class DisplayModel extends Subject {
                 return false;
             }
         }
-        return false;
+        return !iter.hasNext();
     }
 
     /**
@@ -167,6 +167,9 @@ public class DisplayModel extends Subject {
      * @throws EdgeCompletesACircleException if the marked edge would complete a circle
      */
     public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {
+        if(edge == null) {
+            throw new ElementNotInGraphException("Die zu mrakierende Edge existiert nicht");
+        }
         //check if edge is blocked because of circle -> create alert
         if (edge.isBlocked()) throw new EdgeCompletesACircleException("Edge can not be marked, because its blocked");
         //get unmarked vertex of edge and mark both in graph
