@@ -78,6 +78,21 @@ public class DijkstraTest {
 
     }
 
+    @Test
+    public void testIsRevealed() {
+        Assert.assertFalse(d.isRevealed());
+    }
+
+    @Test
+    public void testHasStartingVertex() {
+        Assert.assertTrue(d.hasStartingVertex());
+    }
+
+    @Test
+    public void testHasEndingVertex() {
+        Assert.assertTrue(d.hasEndingVertex());
+    }
+
     /**
      * This tests if the distance to final vertex is correct.
      */
