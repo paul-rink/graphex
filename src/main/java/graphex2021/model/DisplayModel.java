@@ -51,10 +51,20 @@ public class DisplayModel extends Subject {
      * Constructor for DisplayModel for a given {@link GXGraph}.
      * @param graph is the graph the DisplayModel should be init for.
      */
-    public DisplayModel(GXGraph graph) {
-        this.graph = graph;
-        loadGraph();
-    }
+    public DisplayModel(GXGraph graph) throws WrongFileFormatException {
+        if (graph != null) {
+            this.graph = graph;
+            loadGraph();
+        } else {
+            File jarPath;
+            try {
+                  jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
+            } catch (URISyntaxException e) {
+                  throw new WrongFileFormatException(e.getMessage());
+            }
+        loadGraph(new File(jarPath, EXAMPLEGRAPH));
+        }
+}
 
     /**
      * Will init a new DisplayModel for a given file that stores information to a graph. <br>

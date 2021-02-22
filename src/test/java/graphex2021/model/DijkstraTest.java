@@ -35,7 +35,11 @@ public class DijkstraTest {
         steps = new ArrayList<>();
         userSteps = new LinkedList<>();
         step = 0;
-        dp = new DisplayModel(g);
+        try {
+            dp = new DisplayModel(g);
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
