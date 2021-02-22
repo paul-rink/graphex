@@ -270,6 +270,7 @@ public class DisplayModelTest {
     @Test
     public void testUndoNothingMarked() throws ElementNotInGraphException {
         testModel.undo();
+        assertTrue(expectedGraphInitial());
     }
 
     @Test
