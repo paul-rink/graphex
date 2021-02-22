@@ -63,7 +63,12 @@ public final class GraphParser {
             String vertexName = jsonVertex.getString("name");
             int posx = jsonVertex.getInt("posx");
             int posy = jsonVertex.getInt("posy");
-            GXPosition vertexPosition = new GXPosition(posx, posy);
+            GXPosition vertexPosition = null;
+            try {
+                vertexPosition = new GXPosition(posx, posy);
+            } catch (NonValidCoordinatesException e) {
+                throw new WrongFileFormatException("Für Knoten "+ vertexName + " gilt: " + e.getMessage());
+            }
             int id = getNextVertexId();
             GXVertex vertex = new GXVertex(vertexName, id, vertexPosition);
             vertexList.add(vertex);

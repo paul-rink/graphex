@@ -212,8 +212,20 @@ public class GraphParserTest {
     }
 
     private Collection<GXVertex> createExpectedVertices() {
-        GXVertex expectationv1 = new GXVertex("A", 0, new GXPosition(6,7));
-        GXVertex expectationv2 = new GXVertex("B", 1, new GXPosition(6,5));
+        GXPosition pos1 = null;
+        try {
+            pos1 = new GXPosition(6,7);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
+        GXPosition pos2 = null;
+        try {
+            pos2 = new GXPosition(6,5);
+        } catch (NonValidCoordinatesException e) {
+            e.printStackTrace();
+        }
+        GXVertex expectationv1 = new GXVertex("A", 0, pos1);
+        GXVertex expectationv2 = new GXVertex("B", 1, pos2);
 
         Collection<GXVertex> expectation = new ArrayList<GXVertex>();
         expectation.add(expectationv1);
