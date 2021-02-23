@@ -115,7 +115,20 @@ public class GraphAdapterTest {
     }
 
     @Test
-    public void testOppositeVertex() {
+    public void testOppositeVertex() throws ElementNotInGraphException {
+        when(mockedGraph.opposite(vertex1, edge1)).thenReturn(vertex2);
+        assertEquals(vertex2, mockedGraph.opposite(vertex1, edge1));
+    }
 
+    @Test (expected = InvalidEdgeException.class)
+    public void testOppositeVertexWrongEdge() throws ElementNotInGraphException, InvalidEdgeException {
+        when(mockedGraph.opposite(vertex1, edge2)).thenThrow(InvalidEdgeException.class);
+        graphAdapter.opposite(vertex1, edge2);
+    }
+
+    @Test (expected = InvalidVertexException.class)
+    public void testOppositeVertexNotInGraph() throws InvalidVertexException, ElementNotInGraphException {
+        when(mockedGraph.opposite(vertex3, edge1)).thenThrow(InvalidVertexException.class);
+        graphAdapter.opposite(vertex3, edge1);
     }
 }
