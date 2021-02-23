@@ -35,7 +35,11 @@ public class DijkstraTest {
         steps = new ArrayList<>();
         userSteps = new LinkedList<>();
         step = 0;
-        dp = new DisplayModel(g);
+        try {
+            dp = new DisplayModel(g);
+        } catch (WrongFileFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -72,6 +76,21 @@ public class DijkstraTest {
         Assert.assertEquals("Edge: ", 5, steps.get(step).getSelectedEdge().getId());
         step++;
 
+    }
+
+    @Test
+    public void testIsRevealed() {
+        Assert.assertFalse(d.isRevealed());
+    }
+
+    @Test
+    public void testHasStartingVertex() {
+        Assert.assertTrue(d.hasStartingVertex());
+    }
+
+    @Test
+    public void testHasEndingVertex() {
+        Assert.assertTrue(d.hasEndingVertex());
     }
 
     /**

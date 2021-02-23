@@ -1,5 +1,7 @@
 package graphex2021.model;
 
+import javafx.geometry.Pos;
+
 /**
  * Stores the position that a vertex can be in.
  * 2 dimensional position stored with x and y values
@@ -27,7 +29,8 @@ public class GXPosition {
      * @param x x-coordinate
      * @param y y-coordinate
      */
-    public GXPosition(int x, int y) {
+    public GXPosition(int x, int y) throws NonValidCoordinatesException {
+        checkValidCoordinates(x, y);
         this.xPosition = x;
         this.yPosition = y;
     }
@@ -38,9 +41,12 @@ public class GXPosition {
      *  @param x position
      * @param y position
      */
-    public void setPosition(double x, double y) {
-        this.xPosition = (int) Math.round(x);
-        this.yPosition = (int) Math.round(y);
+    public void setPosition(double x, double y) throws NonValidCoordinatesException {
+        int newX = (int) Math.round(x);
+        int newY = (int) Math.round(y);
+        checkValidCoordinates(newX, newY);
+        this.xPosition = newX;
+        this.yPosition = newY;
     }
 
     /**
@@ -50,5 +56,14 @@ public class GXPosition {
      */
     public int[] getPosition() {
         return new int[]{xPosition, yPosition};
+    }
+
+    private void checkValidCoordinates(int x, int y) throws NonValidCoordinatesException{
+        if(x < 0 || x > POSITION_RANGE) {
+            throw new NonValidCoordinatesException("Die Koordinate "+ x + " ist nicht erlaubt");
+        }
+        if(y < 0 || y > POSITION_RANGE) {
+            throw new NonValidCoordinatesException("Die Koordinate "+ y + " ist nicht erlaubt");
+        }
     }
 }

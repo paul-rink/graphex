@@ -51,10 +51,20 @@ public class DisplayModel extends Subject {
      * Constructor for DisplayModel for a given {@link GXGraph}.
      * @param graph is the graph the DisplayModel should be init for.
      */
-    public DisplayModel(GXGraph graph) {
-        this.graph = graph;
-        loadGraph();
-    }
+    public DisplayModel(GXGraph graph) throws WrongFileFormatException {
+        if (graph != null) {
+            this.graph = graph;
+            loadGraph();
+        } else {
+            File jarPath;
+            try {
+                  jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
+            } catch (URISyntaxException e) {
+                  throw new WrongFileFormatException(e.getMessage());
+            }
+        loadGraph(new File(jarPath, EXAMPLEGRAPH));
+        }
+}
 
     /**
      * Will init a new DisplayModel for a given file that stores information to a graph. <br>
@@ -131,7 +141,7 @@ public class DisplayModel extends Subject {
                 return false;
             }
         }
-        return false;
+        return !iter.hasNext();
     }
 
     /**
@@ -157,6 +167,9 @@ public class DisplayModel extends Subject {
      * @throws EdgeCompletesACircleException if the marked edge would complete a circle
      */
     public void markEdge(GXEdge edge) throws ElementNotInGraphException, EdgeCompletesACircleException {
+        if(edge == null) {
+            throw new ElementNotInGraphException("Die zu mrakierende Edge existiert nicht");
+        }
         //check if edge is blocked because of circle -> create alert
         if (edge.isBlocked()) throw new EdgeCompletesACircleException("Edge can not be marked, because its blocked");
         //get unmarked vertex of edge and mark both in graph

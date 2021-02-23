@@ -96,7 +96,7 @@
         {
             "vertex1" : "A",
             "vertex2" : "B",
-            "weight" :"4",
+            "weight" :"6",
         },
         {
             "vertex1" : "A",
@@ -150,7 +150,7 @@
         },{
             "vertex1" : "G",
             "vertex2" : "H",
-            "weight" :"4",
+            "weight" :"6",
         },
         {
             "vertex1" : "G",
@@ -159,7 +159,7 @@
         },{
             "vertex1" : "J",
             "vertex2" : "K",
-            "weight" :"2",
+            "weight" :"3",
         },
         {
             "vertex1" : "J",
@@ -168,11 +168,11 @@
         },{
             "vertex1" : "K",
             "vertex2" : "L",
-            "weight" :"7",
+            "weight" :"6",
         },{
             "vertex1" : "L",
             "vertex2" : "M",
-            "weight" :"1",
+            "weight" :"3",
         },
         {
             "vertex1" : "L",
