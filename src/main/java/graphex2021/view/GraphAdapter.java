@@ -66,7 +66,7 @@ public class GraphAdapter implements Graph {
         try {
             return graph.opposite((GXVertex) v, (GXEdge) e);
         } catch (ElementNotInGraphException eni) {
-            if (eni.getMessage().contains("Vertex")) {
+            if (!graph.vertices().contains(v)) {
                 throw new InvalidVertexException();
             } else {
                 throw new InvalidEdgeException();

@@ -122,13 +122,15 @@ public class GraphAdapterTest {
 
     @Test (expected = InvalidEdgeException.class)
     public void testOppositeVertexWrongEdge() throws ElementNotInGraphException, InvalidEdgeException {
-        when(mockedGraph.opposite(vertex1, edge2)).thenThrow(InvalidEdgeException.class);
+        when(mockedGraph.opposite(vertex1, edge2)).thenThrow(ElementNotInGraphException.class);
+        when(mockedGraph.vertices()).thenReturn(new ArrayList<>(Arrays.asList(vertex1, vertex2)));
         graphAdapter.opposite(vertex1, edge2);
     }
 
     @Test (expected = InvalidVertexException.class)
     public void testOppositeVertexNotInGraph() throws InvalidVertexException, ElementNotInGraphException {
-        when(mockedGraph.opposite(vertex3, edge1)).thenThrow(InvalidVertexException.class);
+        when(mockedGraph.opposite(vertex3, edge1)).thenThrow(ElementNotInGraphException.class);
+        when(mockedGraph.vertices()).thenReturn(new ArrayList<>(Arrays.asList(vertex1, vertex2)));
         graphAdapter.opposite(vertex3, edge1);
     }
 }
