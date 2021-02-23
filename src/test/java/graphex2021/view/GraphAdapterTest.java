@@ -1,5 +1,6 @@
 package graphex2021.view;
 
+import com.brunomnsilva.smartgraph.graph.InvalidEdgeException;
 import com.brunomnsilva.smartgraph.graph.InvalidVertexException;
 import graphex2021.model.ElementNotInGraphException;
 import graphex2021.model.GXEdge;
@@ -105,5 +106,16 @@ public class GraphAdapterTest {
     public void testIncidentEdges() throws ElementNotInGraphException {
         when(mockedGraph.incidentEdges(vertex1)).thenReturn(edges);
         assertArrayEquals(edges.toArray(), graphAdapter.incidentEdges(vertex1).toArray());
+    }
+
+    @Test (expected = InvalidVertexException.class)
+    public void testIncidentEdgesException() throws ElementNotInGraphException, InvalidVertexException {
+        when(mockedGraph.incidentEdges(vertex1)).thenThrow(ElementNotInGraphException.class);
+        graphAdapter.incidentEdges(vertex1);
+    }
+
+    @Test
+    public void testOppositeVertex() {
+
     }
 }
