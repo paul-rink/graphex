@@ -25,28 +25,23 @@ import static org.mockito.Mockito.when;
 @RunWith (MockitoJUnitRunner.class)
 public class GraphAdapterTest {
 
-    @Mock
-    private GXGraph mockedGraph;
-
     private static ArrayList<GXVertex> vertices;
     private static ArrayList<GXEdge> edges;
-
     @Mock
     private static GXEdge edge1;
     @Mock
     private static GXEdge edge2;
     @Mock
     private  static GXEdge edge3;
-
     @Mock
     private static GXVertex vertex1;
     @Mock
     private static GXVertex vertex2;
     @Mock
     private static GXVertex vertex3;
+    @Mock
+    private GXGraph mockedGraph;
 
-    private static final File GRAPH_FILE = new File("src/test/resources/GraphData/exampleGraph.json");
-    private GXGraph example;
     private GraphAdapter graphAdapter;
 
     @BeforeClass
@@ -58,18 +53,12 @@ public class GraphAdapterTest {
 
     @Before
     public void setUp() throws Exception {
-        example = new GXGraph(GRAPH_FILE);
         graphAdapter = new GraphAdapter();
         graphAdapter.setGXGraph(mockedGraph);
-
-
-
-
     }
 
     @After
     public void tearDown() throws Exception {
-        this.example = null;
         graphAdapter = null;
     }
 
@@ -132,5 +121,19 @@ public class GraphAdapterTest {
         when(mockedGraph.opposite(vertex3, edge1)).thenThrow(ElementNotInGraphException.class);
         when(mockedGraph.vertices()).thenReturn(new ArrayList<>(Arrays.asList(vertex1, vertex2)));
         graphAdapter.opposite(vertex3, edge1);
+    }
+
+    @Test
+    public void testAreAdjacent() throws ElementNotInGraphException {
+        when(mockedGraph.areAdjacent(vertex1, vertex2)).thenReturn(true);
+        when(mockedGraph.areAdjacent(vertex1, vertex3)).thenReturn(false);
+        assertTrue(graphAdapter.areAdjacent(vertex1, vertex2));
+        assertFalse(graphAdapter.areAdjacent(vertex1, vertex3));
+    }
+
+    @Test (expected = InvalidVertexException.class)
+    public void testAreAdjacentNotInGraph() throws InvalidVertexException, ElementNotInGraphException {
+        when(mockedGraph.areAdjacent(vertex1, vertex3)).thenThrow(ElementNotInGraphException.class);
+        graphAdapter.areAdjacent(vertex1, vertex3);
     }
 }
