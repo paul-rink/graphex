@@ -1,7 +1,9 @@
 package graphex2021.view;
 
+import com.brunomnsilva.smartgraph.graph.Edge;
 import com.brunomnsilva.smartgraph.graph.InvalidEdgeException;
 import com.brunomnsilva.smartgraph.graph.InvalidVertexException;
+import com.brunomnsilva.smartgraph.graph.Vertex;
 import graphex2021.model.ElementNotInGraphException;
 import graphex2021.model.GXEdge;
 import graphex2021.model.GXGraph;
@@ -135,5 +137,40 @@ public class GraphAdapterTest {
     public void testAreAdjacentNotInGraph() throws InvalidVertexException, ElementNotInGraphException {
         when(mockedGraph.areAdjacent(vertex1, vertex3)).thenThrow(ElementNotInGraphException.class);
         graphAdapter.areAdjacent(vertex1, vertex3);
+    }
+
+    @Test (expected = UnsupportedOperationException.class)
+    public void testInsertVertex() {
+        graphAdapter.insertVertex(null);
+    }
+
+    @Test (expected = UnsupportedOperationException.class)
+    public void testInsertEdge() {
+        graphAdapter.insertEdge(null, null, null);
+    }
+
+    @Test (expected = UnsupportedOperationException.class)
+    public void testInsertEdgeElements() {
+        graphAdapter.insertEdge((Object) null, null, null);
+    }
+
+    @Test (expected = UnsupportedOperationException.class)
+    public void testRemoveVertex() {
+        graphAdapter.removeVertex(null);
+    }
+
+    @Test (expected = UnsupportedOperationException.class)
+    public void testRemoveEdge() {
+        graphAdapter.removeEdge(null);
+    }
+
+    @Test (expected = UnsupportedOperationException.class)
+    public void testReplaceVertex() {
+        graphAdapter.replace((Vertex) null, null);
+    }
+
+    @Test (expected = UnsupportedOperationException.class)
+    public void testRelaceEdge() {
+        graphAdapter.replace((Edge) null, null);
     }
 }
