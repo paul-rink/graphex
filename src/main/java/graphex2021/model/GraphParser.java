@@ -120,9 +120,15 @@ public final class GraphParser {
         JSONObject graphObject = null;
         graphObject = getJsonObject(input);
 
-        String startName =  graphObject.getString("startVertex");
-        return findMatchingVertex(startName, vertices);
+        String startName = graphObject.getString("startVertex");
+        GXVertex start = findMatchingVertex(startName, vertices);
+        if (start != null) {
+            return start;
+        } else {
+            throw new WrongFileFormatException("Der angegebene Startknoten '" + startName + "' ist nicht als Knoten definiert");
+        }
     }
+
 
     /**
      * method that parses which vertex is designated as the end vertex in the file
@@ -135,7 +141,12 @@ public final class GraphParser {
         graphObject = getJsonObject(input);
 
         String endName =  graphObject.getString("endVertex");
-        return findMatchingVertex(endName, vertices);
+        GXVertex end = findMatchingVertex(endName, vertices);
+        if (end != null) {
+            return end;
+        } else {
+            throw new WrongFileFormatException("Der angegebene Endknoten '" + endName + "' ist nicht als Knoten definiert");
+        }
     }
 
     /**
