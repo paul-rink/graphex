@@ -40,7 +40,7 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
         double correctionFactor = currentRatio / startingRatio;
         this.correction = correctionFactor;
 
-        if (width < minWidth && height < minHeight) {
+        if (width <= minWidth && height <= minHeight) {
             for (SmartGraphVertex<V> vertex : vertices) {
 
                 GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
