@@ -25,9 +25,7 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
     @Override
     public <V, E> void place(double width, double height, Graph<V, E> theGraph, Collection<?
             extends SmartGraphVertex<V>> vertices) {
-        //TODO find way to get rid of magic numbers
-        //TODO find way to get the actual height of the Pane and not the size of the window
-        double startingRatio = this.startWidth / (this.startHeight );
+        double startingRatio = this.startWidth / (this.startHeight);
         double currentRatio = width / height;
 
         /*
@@ -42,7 +40,7 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
         double correctionFactor = currentRatio / startingRatio;
         this.correction = correctionFactor;
 
-        if (width < minWidth &&  height < minHeight) {
+        if (width < minWidth && height < minHeight) {
             for (SmartGraphVertex<V> vertex : vertices) {
 
                 GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
@@ -52,20 +50,8 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
             }
 
         } else {
-
-            if (correctionFactor == 1) {
-
-                for (SmartGraphVertex<V> vertex : vertices) {
-
-                    GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
-                    double x = calcFromRelative(width, vert.getPosition().getPosition()[0]);
-                    double y = calcFromRelative(height, vert.getPosition().getPosition()[1]);
-
-                    vertex.setPosition(x, y);
-
-                }
-            } else if (correctionFactor > 1) {
-                //height relatively bigger than Width
+            if (correctionFactor >= 1) {
+                //Relatively wider than high
                 for (SmartGraphVertex<V> vertex : vertices) {
 
                     GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
@@ -80,9 +66,9 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
 
                     GXVertex vert = (GXVertex) vertex.getUnderlyingVertex();
 
-                    // if the width has relatively grown more than the height the correctionFactor is less tha zero
+                    // if the height has relatively grown more than the width the correctionFactor is less than 1
                     // ==> the x coordinates need to be stretched. The factor would be
-                    // (startingHeight / startingWidth) / ( currentHeight/ currentWidth) == (1 / coorectionFactor)
+                    // (startingHeight / startingWidth) / ( currentHeight/ currentWidth) == (1 / correctionFactor)
                     double x = calcFromRelative(width, vert.getPosition().getPosition()[0]) * (1 / correctionFactor);
                     double y = calcFromRelative(height, vert.getPosition().getPosition()[1]);
 
@@ -90,7 +76,6 @@ public class SmartStaticPlacementStrategy implements SmartPlacementStrategy {
                 }
             }
         }
-
     }
 
     public void setSizes(double width, double height, double minWidth, double minHeight) {

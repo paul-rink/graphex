@@ -28,9 +28,9 @@ public class GraphParserTest {
     private static final File TEST_DIR = new File("src/test/resources/GraphData/test");
     private static final File copiedFile = new File("src/test/resources/GraphData/test/testFile.json");
     private static final File GRAPH_MISSING_ATTRIBUTE = new File("src/test/resources/GraphData/wrongGXFormat.json");
-    private static final  File NOT_JSON = new File("src/test/resources/GraphData/noJson.json");
+    private static final File NOT_JSON = new File("src/test/resources/GraphData/noJson.json");
     private static final File copy_GRAPH_MISSING_ATTRIBUTE = new File("src/test/resources/GraphData/test/wrongGXFormat.json");
-    private static final  File copy_NOT_JSON = new File("src/test/resources/GraphData/test/noJson.json");
+    private static final File copy_NOT_JSON = new File("src/test/resources/GraphData/test/noJson.json");
 
     private static GraphParser parser;
 

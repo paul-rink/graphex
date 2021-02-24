@@ -66,8 +66,7 @@ public class GraphAdapter implements Graph {
         try {
             return graph.opposite((GXVertex) v, (GXEdge) e);
         } catch (ElementNotInGraphException eni) {
-            //TODO very ugly
-            if (eni.getMessage().contains("Vertex")) {
+            if (!graph.vertices().contains(v)) {
                 throw new InvalidVertexException();
             } else {
                 throw new InvalidEdgeException();
@@ -87,38 +86,38 @@ public class GraphAdapter implements Graph {
     //TODO Kinda not needed from here on
     @Override
     public Vertex insertVertex(Object vElement) throws InvalidVertexException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Edge insertEdge(Vertex u, Vertex v, Object edgeElement) throws InvalidVertexException, InvalidEdgeException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Edge insertEdge(Object vElement1, Object vElement2, Object edgeElement) throws InvalidVertexException,
             InvalidEdgeException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Object removeVertex(Vertex v) throws InvalidVertexException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Object removeEdge(Edge e) throws InvalidEdgeException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Object replace(Vertex v, Object newElement) throws InvalidVertexException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Object replace(Edge e, Object newElement) throws InvalidEdgeException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public void setGXGraph(GXGraph gxGraph) {
