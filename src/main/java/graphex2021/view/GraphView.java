@@ -169,7 +169,7 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         if (!this.getBackground().getImages().isEmpty()) {
             return this.getBackground().getImages().get(0).getImage().getWidth();
         }
-        return this.getPrefHeight();
+        return this.getPrefWidth();
     }
 
     /**
