@@ -113,8 +113,7 @@ public class Controller {
         initGraphView();
         initScrollPane();
         initTableView();
-        graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
-        graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
+        bind();
         displayModel.notifyObservers();
     }
 
@@ -387,10 +386,12 @@ public class Controller {
     private void setSizes(double prefWidth, double prefHeight, double minWidth, double minHeight) {
         graphView.setMinSize(minWidth, minHeight);
         graphView.setPrefSize(prefWidth, prefHeight);
+    }
+
+    private void bind() {
         graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
         graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
     }
-
     /**
      * Will set the size of the graphview pane according to its background.
      *
@@ -546,7 +547,7 @@ public class Controller {
         }
         addToParent(parent);
         graphView.setBackground(Background.EMPTY);
-        setSizes(STANDARD_PANE_WIDTH, STANDARD_PANE_HEIGHT, STANDARD_PANE_MIN_WIDTH, STANDARD_PANE_MIN_HEIGHT);
+        setSizes(Background.EMPTY);
         reset();
         initializeUpdatedView(parent, true);
     }
