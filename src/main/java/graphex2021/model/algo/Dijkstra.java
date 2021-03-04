@@ -16,6 +16,12 @@ import java.util.*;
  * @version 1.0 14.01.2021
  */
 public class Dijkstra implements Algorithm {
+
+    /**
+     * This is a placeholder for telling the algorithm that distance to a vertex is infinity, i.e. not known, or the
+     * vertex is unreachable at all.
+     */
+    public static final int INFINITY_DIST = -1;
     private GXGraph g;
     private Collection<GXVertex> vertices;
     private GXVertex start;
@@ -50,12 +56,6 @@ public class Dijkstra implements Algorithm {
      */
     private final PriorityQueue<GXVertex> unmarked;
     private LinkedList<Step> steps;
-
-    /**
-     * This is a placeholder for telling the algorithm that distance to a vertex is infinity, i.e. not known, or the
-     * vertex is unreachable at all.
-     */
-    public static final int INFINITY_DIST = -1;
 
     /**
      * Creates a new Dijkstra instance for a given {@link GXGraph}. Initializes the PriorityQueue for distance

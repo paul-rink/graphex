@@ -11,6 +11,9 @@ import javafx.scene.control.Dialog;
  * @version 1.0 07.02.2021
  */
 public class AlgoInfoDialog extends Dialog<Void> {
+    /**
+     * Title of info box.
+     */
     public static final String TITLE = "Algorithmus Information";
 
     AlgoInfoDialog(Algo algo) {

@@ -1,6 +1,10 @@
 package graphex2021.model.algo;
 
-import graphex2021.model.*;
+import graphex2021.model.DisplayModel;
+import graphex2021.model.GXEdge;
+import graphex2021.model.GXGraph;
+import graphex2021.model.GXVertex;
+import graphex2021.model.Step;
 
 import java.util.LinkedList;
 
@@ -25,7 +29,7 @@ public interface Algorithm {
     /**
      * Determines, whether the {@link GXGraph} should be fully revealed at the beginning or not. Choosing
      * {@code true} means, that every {@link GXVertex} and {@link GXEdge} should be visible to the user on
-     * initialization. {@code False} means the opposite: every {@link GXVertex} and {@link GXEdge} sould be invisible
+     * initialization. {@code False} means the opposite: every {@link GXVertex} and {@link GXEdge} should be invisible
      * to the user at beginning. Further exceptions have to be defined by {@link #hasStartingVertex()} or
      * {@link #hasEndingVertex()}.
      *
