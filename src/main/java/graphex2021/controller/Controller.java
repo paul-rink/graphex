@@ -106,8 +106,7 @@ public class Controller {
      */
     public Controller() {
         try {
-            activeAlgo = defaultAlgo;
-            this.displayModel = new DisplayModel(activeAlgo);
+            this.displayModel = new DisplayModel(defaultAlgo);
         } catch (WrongFileFormatException e) {
             Alert error = new FileAlert(e.getMessage());
             error.showAndWait();
@@ -118,6 +117,7 @@ public class Controller {
     }
 
     public void init() {
+        //only init algo menu once
         if (updateAlgoMenu) {
             setUpAlgoMenu();
             updateAlgoMenu = false;
@@ -150,6 +150,7 @@ public class Controller {
         //then check selected one
         m.setSelected(true);
         activeAlgo = algo;
+        displayModel.setAlgo(activeAlgo);
     }
 
     /**
@@ -571,21 +572,29 @@ public class Controller {
         initializeUpdatedView(parent, true);
     }
 
-    /**
-     * If you want to init a new graph view with the default graph, give {@code null} as argument.
-     * @param graph the {@link GXGraph} of the graphview or {@code null} if you want to choose default graph
-     */
+
     private void loadNewGraphView(GXGraph graph) {
         Group parent = (Group) graphView.getParent();
         //final Pane parent = (Pane) graphView.getParent();
         remove(parent, true);
         try {
-            //of no graph is given
-            if (graph == null) {
-                this.displayModel = new DisplayModel(activeAlgo);
-            } else {
-                this.displayModel = new DisplayModel(graph, activeAlgo);
-            }
+            this.displayModel = new DisplayModel(graph, activeAlgo);
+        } catch (WrongFileFormatException e) {
+            new FileAlert(e.getMessage()).showAndWait();
+        }
+        addToParent(parent);
+        graphView.setBackground(Background.EMPTY);
+        setSizes(Background.EMPTY);
+        reset();
+        initializeUpdatedView(parent, true);
+    }
+
+    private void loadNewGraphView() {
+        Group parent = (Group) graphView.getParent();
+        //final Pane parent = (Pane) graphView.getParent();
+        remove(parent, true);
+        try {
+            this.displayModel = new DisplayModel(activeAlgo);
         } catch (WrongFileFormatException e) {
             new FileAlert(e.getMessage()).showAndWait();
         }

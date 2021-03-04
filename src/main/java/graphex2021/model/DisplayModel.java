@@ -476,4 +476,15 @@ public class DisplayModel extends Subject {
         return this.graph.vertices();
     }
 
+    /**
+     * Updates the algo for the current view
+     * @param algo is the chosen algo from {@link Algo}
+     */
+    public void setAlgo(Algo algo) {
+        this.algo = algo.getUnderlyingAlgo();
+        algoSteps = this.algo.getSequence(graph);
+        reset();
+        notifyObservers();
+    }
+
 }
