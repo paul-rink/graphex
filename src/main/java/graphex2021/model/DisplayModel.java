@@ -442,9 +442,11 @@ public class DisplayModel extends Subject {
                     visibleGraph.insertVertex(toIns);
                     visibleGraph.insertEdge(edge);
                 }
-                end.setVisible(true);
-                visibleGraph.insertVertex(end);
-                visibleGraph.setEndingVertex(end);
+                if (algo.hasEndingVertex()) {
+                    end.setVisible(true);
+                    visibleGraph.insertVertex(end);
+                    visibleGraph.setEndingVertex(end);
+                }
             } catch (ElementNotInGraphException eni) {
                 eni.printStackTrace();
             }
