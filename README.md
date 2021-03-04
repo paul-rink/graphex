@@ -8,6 +8,7 @@ Herunterladen der aktuellen Version aus dem "release" Ordner. Entpacken der Zipd
 Zur Verwendung wird aktuell Java jdk-11 benötigt (zufinden [OpenJdk](https://jdk.java.net/java-se-ri/11), oder unter [AdoptOpenJdk](https://adoptopenjdk.net/).
 Wenn diese installiert sind mit der Kommandozeile in den Ordner wechseln in dem die Dateien entpackt sind und dort den Befehl "java -jar graphex-1.0.jar" eingeben. Alternativ kann unter Windows das Programm auch mit einem Doppelklick auf die .jar gestartet werden.
 Danach öffnet sich das Program und kann genutzt werden.
+Passwort zur Freischaltung von Tips: Algorithmus
 
 # Speicherort der Vorlagen
 Die Vorlagen die im Programm zur Verfügung stehen werden im Ordner "Graphex\resources\graphex2021\GraphData\Templates" gespeichert. 
