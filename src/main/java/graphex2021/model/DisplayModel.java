@@ -84,8 +84,8 @@ public class DisplayModel extends Subject {
 
     private void loadGraph() {
         this.visibleGraph = new GXGraph();
-        initialVisibleGraph();
         this.algo = new Dijkstra();
+        initialVisibleGraph();
         algoSteps = algo.getSequence(graph);
         //mark starting vertex from the beginning and update distances for incidents, if algo request a starting vertex
         if (algo.hasStartingVertex()) {
