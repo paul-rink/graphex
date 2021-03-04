@@ -90,7 +90,7 @@ public class DisplayModelTest {
 
     @Test
     public void testDefaultContructor() throws WrongFileFormatException {
-        testModel =new DisplayModel();
+        testModel =new DisplayModel(Algo.DIJKSTRA);
     }
 
     @Test

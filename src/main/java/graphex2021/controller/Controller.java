@@ -54,6 +54,8 @@ public class Controller {
     private static final String PATH_TO_TEMPLATES = "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
 
+    private static final Algo defaultAlgo = Algo.DIJKSTRA;
+
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -91,13 +93,16 @@ public class Controller {
     @FXML
     private CheckMenuItem verticesMoveable;
 
+    @FXML
+    private Menu algoMenu;
+
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
      * by using the standard {@link graphex2021.model.GXGraph}690
      */
     public Controller() {
         try {
-            this.displayModel = new DisplayModel();
+            this.displayModel = new DisplayModel(defaultAlgo);
         } catch (WrongFileFormatException e) {
             Alert error = new FileAlert(e.getMessage());
             error.showAndWait();

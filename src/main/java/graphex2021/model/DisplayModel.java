@@ -36,7 +36,8 @@ public class DisplayModel extends Subject {
      * Standard constructor fpr DisplayModel. This will init a model with a standard graph {@code EXAMPLEGRAPH}.
      * @throws WrongFileFormatException in case the default graph file does not match the correct format
      */
-    public DisplayModel() throws WrongFileFormatException {
+    public DisplayModel(Algo algo) throws WrongFileFormatException {
+        this.algo = algo.getUnderlyingAlgo();
         File jarPath;
         try {
             jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
