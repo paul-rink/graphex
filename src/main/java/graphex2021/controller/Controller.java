@@ -566,12 +566,21 @@ public class Controller {
         initializeUpdatedView(parent, true);
     }
 
+    /**
+     * If you want to init a new graph view with the default graph, give {@code null} as argument.
+     * @param graph the {@link GXGraph} of the graphview or {@code null} if you want to choose default graph
+     */
     private void loadNewGraphView(GXGraph graph) {
         Group parent = (Group) graphView.getParent();
         //final Pane parent = (Pane) graphView.getParent();
         remove(parent, true);
         try {
-            this.displayModel = new DisplayModel(graph, activeAlgo);
+            //of no graph is given
+            if (graph == null) {
+                this.displayModel = new DisplayModel(activeAlgo);
+            } else {
+                this.displayModel = new DisplayModel(graph, activeAlgo);
+            }
         } catch (WrongFileFormatException e) {
             new FileAlert(e.getMessage()).showAndWait();
         }
