@@ -1,13 +1,12 @@
 package graphex2021.view;
-import javafx.geometry.BoundingBox;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+
 
 public class ZoomableScrollPane extends ScrollPane {
     private double scaleValue = 1;
@@ -56,22 +55,18 @@ public class ZoomableScrollPane extends ScrollPane {
         //the minimal size set for the graph
         double minHeight = tar.getMinHeight();
         double minWidth = tar.getMinWidth();
+        target.setScaleX(newScaleValue);
+        target.setScaleY(newScaleValue);
 
-                target.setScaleX(newScaleValue);
-                target.setScaleY(newScaleValue);
 
-
-                if (tar.getScene().getWidth() >= tar.getBoundsInParent().getWidth()
-                        || tar.getScene().getHeight() - 40 - 28 >= tar.getBoundsInParent().getHeight()
-                        || (sceneHeight - 40 - 28 < minHeight && sceneWidth < minWidth)) {
-                    target.setScaleX(scaleValue);
-                    target.setScaleY(scaleValue);
-                    //scaleValue = 1 / newScaleValue;
-                    return;
-                }
-
-                scaleValue = newScaleValue;
-
+        if (tar.getScene().getWidth() >= tar.getBoundsInParent().getWidth()
+                || tar.getScene().getHeight() - 40 - 28 >= tar.getBoundsInParent().getHeight()
+                || (sceneHeight - 40 - 28 < minHeight && sceneWidth < minWidth)) {
+            target.setScaleX(scaleValue);
+            target.setScaleY(scaleValue);
+            return;
+        }
+        scaleValue = newScaleValue;
 
     }
 
@@ -95,7 +90,8 @@ public class ZoomableScrollPane extends ScrollPane {
         Point2D posInZoomTarget = target.parentToLocal(zoomNode.parentToLocal(mousePoint));
 
         // calculate adjustment of scroll position (pixels)
-        Point2D adjustment = target.getLocalToParentTransform().deltaTransform(posInZoomTarget.multiply(zoomFactor - 1));
+        Point2D adjustment = target.getLocalToParentTransform()
+                .deltaTransform(posInZoomTarget.multiply(zoomFactor - 1));
 
         // convert back to [0, 1] range
         // (too large/small values are automatically corrected by ScrollPane)
@@ -104,16 +100,5 @@ public class ZoomableScrollPane extends ScrollPane {
             this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
             this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
         }
-
-        GraphView view = (GraphView) target;
-        System.out.println("HValue " + this.getHvalue());
-        System.out.println("VValue " + this.getVvalue());
-        System.out.println("Width" + this.getWidth());
-        System.out.println("BoundsInLocal" + view.getBoundsInLocal().getWidth());
-        System.out.println("BOUNDSINPARTEN: " +  view.getBoundsInParent().getWidth());
-        System.out.println("LayoutBounds" + view.getLayoutBounds().getWidth());
-        System.out.println("-------------------------------------------------------------------");
-        //view.prefWidth(view.getWidth() * scaleValue);
-        //view.prefHeight(view.getHeight() * scaleValue);
     }
 }

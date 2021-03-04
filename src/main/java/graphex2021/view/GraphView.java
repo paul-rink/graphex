@@ -5,9 +5,9 @@ import graphex2021.controller.FileAlert;
 import graphex2021.model.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -195,17 +195,8 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
     private void graphViewSizeListener() {
         ChangeListener<Number> widthListener = ((observable, oldValue, newValue) -> {
             double scale = newValue.doubleValue() / oldValue.doubleValue();
-            System.out.println("Width" + this.getWidth());
-            System.out.println("BoundsInLocal" + this.getBoundsInLocal().getWidth());
-            System.out.println("BOUNDSINPARTEN: " +  this.getBoundsInParent().getWidth());
-            System.out.println("LayoutBounds" + this.getLayoutBounds().getWidth());
-            System.out.println("New Value : " + newValue);
-            System.out.println("SCaleValue :" + getScaleX());
-            System.out.println("----------------------------------------------------------------------");
-            ZoomableScrollPane pane = (ZoomableScrollPane) this.getParent().getParent().getParent();
-            Group group = (Group) this.getParent();
             if (scale >= 1 && this.getScene().getWidth() > this.getBoundsInParent().getWidth()) {
-                if (pane.getViewportBounds().getWidth() < this.getScene().getWidth()) {
+                if (this.getBoundsInParent().getWidth() - this.getBoundsInLocal().getWidth() > 30) {
 
                 } else if (newValue.doubleValue() > this.getMinWidth()) {
                     this.setWidth(this.getBoundsInLocal().getWidth() * scale);
@@ -226,19 +217,8 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
                 }
             }
             this.placeVertices();
-
-
-
-        }
-        );
+        } );
         ChangeListener<Number> heightListener = ((observable, oldValue, newValue) -> {
-            System.out.println("Height " + this.getWidth());
-            System.out.println("BoundsInLocal" + this.getBoundsInLocal().getWidth());
-            System.out.println("BOUNDSINPARTEN: " +  this.getBoundsInParent().getWidth());
-            System.out.println("LayoutBounds" + this.getLayoutBounds().getWidth());
-            System.out.println("New Value : " + newValue);
-            System.out.println("----------------------------------------------------------------------");
-            Group group = (Group) this.getParent();
             double scale = newValue.doubleValue() / oldValue.doubleValue();
             if (scale >= 1 && this.getScene().getHeight() > this.getBoundsInParent().getHeight()) {
                 if (this.getBoundsInParent().getHeight() - this.getBoundsInLocal().getHeight() > 30) {
