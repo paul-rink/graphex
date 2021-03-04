@@ -1,7 +1,9 @@
 package graphex2021.model;
 
 /**
- * @author kmarq
+ * Version of {@link Dijkstra} where the whole {@link GXGraph} is visible from beginning.
+ *
+ * @author D. Flohs, K. Marquardt, P. Rink
  * @version 1.0 04.03.2021
  */
 public class DijkstraVisible extends Dijkstra {
