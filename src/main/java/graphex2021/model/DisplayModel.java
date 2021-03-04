@@ -84,7 +84,7 @@ public class DisplayModel extends Subject {
 
     private void loadGraph() {
         this.visibleGraph = new GXGraph();
-        this.algo = new Dijkstra();
+        this.algo = new DijkstraVisible();
         initialVisibleGraph();
         algoSteps = algo.getSequence(graph);
         //mark starting vertex from the beginning and update distances for incidents, if algo request a starting vertex
@@ -241,7 +241,9 @@ public class DisplayModel extends Subject {
             GXEdge lastEdge = lastStep.getSelectedEdge();
             GXVertex lastVertex = lastStep.getSelectedVertex();
             removeLastUserStep();
-            makeIncidentsInvisible(lastVertex);
+            if (!algo.isRevealed()) {
+                makeIncidentsInvisible(lastVertex);
+            }
             lastVertex.unmark();
             lastEdge.unmark();
             graph.unblock(lastVertex);
@@ -257,13 +259,17 @@ public class DisplayModel extends Subject {
         //Making all edges unmarked and invisible
         for (GXEdge edge : graph.edges()) {
             edge.unmark();
-            edge.setVisible(false);
+            if (!algo.isRevealed()) {
+                edge.setVisible(false);
+            }
             edge.setBlocked(false);
         }
         //Making all vertices unmarked and invisible
         for (GXVertex vertex : graph.vertices()) {
             vertex.unmark();
-            vertex.setVisible(false);
+            if (algo.isRevealed()) {
+                vertex.setVisible(false);
+            }
         }
         //Creating new visibileGraph that will then have the starting and end vertex be visible.
         this.visibleGraph = new GXGraph();
@@ -419,6 +425,8 @@ public class DisplayModel extends Subject {
     private void initialVisibleGraph() {
         final GXVertex start = graph.getStartingVertex();
         final GXVertex end =  graph.getEndingVertex();
+        start.mark();
+        start.setVisible(true);
         start.setCurrentDistance(INIT_DISTANCE);
         if (!algo.isRevealed()) {
             try {
