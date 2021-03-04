@@ -418,36 +418,46 @@ public class DisplayModel extends Subject {
 
     private void initialVisibleGraph() {
         final GXVertex start = graph.getStartingVertex();
-        start.mark();
-        start.setVisible(true);
-        start.setCurrentDistance(INIT_DISTANCE);
-        visibleGraph.insertVertex(start);
-        try {
-            visibleGraph.setStartingVertex(start);
-            updateCurrentDistancesForIncidents(start);
-            for (GXEdge edge : graph.incidentEdges(start)) {
-                GXVertex toIns = edge.getNextVertex();
-                //shouldn't never be the case, at beginning only start is marked and no other vertex
-                if (toIns == null) continue;
-                //Setting the initial edge visible and the vertex at the other end
-                toIns.setVisible(true);
-                edge.setVisible(true);
-                //inserting the vertex and edge into the visible graph
-                visibleGraph.insertVertex(toIns);
-                visibleGraph.insertEdge(edge);
-            }
-        } catch (ElementNotInGraphException eni) {
-            eni.printStackTrace();
-        }
-
-
         final GXVertex end =  graph.getEndingVertex();
-        end.setVisible(true);
-        try {
-            visibleGraph.insertVertex(end);
-            visibleGraph.setEndingVertex(end);
-        } catch (ElementNotInGraphException eni) {
-            eni.printStackTrace();
+        start.setCurrentDistance(INIT_DISTANCE);
+        if (!algo.isRevealed()) {
+            try {
+                visibleGraph.setStartingVertex(start);
+                updateCurrentDistancesForIncidents(start);
+                for (GXEdge edge : graph.incidentEdges(start)) {
+                    GXVertex toIns = edge.getNextVertex();
+                    //shouldn't never be the case, at beginning only start is marked and no other vertex
+                    if (toIns == null) continue;
+                    //Setting the initial edge visible and the vertex at the other end
+                    toIns.setVisible(true);
+                    edge.setVisible(true);
+                    //inserting the vertex and edge into the visible graph
+                    visibleGraph.insertVertex(toIns);
+                    visibleGraph.insertEdge(edge);
+                    visibleGraph.insertVertex(start);
+                }
+                end.setVisible(true);
+                visibleGraph.insertVertex(end);
+                visibleGraph.setEndingVertex(end);
+            } catch (ElementNotInGraphException eni) {
+                eni.printStackTrace();
+            }
+        } else {
+            try {
+                updateCurrentDistancesForIncidents(start);
+                for (GXVertex vertex : graph.vertices()) {
+                    vertex.setVisible(true);
+                    visibleGraph.insertVertex(vertex);
+                }
+                for (GXEdge edge : graph.edges()) {
+                    edge.setVisible(true);
+                    visibleGraph.insertEdge(edge);
+                }
+                visibleGraph.setStartingVertex(start);
+                visibleGraph.setEndingVertex(end);
+            } catch (ElementNotInGraphException eni) {
+                eni.printStackTrace();
+            }
         }
     }
 
