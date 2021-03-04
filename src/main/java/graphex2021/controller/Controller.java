@@ -68,6 +68,8 @@ public class Controller {
     private Stage tableStage;
 
     private boolean debugMode;
+    //algo menu has to be set up once at start, then never again
+    private boolean updateAlgoMenu = true;
 
     @FXML
     private Menu templates;
@@ -116,7 +118,10 @@ public class Controller {
     }
 
     public void init() {
-        setUpAlgoMenu();
+        if (updateAlgoMenu) {
+            setUpAlgoMenu();
+            updateAlgoMenu = false;
+        }
         loadTemplates();
         initGraphView();
         initScrollPane();
