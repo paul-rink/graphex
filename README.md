@@ -71,5 +71,6 @@ Dieses Projekt ist unter der GNU General Public License (GPL) lizensiert.
 # Dependencies
 [JavaFXSmartGraph](https://github.com/brunomnsilva/JavaFXSmartGraph) (MIT License)
 [everit-json](https://github.com/everit-org/json-schema) (Apache 2.0 License)
-[JSON](https://www.json.org/json-en.html) (MIT License)
+[JSON](https://www.json.org/json-en.html) (MIT License, siehe [LICENSE-Apache.txt](https://github.com/paul-rink/graphex/files/6083580/LICENSE-Apache.txt))
+
 [JavaFX](https://github.com/openjdk/jfx) (EULA License)
