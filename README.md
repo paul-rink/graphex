@@ -6,8 +6,13 @@ Ein Programm das im Informatikunterricht der Oberstufe zur Einführung in das Th
 # Starten von Graphex (WIP)
 Herunterladen der aktuellen Version aus dem "release" Ordner. Entpacken der Zipdateie in einen Zielordner. 
 Zur Verwendung wird aktuell Java jdk-11 benötigt (zufinden [OpenJdk](https://jdk.java.net/java-se-ri/11), oder unter [AdoptOpenJdk](https://adoptopenjdk.net/).
-Wenn diese installiert sind mit der Kommandozeile in den Ordner wechseln in dem die Dateien entpackt sind und dort den Befehl "java -jar graphex-1.0.jar" eingeben.
+Wenn diese installiert sind mit der Kommandozeile in den Ordner wechseln in dem die Dateien entpackt sind und dort den Befehl "java -jar graphex-1.0.jar" eingeben. Alternativ kann unter Windows das Programm auch mit einem Doppelklick auf die .jar gestartet werden.
 Danach öffnet sich das Program und kann genutzt werden.
+
+# Speicherort der Vorlagen
+Die Vorlagen die im Programm zur Verfügung stehen werden im Ordner "Graphex\resources\graphex2021\GraphData\Templates" gespeichert. 
+Wie auch bei Graphen die von extern Orten geladen werden, kann ein Hintergrundbild hinzugefügt werden, wenn es im gleichen Verzeichnis liegt und den gleichen Namen hat wie der Graph.
+Unterstützte Bild-Formate sind: jpeg, jpg, png und bmp.
 
 # Format der JSON-Graph Datei
 Graphen für GraphEX werden im JSON Format gespeichert. Zusätzlich können Hintergrundbilder hinzugefügt werden, wenn sie im geleichen Verzeichnis wie der Graph liegen und den gleichen Dateinamen haben.
