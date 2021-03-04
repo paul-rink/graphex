@@ -1,5 +1,9 @@
 package graphex2021.model;
 
+/**
+ * Contains a simplified representation of every algo that could be used by the application. Be aware, you need to
+ * implement the specific {@link Algorithm} first.
+ */
 public enum Algo {
     DIJKSTRA(new Dijkstra(), "Dijkstra"), DIJKSTRA_VISIBLE(new DijkstraVisible(), "Dijkstra (aufgedeckt)");
 
