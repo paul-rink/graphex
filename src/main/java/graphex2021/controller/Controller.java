@@ -108,6 +108,7 @@ public class Controller {
     public Controller() {
         try {
             this.displayModel = new DisplayModel(defaultAlgo);
+            this.activeAlgo = defaultAlgo;
         } catch (WrongFileFormatException e) {
             Alert error = new FileAlert(e.getMessage());
             error.showAndWait();
@@ -133,7 +134,7 @@ public class Controller {
 
     private void setUpAlgoMenu() {
         for (Algo algo : Algo.values()) {
-            CheckMenuItem item = new CheckMenuItem(algo.toString());
+            CheckMenuItem item = new CheckMenuItem(algo.getDisplayName());
             item.setOnAction(e -> onAlgoSelect(item, algo));
             algoMenu.getItems().add(item);
             //on setup select default algo
@@ -707,7 +708,7 @@ public class Controller {
      */
     @FXML
     private void onDisplayAlgorithmExplanation() {
-        Dialog<Void> dialog = new InfoDialog(AlgorithmName.DIJKSTRA);
+        Dialog<Void> dialog = new AlgoInfoDialog(activeAlgo);
         dialog.showAndWait();
     }
 

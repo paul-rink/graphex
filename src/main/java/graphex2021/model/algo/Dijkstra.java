@@ -19,6 +19,21 @@ public class Dijkstra implements Algorithm {
     private GXGraph g;
     private Collection<GXVertex> vertices;
     private GXVertex start;
+
+    private String NAME = "Dijkstra (verdeckt)";
+    private String DESCRIPTION = "Der Algorithmus von Dijkstra (nach seinem Erfinder Edsger W. "
+            + "Dijkstra) ist ein Algorithmus aus der Klasse der Greedy-Algorithmen und löst das Problem der "
+            + "kürzesten Pfade für einen gegebenen Startknoten. \n" + "Er berechnet somit einen kürzesten"
+            + " Pfad zwischen dem gegebenen Startknoten und einem der (oder allen) übrigen Knoten in einem "
+            + "kantengewichteten Graphen (sofern dieser keine Negativkanten enthält). \n"
+            + "Für unzusammenhängende ungerichtete Graphen ist der Abstand zu denjenigen Knoten unendlich, zu "
+            + "denen kein Pfad vom Startknoten aus existiert. Dasselbe gilt auch für gerichtete nicht stark "
+            + "zusammenhängende Graphen. Dabei wird der Abstand synonym auch als Entfernung, Kosten oder "
+            + "Gewicht bezeichnet.\n\n"
+            + "HINWEISE: \nWähle bei unentschiedenen Gewichten immer den Knoten "
+            + "bzw. die Kante mit der niedrigeren ID. \nWenn der Zielknoten nicht erreichbar ist, verwende "
+            + Dijkstra.INFINITY_DIST + " als kürzeste Distanz.";
+
     /**
      * Array that holds distances for all {@link GXVertex}s respectively as distance to given
      * {@code start}-vertex. {@link GXEdge#INVALID_DISTANCE} is for {@code infinity}.
@@ -96,6 +111,16 @@ public class Dijkstra implements Algorithm {
     @Override
     public boolean isCorrectDistance(GXVertex goal, int distance) {
         return distance == dist[goal.getId()];
+    }
+
+    @Override
+    public String algoName() {
+        return this.NAME;
+    }
+
+    @Override
+    public String algoDescription() {
+        return this.DESCRIPTION;
     }
 
     /**

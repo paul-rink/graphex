@@ -10,11 +10,17 @@ import graphex2021.model.GXGraph;
  */
 public class DijkstraVisible extends Dijkstra {
 
+    private String NAME = "Dijkstra (aufgedeckt)";
+
     DijkstraVisible() {
         super();
     }
 
     public boolean isRevealed() {
         return true;
+    }
+
+    public String algoName() {
+        return NAME;
     }
 }

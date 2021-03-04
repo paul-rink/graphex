@@ -55,4 +55,17 @@ public interface Algorithm {
      * @return {@code true} if distance is correct, {@code false} else.
      */
     boolean isCorrectDistance(GXVertex goal, int distance);
+
+    /**
+     * Returns a String representation of the implemented algorithm.
+     * @return algo name
+     */
+    String algoName();
+
+    /**
+     * Returns a String representation of a description of the implemented algorithm. The description should give some
+     * insights, how the algorithm works.
+     * @return algo description
+     */
+    String algoDescription();
 }

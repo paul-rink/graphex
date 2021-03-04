@@ -5,14 +5,23 @@ package graphex2021.model.algo;
  * implement the specific {@link Algorithm} first.
  */
 public enum Algo {
-    DIJKSTRA(new Dijkstra(), "Dijkstra"), DIJKSTRA_VISIBLE(new DijkstraVisible(), "Dijkstra (aufgedeckt)");
+    /**
+     * See {@link Dijkstra}
+     */
+    DIJKSTRA(new Dijkstra()),
+    /**
+     * See {@link DijkstraVisible}
+     */
+    DIJKSTRA_VISIBLE(new DijkstraVisible());
 
-    private Algorithm algo;
-    private final String name;
+    private final Algorithm algo;
+    private final String displayName;
+    private final String description;
 
-    Algo(Algorithm algo, String name) {
+    Algo(Algorithm algo) {
         this.algo = algo;
-        this.name = name;
+        this.displayName = algo.algoName();
+        this.description = algo.algoDescription();
     }
 
     /**
@@ -23,7 +32,9 @@ public enum Algo {
         return this.algo;
     }
 
-    public String toString() {
-        return this.name;
+    public String getDisplayName() {
+        return this.displayName;
     }
+
+    public String getDescription() { return this.description; }
 }
