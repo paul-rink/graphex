@@ -31,10 +31,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onLoadGraph" text="Graph importieren..." />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Algorithmus">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Dijkstra" />
-                    </items>
+                <Menu fx:id="algoMenu" mnemonicParsing="false" text="Algorithmus">
                 </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
                     <items>

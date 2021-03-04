@@ -18,4 +18,8 @@ public enum Algo {
     public Algorithm getUnderlyingAlgo() {
         return this.algo;
     }
+
+    public String toString() {
+        return this.name;
+    }
 }

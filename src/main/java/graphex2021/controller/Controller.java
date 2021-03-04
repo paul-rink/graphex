@@ -109,17 +109,29 @@ public class Controller {
             e.printStackTrace();
             return;
         }
-
         this.gxTable = new GXTableView();
     }
 
     public void init() {
+        setUpAlgoMenu();
         loadTemplates();
         initGraphView();
         initScrollPane();
         initTableView();
         bind();
         displayModel.notifyObservers();
+    }
+
+    private void setUpAlgoMenu() {
+        for (Algo algo : Algo.values()) {
+            MenuItem item = new MenuItem(algo.toString());
+            item.setOnAction(e -> onAlgoSelect(algo));
+            algoMenu.getItems().add(item);
+        }
+    }
+
+    private void onAlgoSelect(Algo algo) {
+
     }
 
     /**
