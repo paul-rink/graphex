@@ -580,7 +580,8 @@ public class Controller {
         setSizes(oldBackground);
         initializeUpdatedView(parent, false);
         if (!finish.getText().equals("Start")) {
-            setActions();
+            Platform.runLater(this::setActions);
+
         }
 
     }
