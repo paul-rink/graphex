@@ -1,4 +1,5 @@
 package graphex2021.view;
+import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -6,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 public class ZoomableScrollPane extends ScrollPane {
     private double scaleValue = 1;
@@ -23,11 +25,13 @@ public class ZoomableScrollPane extends ScrollPane {
         setScrollAction(view);
         setContent(target);
 
+        setPrefViewportHeight(1000000.);
+        setPrefViewportWidth(1000000.);
         setPannable(true);
         setFitToHeight(true); //center
         setFitToWidth(true); //center
-        setVbarPolicy(ScrollBarPolicy.ALWAYS);
-        setHbarPolicy(ScrollBarPolicy.ALWAYS);
+        //setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        //setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 
         updateScale(scaleValue);
     }
@@ -40,6 +44,7 @@ public class ZoomableScrollPane extends ScrollPane {
     }
 
     private void updateScale(double newScaleValue) {
+
         Pane tar = (Pane) target;
         //the height of the scene the scrollpane is displayed in
         double sceneHeight = this.getScene().getHeight();
@@ -48,18 +53,19 @@ public class ZoomableScrollPane extends ScrollPane {
         double currentHeight = tar.heightProperty().doubleValue();
         double currentWidth = tar.widthProperty().doubleValue();
         //the future size of the scroll pane if the zoom action is actually done
-        double newHeight = currentHeight*newScaleValue;
-        double newWidth = currentWidth*newScaleValue;
+        double newHeight = currentHeight * newScaleValue;
+        double newWidth = currentWidth * newScaleValue;
         //the minimal size set for the graph
-        double minHeight =tar.getMinHeight();
+        double minHeight = tar.getMinHeight();
         double minWidth = tar.getMinWidth();
+
         if (newHeight < sceneHeight && minHeight < sceneHeight) {
             //as the graph wouldnt fit into the window it is not allowed
-            double factor = currentHeight/sceneHeight;
+            double factor = currentHeight / sceneHeight;
             target.setScaleX(factor);
             target.setScaleY(factor);
             scaleValue = 1;
-        } else if(newWidth < sceneWidth && minWidth < sceneWidth) {
+        } else if (newWidth < sceneWidth && minWidth < sceneWidth) {
             //as the graph wouldnt fit into the window it is not allowed
             double factor = currentWidth / sceneWidth;
             target.setScaleX(factor);
@@ -67,16 +73,18 @@ public class ZoomableScrollPane extends ScrollPane {
             scaleValue = 1;
         } else {
             //in this case a zoom is doable if it doesnt make the graph smaller than the minimum size
-            if(newWidth > minWidth && newHeight > minHeight) {
+            if (newWidth > minWidth && newHeight > minHeight) {
                 target.setScaleX(newScaleValue);
                 target.setScaleY(newScaleValue);
                 scaleValue = newScaleValue;
             }
 
         }
+
     }
 
     private void onScroll(double wheelDelta, Point2D mousePoint) {
+
         double zoomFactor = Math.exp(wheelDelta * zoomIntensity);
 
         Bounds innerBounds = zoomNode.getLayoutBounds();
@@ -101,5 +109,8 @@ public class ZoomableScrollPane extends ScrollPane {
         Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
         this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
         this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
+        GraphView view = (GraphView) target;
+        //view.prefWidth(view.getWidth() * scaleValue);
+        //view.prefHeight(view.getHeight() * scaleValue);
     }
 }

@@ -8,16 +8,12 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
 
-<?import graphex2021.view.GraphView?>
+<?import graphex2021.view.*?>
 <?import javafx.scene.control.CheckMenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<?import graphex2021.view.ZoomableScrollPane?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.layout.VBox?>
-<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller">
-
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphex2021.controller.Controller"  minHeight="1007">
     <top>
         <MenuBar>
             <menus>
@@ -58,11 +54,11 @@
         </MenuBar>
     </top>
     <center>
-        <ZoomableScrollPane fx:id="scrollPane" pannable="true">
+        <ZoomableScrollPane fx:id="scrollPane" pannable="true" fitToHeight="true" fitToWidth="true" style="-fx-background-color: red">
             <content>
-                <VBox minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" alignment="CENTER" >
+                <VBox fx:id="vBox" style="-fx-background-color: yellow">
                     <Group fx:id="group">
-                        <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover" >
+                        <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover; -fx-border-color: #22ff00" >
                         </GraphView>
                     </Group>
                 </VBox>
@@ -70,14 +66,14 @@
         </ZoomableScrollPane>
     </center>
    <bottom>
-      <ToolBar BorderPane.alignment="CENTER">
-        <items>
-            <Button fx:id="finish" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartPressed" text="Start" />
-            <Button mnemonicParsing="false" onAction="#onUndoPressed" text="Undo" />
-            <TextField fx:id="finTextField" promptText="Kürzeste Distanz"/>
-            <Button mnemonicParsing="false" onAction="#onFinishedPressed" text="Fertig" />
-            <Button mnemonicParsing="false" onAction="#onResetPressed" text="Reset" />
-        </items>
-      </ToolBar>
+        <ToolBar minHeight="40">
+            <items>
+                <Button fx:id="finish" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onStartPressed" text="Start" />
+                <Button mnemonicParsing="false" onAction="#onUndoPressed" text="Undo" />
+                <TextField fx:id="finTextField" promptText="Kürzeste Distanz"/>
+                <Button mnemonicParsing="false" onAction="#onFinishedPressed" text="Fertig" />
+                <Button mnemonicParsing="false" onAction="#onResetPressed" text="Reset" />
+            </items>
+        </ToolBar>
    </bottom>
 </BorderPane>

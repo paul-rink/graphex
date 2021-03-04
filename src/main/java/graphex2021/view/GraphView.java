@@ -5,11 +5,10 @@ import graphex2021.controller.FileAlert;
 import graphex2021.model.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -196,12 +195,29 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
 
     private void graphViewSizeListener() {
         ChangeListener<Number> widthListener = ((observable, oldValue, newValue) -> {
-            this.setWidth(newValue.doubleValue());
+            //this.setWidth(newValue.doubleValue());
+            double scale = newValue.doubleValue() / oldValue.doubleValue();
+            Group group = (Group) this.getParent();
+            this.updateBounds();
+
+            group.setScaleX(scale);
+            group.setScaleY(scale);
+
+            this.setScaleX(scale);
+            this.setScaleY(scale);
             this.placeVertices();
+            System.out.println(this.getBoundsInParent());
+            System.out.println(this.getBoundsInLocal());
+
+
         }
         );
         ChangeListener<Number> heightListener = ((observable, oldValue, newValue) -> {
-            this.setHeight(newValue.doubleValue());
+            //this.setHeight(newValue.doubleValue());
+            double scale = newValue.doubleValue() / oldValue.doubleValue();
+            Group pane = (Group) this.getParent();
+            this.setScaleX(scale);
+            this.setScaleY(scale);
             this.placeVertices();
         }
         );

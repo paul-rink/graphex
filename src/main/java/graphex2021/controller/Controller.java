@@ -53,6 +53,7 @@ public class Controller {
     private static final int MIN_PANE_SIZE = 1000;
     private static final String PATH_TO_TEMPLATES = "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
+    public VBox vBox;
 
 
     /**
@@ -64,6 +65,7 @@ public class Controller {
     private Stage tableStage;
 
     private boolean debugMode;
+    
 
     @FXML
     private Menu templates;
@@ -113,6 +115,7 @@ public class Controller {
         initGraphView();
         initScrollPane();
         initTableView();
+        group.setAutoSizeChildren(false);
         bind();
         displayModel.notifyObservers();
     }
@@ -129,7 +132,7 @@ public class Controller {
 
     private void initScrollPane() {
         Node parentPane = graphView.getParent();
-        scrollPane.init(parentPane, group, graphView);
+        scrollPane.init(vBox, group, graphView);
     }
 
     /**
@@ -389,8 +392,8 @@ public class Controller {
     }
 
     private void bind() {
-        graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
-        graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
+        //graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
+        //graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
     }
     /**
      * Will set the size of the graphview pane according to its background.
@@ -482,7 +485,7 @@ public class Controller {
         parent.getChildren().add(graphView);
     }
 
-    /**
+    /**vBox.widthPr
      * Creates and adds a new {@link GraphView} to the pane.
      *
      * @param parent    parent the {@link GraphView} should be added to.
