@@ -261,17 +261,13 @@ public class DisplayModel extends Subject {
         //Making all edges unmarked and invisible
         for (GXEdge edge : graph.edges()) {
             edge.unmark();
-            if (!algo.isRevealed()) {
-                edge.setVisible(false);
-            }
+            edge.setVisible(false);
             edge.setBlocked(false);
         }
         //Making all vertices unmarked and invisible
         for (GXVertex vertex : graph.vertices()) {
             vertex.unmark();
-            if (algo.isRevealed()) {
-                vertex.setVisible(false);
-            }
+            vertex.setVisible(false);
         }
         //Creating new visibileGraph that will then have the starting and end vertex be visible.
         this.visibleGraph = new GXGraph();
@@ -452,6 +448,7 @@ public class DisplayModel extends Subject {
             } catch (ElementNotInGraphException eni) {
                 eni.printStackTrace();
             }
+            //full visible
         } else {
             try {
                 updateCurrentDistancesForIncidents(start);
