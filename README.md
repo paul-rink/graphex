@@ -66,7 +66,7 @@ Beispiel:
 ```
 
 # Lizenz
-Dieses Projekt ist unter der MIT Lizenz lizensiert. Für weitere Details siehe LICENSE.txt
+Dieses Projekt ist unter der MIT Lizenz lizensiert. Für weitere Details siehe [LICENSE.txt](https://github.com/paul-rink/graphex/files/6083413/LICENSE.txt)
 
 # Libraries
 [JavaFXSmartGraph](https://github.com/brunomnsilva/JavaFXSmartGraph)
