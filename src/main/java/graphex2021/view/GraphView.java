@@ -8,7 +8,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -195,29 +194,68 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
 
     private void graphViewSizeListener() {
         ChangeListener<Number> widthListener = ((observable, oldValue, newValue) -> {
-            this.setWidth(newValue.doubleValue());
             double scale = newValue.doubleValue() / oldValue.doubleValue();
+            System.out.println("Width" + this.getWidth());
+            System.out.println("BoundsInLocal" + this.getBoundsInLocal().getWidth());
+            System.out.println("BOUNDSINPARTEN: " +  this.getBoundsInParent().getWidth());
+            System.out.println("LayoutBounds" + this.getLayoutBounds().getWidth());
+            System.out.println("New Value : " + newValue);
+            System.out.println("----------------------------------------------------------------------");
             Group group = (Group) this.getParent();
-            this.updateBounds();
+            if (scale >= 1 && this.getScene().getWidth() > this.getBoundsInParent().getWidth()) {
+                if (newValue.doubleValue() > this.getMinWidth()) {
+                    this.setWidth(this.getWidth() * scale);
+                    this.setHeight(getHeight() * scale);
 
-            //group.setScaleX(scale);
-            //group.setScaleY(scale);
+                    this.setScaleX(this.getScaleX() * scale);
+                    this.setScaleY(this.getScaleY() * scale);
+                }
 
-            this.setScaleX(scale);
-            this.setScaleY(scale);
+            } else {
+                if (this.getScene().getWidth() < this.getBoundsInParent().getWidth()
+                        && this.getScene().getHeight() < this.getBoundsInParent().getHeight()
+                        && this.getScene().getWidth() > this.getMinWidth()) {
+                    this.setWidth(this.getWidth() * scale);
+                    this.setHeight(this.getHeight() * scale);
+                    this.setScaleX(this.getScaleX() * scale);
+                    this.setScaleY(this.getScaleY() * scale);
+                }
+            }
             this.placeVertices();
-            System.out.println(this.getBoundsInParent());
-            System.out.println(this.getBoundsInLocal());
+
 
 
         }
         );
         ChangeListener<Number> heightListener = ((observable, oldValue, newValue) -> {
-            //this.setHeight(newValue.doubleValue());
+            System.out.println("Height " + this.getWidth());
+            System.out.println("BoundsInLocal" + this.getBoundsInLocal().getWidth());
+            System.out.println("BOUNDSINPARTEN: " +  this.getBoundsInParent().getWidth());
+            System.out.println("LayoutBounds" + this.getLayoutBounds().getWidth());
+            System.out.println("New Value : " + newValue);
+            System.out.println("----------------------------------------------------------------------");
+            Group group = (Group) this.getParent();
             double scale = newValue.doubleValue() / oldValue.doubleValue();
-            Group pane = (Group) this.getParent();
-            //this.setScaleX(scale);
-            //this.setScaleY(scale);
+            if (scale >= 1 && this.getScene().getHeight() > this.getBoundsInParent().getHeight()) {
+                if (newValue.doubleValue() > this.getMinHeight()) {
+                    this.setHeight(getHeight() * scale);
+                    this.setWidth(this.getWidth() * scale);
+
+                    this.setScaleX(this.getScaleX() * scale);
+                    this.setScaleY(this.getScaleY() * scale);
+                }
+
+            } else {
+                if (this.getScene().getHeight() < this.getBoundsInParent().getHeight()
+                        && this.getScene().getWidth() < this.getBoundsInParent().getWidth()
+                        && this.getScene().getHeight() > this.getMinHeight()) {
+                    this.setWidth(this.getWidth() * scale);
+                    this.setHeight(this.getHeight() * scale);
+                    this.setScaleX(this.getScaleX() * scale);
+                    this.setScaleY(this.getScaleY() * scale);
+                }
+
+            }
             this.placeVertices();
         }
         );

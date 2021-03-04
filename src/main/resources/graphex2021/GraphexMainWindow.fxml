@@ -56,10 +56,12 @@
     <center>
         <ZoomableScrollPane fx:id="scrollPane" pannable="true" fitToHeight="true" fitToWidth="true" style="-fx-background-color: red">
             <content>
+                <VBox minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" maxHeight="Infinity" maxWidth="Infinity" >
                 <Group fx:id="group">
-                        <GraphView fx:id="graphView" minHeight="650" minWidth="1061"  style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover; -fx-border-color: #22ff00" >
+                        <GraphView fx:id="graphView" minHeight="650" minWidth="1061" prefHeight="938" prefWidth="1532" maxHeight="Infinity" maxWidth="Infinity" style="-fx-background-image: url('graphex2021/GraphData/Templates/Vorlage_(Karlsruhe).jpg'); -fx-background-repeat: no-repeat; -fx-background-size: cover; -fx-border-color: #22ff00" >
                         </GraphView>
                 </Group>
+                </VBox>
             </content>
         </ZoomableScrollPane>
     </center>

@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
 
 public class ZoomableScrollPane extends ScrollPane {
     private double scaleValue = 1;
-    private final double zoomIntensity = 0.002;
+    private final double zoomIntensity = 0.0002;
     private Node target;
     private Node zoomNode;
 
@@ -57,6 +57,9 @@ public class ZoomableScrollPane extends ScrollPane {
         double minHeight = tar.getMinHeight();
         double minWidth = tar.getMinWidth();
 
+
+
+        /*
         if (newHeight < sceneHeight && minHeight < sceneHeight) {
             //as the graph wouldnt fit into the window it is not allowed
             double factor = currentHeight / sceneHeight;
@@ -70,14 +73,25 @@ public class ZoomableScrollPane extends ScrollPane {
             target.setScaleY(factor);
             scaleValue = 1;
         } else {
+        */
             //in this case a zoom is doable if it doesnt make the graph smaller than the minimum size
-            if (newWidth > minWidth && newHeight > minHeight) {
+            //if (newWidth > minWidth && newHeight > minHeight) {
                 target.setScaleX(newScaleValue);
                 target.setScaleY(newScaleValue);
-                scaleValue = newScaleValue;
-            }
 
-        }
+
+                if (tar.getScene().getWidth() >= tar.getBoundsInParent().getWidth()
+                        || tar.getScene().getHeight() - 40 - 28 >= tar.getBoundsInParent().getHeight()) {
+                    target.setScaleX(scaleValue);
+                    target.setScaleY(scaleValue);
+                    //scaleValue = 1 / newScaleValue;
+                    return;
+                }
+
+                scaleValue = newScaleValue;
+            //}
+
+        //}
 
     }
 
@@ -92,7 +106,8 @@ public class ZoomableScrollPane extends ScrollPane {
         double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
 
-        double newscaleValue = scaleValue * zoomFactor;
+        System.out.println("Scale " +  target.getScaleX());
+        double newscaleValue = target.getScaleX() * zoomFactor;
         updateScale(newscaleValue);
         this.layout(); // refresh ScrollPane scroll positions & target bounds
 
@@ -105,9 +120,19 @@ public class ZoomableScrollPane extends ScrollPane {
         // convert back to [0, 1] range
         // (too large/small values are automatically corrected by ScrollPane)
         Bounds updatedInnerBounds = zoomNode.getBoundsInLocal();
-        this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
-        this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
+        if (!(Math.abs(updatedInnerBounds.getWidth() - viewportBounds.getWidth()) < 0.1) && !(Math.abs(updatedInnerBounds.getHeight() - viewportBounds.getHeight()) < 0.1)) {
+            this.setHvalue((valX + adjustment.getX()) / (updatedInnerBounds.getWidth() - viewportBounds.getWidth()));
+            this.setVvalue((valY + adjustment.getY()) / (updatedInnerBounds.getHeight() - viewportBounds.getHeight()));
+        }
+
         GraphView view = (GraphView) target;
+        System.out.println("HValue " + this.getHvalue());
+        System.out.println("VValue " + this.getVvalue());
+        System.out.println("Width" + this.getWidth());
+        System.out.println("BoundsInLocal" + view.getBoundsInLocal().getWidth());
+        System.out.println("BOUNDSINPARTEN: " +  view.getBoundsInParent().getWidth());
+        System.out.println("LayoutBounds" + view.getLayoutBounds().getWidth());
+        System.out.println("-------------------------------------------------------------------");
         //view.prefWidth(view.getWidth() * scaleValue);
         //view.prefHeight(view.getHeight() * scaleValue);
     }
