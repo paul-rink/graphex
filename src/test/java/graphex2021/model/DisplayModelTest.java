@@ -40,7 +40,7 @@ public class DisplayModelTest {
         }*/
         testGraph = Mockito.spy(new GXGraph());
         addGraph(testGraph);
-        testModel = Mockito.spy(new DisplayModel(testGraph));
+        testModel = Mockito.spy(new DisplayModel(testGraph,Algo.DIJKSTRA));
     }
 
     private void addGraph(GXGraph graph) {
@@ -96,12 +96,12 @@ public class DisplayModelTest {
     @Test
     public void testConstructorNullGraph() throws WrongFileFormatException {
         testGraph = null;
-        testModel = new DisplayModel(testGraph);
+        testModel = new DisplayModel(testGraph, Algo.DIJKSTRA);
     }
 
     @Test
     public void testConstructorWithFile() throws WrongFileFormatException{
-        testModel = new DisplayModel(GRAPH_FILE);
+        testModel = new DisplayModel(GRAPH_FILE, Algo.DIJKSTRA);
     }
 
     @Test

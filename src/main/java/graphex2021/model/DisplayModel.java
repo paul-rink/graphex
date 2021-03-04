@@ -52,7 +52,8 @@ public class DisplayModel extends Subject {
      * Constructor for DisplayModel for a given {@link GXGraph}.
      * @param graph is the graph the DisplayModel should be init for.
      */
-    public DisplayModel(GXGraph graph) throws WrongFileFormatException {
+    public DisplayModel(GXGraph graph, Algo algo) throws WrongFileFormatException {
+        this.algo = algo.getUnderlyingAlgo();
         if (graph != null) {
             this.graph = graph;
             loadGraph();
@@ -73,7 +74,8 @@ public class DisplayModel extends Subject {
      * @param inputFile is the input file that contains the graph data.
      * @throws WrongFileFormatException in case the file does not match the correct format
      */
-    public DisplayModel(File inputFile) throws WrongFileFormatException {
+    public DisplayModel(File inputFile, Algo algo) throws WrongFileFormatException {
+        this.algo = algo.getUnderlyingAlgo();
         loadGraph(inputFile);
     }
 
@@ -85,7 +87,6 @@ public class DisplayModel extends Subject {
 
     private void loadGraph() {
         this.visibleGraph = new GXGraph();
-        this.algo = new DijkstraVisible();
         initialVisibleGraph();
         algoSteps = algo.getSequence(graph);
         //mark starting vertex from the beginning and update distances for incidents, if algo request a starting vertex
@@ -431,6 +432,7 @@ public class DisplayModel extends Subject {
         start.setCurrentDistance(INIT_DISTANCE);
         if (!algo.isRevealed()) {
             try {
+                visibleGraph.insertVertex(start);
                 visibleGraph.setStartingVertex(start);
                 updateCurrentDistancesForIncidents(start);
                 for (GXEdge edge : graph.incidentEdges(start)) {
@@ -443,7 +445,6 @@ public class DisplayModel extends Subject {
                     //inserting the vertex and edge into the visible graph
                     visibleGraph.insertVertex(toIns);
                     visibleGraph.insertEdge(edge);
-                    visibleGraph.insertVertex(start);
                 }
                 end.setVisible(true);
                 visibleGraph.insertVertex(end);

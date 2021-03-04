@@ -104,7 +104,8 @@ public class Controller {
      */
     public Controller() {
         try {
-            this.displayModel = new DisplayModel(defaultAlgo);
+            activeAlgo = defaultAlgo;
+            this.displayModel = new DisplayModel(activeAlgo);
         } catch (WrongFileFormatException e) {
             Alert error = new FileAlert(e.getMessage());
             error.showAndWait();
@@ -129,6 +130,10 @@ public class Controller {
             CheckMenuItem item = new CheckMenuItem(algo.toString());
             item.setOnAction(e -> onAlgoSelect(item, algo));
             algoMenu.getItems().add(item);
+            //on setup select default algo
+            if (algo == defaultAlgo) {
+                item.setSelected(true);
+            }
         }
     }
 
@@ -537,7 +542,7 @@ public class Controller {
 
         DisplayModel newModel = null;
         try {
-            newModel = new DisplayModel(file);
+            newModel = new DisplayModel(file, activeAlgo);
         } catch (WrongFileFormatException e) {
             Alert formatError = new FileFormatError(e);
             formatError.showAndWait();
@@ -566,7 +571,7 @@ public class Controller {
         //final Pane parent = (Pane) graphView.getParent();
         remove(parent, true);
         try {
-            this.displayModel = new DisplayModel(graph);
+            this.displayModel = new DisplayModel(graph, activeAlgo);
         } catch (WrongFileFormatException e) {
             new FileAlert(e.getMessage()).showAndWait();
         }
