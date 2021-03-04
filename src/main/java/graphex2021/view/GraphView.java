@@ -200,25 +200,29 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
             System.out.println("BOUNDSINPARTEN: " +  this.getBoundsInParent().getWidth());
             System.out.println("LayoutBounds" + this.getLayoutBounds().getWidth());
             System.out.println("New Value : " + newValue);
+            System.out.println("SCaleValue :" + getScaleX());
             System.out.println("----------------------------------------------------------------------");
+            ZoomableScrollPane pane = (ZoomableScrollPane) this.getParent().getParent().getParent();
             Group group = (Group) this.getParent();
             if (scale >= 1 && this.getScene().getWidth() > this.getBoundsInParent().getWidth()) {
-                if (newValue.doubleValue() > this.getMinWidth()) {
-                    this.setWidth(this.getWidth() * scale);
-                    this.setHeight(getHeight() * scale);
+                if (pane.getViewportBounds().getWidth() < this.getScene().getWidth()) {
 
-                    this.setScaleX(this.getScaleX() * scale);
-                    this.setScaleY(this.getScaleY() * scale);
+                } else if (newValue.doubleValue() > this.getMinWidth()) {
+                    this.setWidth(this.getBoundsInLocal().getWidth() * scale);
+                    this.setHeight(this.getBoundsInLocal().getHeight() * scale);
+
+                    this.setScaleX(scale);
+                    this.setScaleY(scale);
                 }
 
             } else {
                 if (this.getScene().getWidth() < this.getBoundsInParent().getWidth()
                         && this.getScene().getHeight() < this.getBoundsInParent().getHeight()
                         && this.getScene().getWidth() > this.getMinWidth()) {
-                    this.setWidth(this.getWidth() * scale);
-                    this.setHeight(this.getHeight() * scale);
-                    this.setScaleX(this.getScaleX() * scale);
-                    this.setScaleY(this.getScaleY() * scale);
+                    this.setWidth(this.getBoundsInLocal().getWidth() * scale);
+                    this.setHeight(this.getBoundsInLocal().getHeight() * scale);
+                    this.setScaleX(scale);
+                    this.setScaleY(scale);
                 }
             }
             this.placeVertices();
@@ -237,22 +241,24 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
             Group group = (Group) this.getParent();
             double scale = newValue.doubleValue() / oldValue.doubleValue();
             if (scale >= 1 && this.getScene().getHeight() > this.getBoundsInParent().getHeight()) {
-                if (newValue.doubleValue() > this.getMinHeight()) {
-                    this.setHeight(getHeight() * scale);
-                    this.setWidth(this.getWidth() * scale);
+                if (this.getBoundsInParent().getHeight() - this.getBoundsInLocal().getHeight() > 30) {
 
-                    this.setScaleX(this.getScaleX() * scale);
-                    this.setScaleY(this.getScaleY() * scale);
+                } else if (newValue.doubleValue() > this.getMinHeight()) {
+                    this.setHeight(this.getBoundsInLocal().getHeight() * scale);
+                    this.setWidth(this.getBoundsInLocal().getWidth() * scale);
+
+                    this.setScaleX(scale);
+                    this.setScaleY(scale);
                 }
 
             } else {
                 if (this.getScene().getHeight() < this.getBoundsInParent().getHeight()
                         && this.getScene().getWidth() < this.getBoundsInParent().getWidth()
                         && this.getScene().getHeight() > this.getMinHeight()) {
-                    this.setWidth(this.getWidth() * scale);
-                    this.setHeight(this.getHeight() * scale);
-                    this.setScaleX(this.getScaleX() * scale);
-                    this.setScaleY(this.getScaleY() * scale);
+                    this.setWidth(this.getBoundsInLocal().getWidth() * scale);
+                    this.setHeight(this.getBoundsInLocal().getHeight() * scale);
+                    this.setScaleX(scale);
+                    this.setScaleY(scale);
                 }
 
             }

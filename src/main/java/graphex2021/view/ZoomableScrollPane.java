@@ -57,31 +57,13 @@ public class ZoomableScrollPane extends ScrollPane {
         double minHeight = tar.getMinHeight();
         double minWidth = tar.getMinWidth();
 
-
-
-        /*
-        if (newHeight < sceneHeight && minHeight < sceneHeight) {
-            //as the graph wouldnt fit into the window it is not allowed
-            double factor = currentHeight / sceneHeight;
-            target.setScaleX(factor);
-            target.setScaleY(factor);
-            scaleValue = 1;
-        } else if (newWidth < sceneWidth && minWidth < sceneWidth) {
-            //as the graph wouldnt fit into the window it is not allowed
-            double factor = currentWidth / sceneWidth;
-            target.setScaleX(factor);
-            target.setScaleY(factor);
-            scaleValue = 1;
-        } else {
-        */
-            //in this case a zoom is doable if it doesnt make the graph smaller than the minimum size
-            //if (newWidth > minWidth && newHeight > minHeight) {
                 target.setScaleX(newScaleValue);
                 target.setScaleY(newScaleValue);
 
 
                 if (tar.getScene().getWidth() >= tar.getBoundsInParent().getWidth()
-                        || tar.getScene().getHeight() - 40 - 28 >= tar.getBoundsInParent().getHeight()) {
+                        || tar.getScene().getHeight() - 40 - 28 >= tar.getBoundsInParent().getHeight()
+                        || (sceneHeight - 40 - 28 < minHeight && sceneWidth < minWidth)) {
                     target.setScaleX(scaleValue);
                     target.setScaleY(scaleValue);
                     //scaleValue = 1 / newScaleValue;
@@ -89,9 +71,7 @@ public class ZoomableScrollPane extends ScrollPane {
                 }
 
                 scaleValue = newScaleValue;
-            //}
 
-        //}
 
     }
 
