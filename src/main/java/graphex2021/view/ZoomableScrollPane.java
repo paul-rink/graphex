@@ -25,13 +25,11 @@ public class ZoomableScrollPane extends ScrollPane {
         setScrollAction(view);
         setContent(target);
 
-        setPrefViewportHeight(1000000.);
-        setPrefViewportWidth(1000000.);
         setPannable(true);
         setFitToHeight(true); //center
         setFitToWidth(true); //center
-        //setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-        //setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+        setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 
         updateScale(scaleValue);
     }

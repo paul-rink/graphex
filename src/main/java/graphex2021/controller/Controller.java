@@ -132,7 +132,7 @@ public class Controller {
 
     private void initScrollPane() {
         Node parentPane = graphView.getParent();
-        scrollPane.init(vBox, group, graphView);
+        scrollPane.init(parentPane, group, graphView);
     }
 
     /**

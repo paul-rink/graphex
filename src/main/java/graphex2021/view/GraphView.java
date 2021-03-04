@@ -195,13 +195,13 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
 
     private void graphViewSizeListener() {
         ChangeListener<Number> widthListener = ((observable, oldValue, newValue) -> {
-            //this.setWidth(newValue.doubleValue());
+            this.setWidth(newValue.doubleValue());
             double scale = newValue.doubleValue() / oldValue.doubleValue();
             Group group = (Group) this.getParent();
             this.updateBounds();
 
-            group.setScaleX(scale);
-            group.setScaleY(scale);
+            //group.setScaleX(scale);
+            //group.setScaleY(scale);
 
             this.setScaleX(scale);
             this.setScaleY(scale);
@@ -216,8 +216,8 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
             //this.setHeight(newValue.doubleValue());
             double scale = newValue.doubleValue() / oldValue.doubleValue();
             Group pane = (Group) this.getParent();
-            this.setScaleX(scale);
-            this.setScaleY(scale);
+            //this.setScaleX(scale);
+            //this.setScaleY(scale);
             this.placeVertices();
         }
         );
