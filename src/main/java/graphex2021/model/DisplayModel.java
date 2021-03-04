@@ -1,5 +1,9 @@
 package graphex2021.model;
 
+import graphex2021.model.algo.Algo;
+import graphex2021.model.algo.Algorithm;
+import graphex2021.model.algo.Dijkstra;
+
 import java.io.File;
 import java.net.URISyntaxException;
 

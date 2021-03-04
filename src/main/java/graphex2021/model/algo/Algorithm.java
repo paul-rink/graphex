@@ -1,4 +1,6 @@
-package graphex2021.model;
+package graphex2021.model.algo;
+
+import graphex2021.model.*;
 
 import java.util.LinkedList;
 

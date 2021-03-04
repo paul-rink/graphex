@@ -1,5 +1,6 @@
 package graphex2021.model;
 
+import graphex2021.model.algo.Algo;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +41,7 @@ public class DisplayModelTest {
         }*/
         testGraph = Mockito.spy(new GXGraph());
         addGraph(testGraph);
-        testModel = Mockito.spy(new DisplayModel(testGraph,Algo.DIJKSTRA));
+        testModel = Mockito.spy(new DisplayModel(testGraph, Algo.DIJKSTRA));
     }
 
     private void addGraph(GXGraph graph) {

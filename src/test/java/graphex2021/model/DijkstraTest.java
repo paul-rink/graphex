@@ -1,5 +1,7 @@
 package graphex2021.model;
 
+import graphex2021.model.algo.Algo;
+import graphex2021.model.algo.Dijkstra;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

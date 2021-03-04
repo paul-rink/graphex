@@ -1,4 +1,4 @@
-package graphex2021.model;
+package graphex2021.model.algo;
 
 /**
  * Contains a simplified representation of every algo that could be used by the application. Be aware, you need to

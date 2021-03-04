@@ -1,5 +1,7 @@
 package graphex2021.model;
 
+import graphex2021.model.algo.Algorithm;
+
 import java.io.File;
 import java.util.*;
 

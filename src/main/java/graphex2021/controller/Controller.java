@@ -4,6 +4,8 @@ import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.Main;
 import graphex2021.model.*;
+import graphex2021.model.algo.Algo;
+import graphex2021.model.algo.Algorithm;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 
@@ -32,7 +34,6 @@ import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 
 public class Controller {

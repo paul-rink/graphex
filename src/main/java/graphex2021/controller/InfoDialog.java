@@ -1,6 +1,6 @@
 package graphex2021.controller;
 
-import graphex2021.model.Dijkstra;
+import graphex2021.model.algo.Dijkstra;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
