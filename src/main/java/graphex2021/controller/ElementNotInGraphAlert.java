@@ -3,9 +3,9 @@ package graphex2021.controller;
 import javafx.scene.control.Alert;
 
 /**
-* TODO JAVADOC
-*
-*
+* This Alert is displayed if something in the underlying graph model went wrong and the graph has not been updated
+* correctly when vertices/edges were added.
+ *
 * @author D. Flohs, K. Marquardt, P. Rink
 * @version 1.0 26.01.2021
 */

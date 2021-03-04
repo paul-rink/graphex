@@ -196,7 +196,7 @@ public class GraphParserTest {
     }
 
 
-    //TODO make this more elegant
+
     private Boolean sameVertices(GXVertex expectation, GXVertex readVertex) {
         Boolean result = false;
         if(expectation.element().equals(readVertex.element())) {
@@ -250,7 +250,6 @@ public class GraphParserTest {
         return expectation;
     }
     private GXVertex findMatchingVertex(String vertexName, Collection<GXVertex> vertices){
-        //TODO if element is the name and its not unique this will have problems (should we allow vertices with the same name?)
         Iterator<GXVertex> it = vertices.iterator();
         GXVertex matchingVertex = null;
         while(it.hasNext()) {

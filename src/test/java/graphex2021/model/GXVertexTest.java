@@ -153,7 +153,7 @@ public class GXVertexTest {
         assertEquals(GXVertexType.STARTING, testVertex.getStartOrEnd());
     }
 
-    @Test //TODO what is the expected behaviour here?
+    @Test
     public void testSetTypeNull() {
         testVertex.setType(null);
         //assertEquals(GXVertexType.NORMAL, testVertex.getStartOrEnd());

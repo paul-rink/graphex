@@ -83,7 +83,6 @@ public class GraphAdapter implements Graph {
         }
     }
 
-    //TODO Kinda not needed from here on
     @Override
     public Vertex insertVertex(Object vElement) throws InvalidVertexException {
         throw new UnsupportedOperationException();

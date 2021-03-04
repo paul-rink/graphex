@@ -3,7 +3,8 @@ package graphex2021.controller;
 import javafx.scene.control.Alert;
 
 /**
- * TODO javadoc
+ * This alert is displayed when an edge is selected, that is blocked.
+ *
  * @author kmarq
  * @version 1.0 26.01.2021
  */

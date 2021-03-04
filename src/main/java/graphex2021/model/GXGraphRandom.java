@@ -1,5 +1,7 @@
 package graphex2021.model;
 
+import graphex2021.controller.ElementNotInGraphAlert;
+
 import java.util.*;
 
 /**
@@ -106,7 +108,7 @@ public class GXGraphRandom extends GXGraph {
                 try {
                     rndPosition = new GXPosition(x, y);
                 } catch (NonValidCoordinatesException e) {
-                    e.printStackTrace(); //TODO cant happen
+                    new ElementNotInGraphAlert().showAndWait();
                 }
             }
             GXVertex newVertex = new GXVertex(labels[counter].toString(), counter, rndPosition);
@@ -125,7 +127,7 @@ public class GXGraphRandom extends GXGraph {
         int s = 0;
         int z = 0;
         //choose starting and ending vertex random and check that they are not the same
-        while(s == z) {
+        while (s == z) {
             s = new Random().nextInt(max);
             z = new Random().nextInt(max);
         }
@@ -238,7 +240,7 @@ public class GXGraphRandom extends GXGraph {
             try {
                 rndPosition = new GXPosition(rndX, rndY);
             } catch (NonValidCoordinatesException e) {
-                e.printStackTrace(); //TODO cant happen
+                new ElementNotInGraphAlert().showAndWait();
             }
             n--;
         } while (conflicts(rndPosition) && n > 0);

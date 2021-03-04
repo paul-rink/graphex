@@ -204,7 +204,6 @@ public class GXGraphTest {
         //Adding edges to all other vertices.
         for (GXVertex vertex : isolateExampleGraph.vertices()) {
             try {
-                //TODO allow null as element
                GXEdge newEdge = isolateExampleGraph.insertEdge(vert0, vertex, "1");
                assertEquals(newEdge, isolateExampleGraph.getEdge(vertex, vert0));
             } catch (ElementNotInGraphException e) {

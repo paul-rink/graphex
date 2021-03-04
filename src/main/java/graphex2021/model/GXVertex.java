@@ -104,7 +104,6 @@ public class GXVertex implements Vertex<String> {
     }
 
     /**
-     * TODO why -1, need constant, probably this is obsolete here.
      * Unmarks the vertex and sets its current distance to -1.
      * Setting the previous edge to null also.
      *
@@ -134,15 +133,6 @@ public class GXVertex implements Vertex<String> {
      */
     public void mark() {
         this.marked = true;
-    }
-
-    /**
-     * TODO implement and check what is exactly needed as the label
-     *
-     * @return the label matching this vertex
-     */
-    public String getLabel() {
-        return null;
     }
 
     /**

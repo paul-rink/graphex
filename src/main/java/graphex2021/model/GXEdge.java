@@ -69,8 +69,9 @@ public class GXEdge implements Edge<String, String> {
     private boolean isHighlighted;
 
     /**
-     * Creates new Vertex with a weight
-     * TODO finish constructor to contain missing attributes. Check how to generate the IDs
+     * Creates new Edge with a weight. This edge will be between two vertices and has a weight. The ID should be
+     * created externally and therefore no check whether the ID is allowed will be done here.
+     *
      * @param inboundVertex the first vertex of the edge
      * @param outboundVertex the second vertex of the edge
      * @param element the element contained in the edge

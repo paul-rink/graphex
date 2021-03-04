@@ -71,7 +71,7 @@ public class Dijkstra implements Algorithm {
         try {
             createSteps();
         } catch (ElementNotInGraphException eni) {
-            //TODO check the way this is done
+            return null;
         }
         return steps;
     }

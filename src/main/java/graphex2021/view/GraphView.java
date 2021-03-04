@@ -1,6 +1,7 @@
 package graphex2021.view;
 
 import com.brunomnsilva.smartgraph.graphview.*;
+import graphex2021.controller.FileAlert;
 import graphex2021.model.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -45,8 +46,7 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
                     + File.separator + "graphex2021"
                     + File.separator + "smartgraphmove.properties");
         } catch (URISyntaxException e) {
-            //TODO what here
-            e.getMessage();
+            new FileAlert(e.getMessage()).showAndWait();
         }
     }
 
@@ -74,17 +74,7 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         this.isMoveable = isMoveable;
     }
 
-    /**
-     * TODO use for random graphs?
-     *
-     * @param strategy
-     * @throws FileNotFoundException
-     */
-    public GraphView(SmartPlacementStrategy strategy) throws FileNotFoundException {
-        super(new GraphAdapter(), new SmartGraphProperties(new FileInputStream(properties)),
-                strategy, stylesheet.toURI());
-        this.isMoveable = false;
-    }
+
 
     @Override
     public void doUpdate(Subject s) {
@@ -106,7 +96,7 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
      */
     private void styleEdge(SmartGraphEdgeLine edge) {
         GXEdge gxEdge = (GXEdge) edge.getUnderlyingEdge();
-        //call this first because every marked edge is blocked as well //TODO maybe change this?
+        //call this first because every marked edge is blocked as well
         if (gxEdge.isBlocked() && !gxEdge.isMarked()) {
             edge.setStyleClass("blockedEdge");
         } else if (gxEdge.isMarked()) {
@@ -134,7 +124,7 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
             vertex.setStyleClass("vertex");
             showVertexTooltip(vertex, TooltipType.ID);
         }
-        //TODO rethink the order here
+
         if (gxVertex.isHint()) {
             vertex.setStyleClass("hintVertex");
         }
@@ -346,8 +336,8 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
             try {
                 vert.getPosition().setPosition(calcRelativeX(smartVertex), calcRelativeY(smartVertex));
             } catch (NonValidCoordinatesException e) {
-                e.printStackTrace(); //TODO is this a problem?
-                }
+                e.printStackTrace();
+            }
         });
     }
 
