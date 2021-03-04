@@ -32,6 +32,7 @@ import java.net.URISyntaxException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 public class Controller {
@@ -55,6 +56,7 @@ public class Controller {
             + File.separator + "GraphData" + File.separator + "Templates";
 
     private static final Algo defaultAlgo = Algo.DIJKSTRA;
+    private Algo activeAlgo;
 
 
     /**
@@ -124,14 +126,20 @@ public class Controller {
 
     private void setUpAlgoMenu() {
         for (Algo algo : Algo.values()) {
-            MenuItem item = new MenuItem(algo.toString());
-            item.setOnAction(e -> onAlgoSelect(algo));
+            CheckMenuItem item = new CheckMenuItem(algo.toString());
+            item.setOnAction(e -> onAlgoSelect(item, algo));
             algoMenu.getItems().add(item);
         }
     }
 
-    private void onAlgoSelect(Algo algo) {
-
+    private void onAlgoSelect(CheckMenuItem m, Algo algo) {
+        //uncheck all
+        for (MenuItem item : algoMenu.getItems()) {
+            ((CheckMenuItem) item).setSelected(false);
+        }
+        //then check selected one
+        m.setSelected(true);
+        activeAlgo = algo;
     }
 
     /**
