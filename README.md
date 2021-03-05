@@ -79,7 +79,7 @@ Algorithmen wie _Kruskal_ sind nach dem momentanen Entwurf **nicht** ohne Weiter
 **Erläuterung** <br />
 Zu Beginn ist immer mindestens ein Startknoten _markiert_.
 Weitere Schritte werden von Nutzer durch Doppelklick auf Kanten und dadurch markieren dieser ausgeführt.
-Es ist aber nur möglich Kanten zu markieren, bei denen schon mindestens ein Knoten markiert ist, d.h. die irgendwie von einem festgelegten Start aus erreichbar ist. <br \>
+Es ist aber nur möglich Kanten zu markieren, bei denen schon mindestens ein Knoten markiert ist, d.h. die irgendwie von einem festgelegten Start aus erreichbar ist. <br />
 Das Verhalten beim Markieren ist durch `markEdge()` in `graphex2021.model.DisplayModel`festgelegt. <br />
 Für Algorithmen die bei denen Kanten / Knoten beliebig im Graphen ausgewählt werden, muss das Verhalten von `markEdge()` angepasst werden, etwa durch Switch-Case oder durch ein neues `DisplayModel` welches vom aktuellen erbt. <br />
 Es gibt auch einen Methodenrumpf für `markVertex()`, dieser ist aktuell nicht implementiert und nicht in Verwendung. Markierungen finden ausschließlich über Kanten statt (wegen der Eindeutigkeit bzgl. Pfade im Graphen).
