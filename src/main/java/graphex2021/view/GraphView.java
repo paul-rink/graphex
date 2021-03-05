@@ -196,24 +196,22 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         ChangeListener<Number> widthListener = ((observable, oldValue, newValue) -> {
             double scale = newValue.doubleValue() / oldValue.doubleValue();
             if (scale >= 1 && this.getScene().getWidth() > this.getBoundsInParent().getWidth()) {
-                if (this.getBoundsInParent().getWidth() - this.getBoundsInLocal().getWidth() > 30) {
-
-                } else if (newValue.doubleValue() > this.getMinWidth()) {
+                 if (newValue.doubleValue() > this.getMinWidth()) {
                     this.setWidth(this.getBoundsInLocal().getWidth() * scale);
                     this.setHeight(this.getBoundsInLocal().getHeight() * scale);
 
-                    this.setScaleX(scale);
-                    this.setScaleY(scale);
+                    this.setScaleX(scale * this.getScaleX());
+                    this.setScaleY(scale * this.getScaleY());
                 }
 
             } else {
-                if (this.getScene().getWidth() < this.getBoundsInParent().getWidth()
+                if (scale <= 1 && this.getScene().getWidth() < this.getBoundsInParent().getWidth()
                         && this.getScene().getHeight() < this.getBoundsInParent().getHeight()
                         && this.getScene().getWidth() > this.getMinWidth()) {
                     this.setWidth(this.getBoundsInLocal().getWidth() * scale);
                     this.setHeight(this.getBoundsInLocal().getHeight() * scale);
-                    this.setScaleX(scale);
-                    this.setScaleY(scale);
+                    this.setScaleX(scale * this.getScaleX());
+                    this.setScaleY(scale * this.getScaleY());
                 }
             }
             this.placeVertices();
@@ -221,28 +219,27 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
         ChangeListener<Number> heightListener = ((observable, oldValue, newValue) -> {
             double scale = newValue.doubleValue() / oldValue.doubleValue();
             if (scale >= 1 && this.getScene().getHeight() > this.getBoundsInParent().getHeight()) {
-                if (this.getBoundsInParent().getHeight() - this.getBoundsInLocal().getHeight() > 30) {
-
-                } else if (newValue.doubleValue() > this.getMinHeight()) {
+                 if (newValue.doubleValue() > this.getMinHeight()) {
                     this.setHeight(this.getBoundsInLocal().getHeight() * scale);
                     this.setWidth(this.getBoundsInLocal().getWidth() * scale);
 
-                    this.setScaleX(scale);
-                    this.setScaleY(scale);
+                    this.setScaleX(scale * this.getScaleX());
+                    this.setScaleY(scale * this.getScaleY());
                 }
 
             } else {
-                if (this.getScene().getHeight() < this.getBoundsInParent().getHeight()
+                if (scale <= 1 && this.getScene().getHeight() < this.getBoundsInParent().getHeight()
                         && this.getScene().getWidth() < this.getBoundsInParent().getWidth()
                         && this.getScene().getHeight() > this.getMinHeight()) {
                     this.setWidth(this.getBoundsInLocal().getWidth() * scale);
                     this.setHeight(this.getBoundsInLocal().getHeight() * scale);
-                    this.setScaleX(scale);
-                    this.setScaleY(scale);
+                    this.setScaleX(scale * this.getScaleX());
+                    this.setScaleY(scale * this.getScaleY());
                 }
 
             }
             this.placeVertices();
+
         }
         );
         this.getScene().widthProperty().addListener(widthListener);
