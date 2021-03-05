@@ -10,7 +10,7 @@ import javafx.scene.layout.Pane;
 
 public class ZoomableScrollPane extends ScrollPane {
     private double scaleValue = 1;
-    private final double zoomIntensity = 0.0002;
+    private final double zoomIntensity = 0.0008;
     private Node target;
     private Node zoomNode;
 
@@ -46,12 +46,7 @@ public class ZoomableScrollPane extends ScrollPane {
         //the height of the scene the scrollpane is displayed in
         double sceneHeight = this.getScene().getHeight();
         double sceneWidth = this.getScene().getWidth();
-        //the height of the scrollpane
-        double currentHeight = tar.heightProperty().doubleValue();
-        double currentWidth = tar.widthProperty().doubleValue();
-        //the future size of the scroll pane if the zoom action is actually done
-        double newHeight = currentHeight * newScaleValue;
-        double newWidth = currentWidth * newScaleValue;
+        
         //the minimal size set for the graph
         double minHeight = tar.getMinHeight();
         double minWidth = tar.getMinWidth();
@@ -80,7 +75,7 @@ public class ZoomableScrollPane extends ScrollPane {
         // calculate pixel offsets from [0, 1] range
         double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
-        
+
         double newscaleValue = target.getScaleX() * zoomFactor;
         updateScale(newscaleValue);
         this.layout(); // refresh ScrollPane scroll positions & target bounds

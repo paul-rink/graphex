@@ -480,7 +480,7 @@ public class Controller {
         parent.getChildren().add(graphView);
     }
 
-    /**vBox.widthPr
+    /**
      * Creates and adds a new {@link GraphView} to the pane.
      *
      * @param parent    parent the {@link GraphView} should be added to.
