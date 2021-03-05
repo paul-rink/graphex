@@ -21,6 +21,7 @@
     <fileSet>
         <includes>
             <include>README.md</include>
+            <include>LICENSE-Apache.txt</include>
         </includes>
         <outputDirectory>Graphex</outputDirectory>
     </fileSet>
