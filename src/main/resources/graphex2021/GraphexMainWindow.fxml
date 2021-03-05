@@ -31,10 +31,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onLoadGraph" text="Graph importieren..." />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Algorithmus">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Dijkstra" />
-                    </items>
+                <Menu fx:id="algoMenu" mnemonicParsing="false" text="Algorithmus">
                 </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
                     <items>
@@ -47,7 +44,7 @@
                 <Menu mnemonicParsing="false" text="Informationen">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#onDisplayInteractionHelp" text="Interaktionshilfe" />
-                        <MenuItem mnemonicParsing="false" onAction="#onDisplayAlgorithmExplanation" text="Informationen zum Dijkstra-Algorithmus" />
+                        <MenuItem mnemonicParsing="false" onAction="#onDisplayAlgorithmExplanation" text="Informationen zum Algorithmus" />
                         <CheckMenuItem fx:id="verticesMoveable" mnemonicParsing="false" onAction="#verticesMovable" text="Freier Modus"/>
                     </items>
                 </Menu>

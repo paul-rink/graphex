@@ -20,7 +20,7 @@ public class Step {
      * @param selectedVertex is the selected/modified {@link GXVertex}
      * @param selectedEdge is the selected/modified {@link GXEdge}
      */
-    Step(GXVertex selectedVertex, GXEdge selectedEdge) {
+    public Step(GXVertex selectedVertex, GXEdge selectedEdge) {
         this.selectedVertex = selectedVertex;
         this.selectedEdge = selectedEdge;
     }

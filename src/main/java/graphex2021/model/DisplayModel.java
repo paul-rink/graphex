@@ -1,5 +1,9 @@
 package graphex2021.model;
 
+import graphex2021.model.algo.Algo;
+import graphex2021.model.algo.Algorithm;
+import graphex2021.model.algo.Dijkstra;
+
 import java.io.File;
 import java.net.URISyntaxException;
 
@@ -36,7 +40,8 @@ public class DisplayModel extends Subject {
      * Standard constructor fpr DisplayModel. This will init a model with a standard graph {@code EXAMPLEGRAPH}.
      * @throws WrongFileFormatException in case the default graph file does not match the correct format
      */
-    public DisplayModel() throws WrongFileFormatException {
+    public DisplayModel(Algo algo) throws WrongFileFormatException {
+        this.algo = algo.getUnderlyingAlgo();
         File jarPath;
         try {
             jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile();
@@ -51,7 +56,8 @@ public class DisplayModel extends Subject {
      * Constructor for DisplayModel for a given {@link GXGraph}.
      * @param graph is the graph the DisplayModel should be init for.
      */
-    public DisplayModel(GXGraph graph) throws WrongFileFormatException {
+    public DisplayModel(GXGraph graph, Algo algo) throws WrongFileFormatException {
+        this.algo = algo.getUnderlyingAlgo();
         if (graph != null) {
             this.graph = graph;
             loadGraph();
@@ -72,7 +78,8 @@ public class DisplayModel extends Subject {
      * @param inputFile is the input file that contains the graph data.
      * @throws WrongFileFormatException in case the file does not match the correct format
      */
-    public DisplayModel(File inputFile) throws WrongFileFormatException {
+    public DisplayModel(File inputFile, Algo algo) throws WrongFileFormatException {
+        this.algo = algo.getUnderlyingAlgo();
         loadGraph(inputFile);
     }
 
@@ -85,7 +92,6 @@ public class DisplayModel extends Subject {
     private void loadGraph() {
         this.visibleGraph = new GXGraph();
         initialVisibleGraph();
-        this.algo = new Dijkstra();
         algoSteps = algo.getSequence(graph);
         //mark starting vertex from the beginning and update distances for incidents, if algo request a starting vertex
         if (algo.hasStartingVertex()) {
@@ -241,7 +247,9 @@ public class DisplayModel extends Subject {
             GXEdge lastEdge = lastStep.getSelectedEdge();
             GXVertex lastVertex = lastStep.getSelectedVertex();
             removeLastUserStep();
-            makeIncidentsInvisible(lastVertex);
+            if (!algo.isRevealed()) {
+                makeIncidentsInvisible(lastVertex);
+            }
             lastVertex.unmark();
             lastEdge.unmark();
             graph.unblock(lastVertex);
@@ -418,36 +426,51 @@ public class DisplayModel extends Subject {
 
     private void initialVisibleGraph() {
         final GXVertex start = graph.getStartingVertex();
+        final GXVertex end =  graph.getEndingVertex();
         start.mark();
         start.setVisible(true);
         start.setCurrentDistance(INIT_DISTANCE);
-        visibleGraph.insertVertex(start);
-        try {
-            visibleGraph.setStartingVertex(start);
-            updateCurrentDistancesForIncidents(start);
-            for (GXEdge edge : graph.incidentEdges(start)) {
-                GXVertex toIns = edge.getNextVertex();
-                //shouldn't never be the case, at beginning only start is marked and no other vertex
-                if (toIns == null) continue;
-                //Setting the initial edge visible and the vertex at the other end
-                toIns.setVisible(true);
-                edge.setVisible(true);
-                //inserting the vertex and edge into the visible graph
-                visibleGraph.insertVertex(toIns);
-                visibleGraph.insertEdge(edge);
+        if (!algo.isRevealed()) {
+            try {
+                visibleGraph.insertVertex(start);
+                visibleGraph.setStartingVertex(start);
+                updateCurrentDistancesForIncidents(start);
+                for (GXEdge edge : graph.incidentEdges(start)) {
+                    GXVertex toIns = edge.getNextVertex();
+                    //shouldn't never be the case, at beginning only start is marked and no other vertex
+                    if (toIns == null) continue;
+                    //Setting the initial edge visible and the vertex at the other end
+                    toIns.setVisible(true);
+                    edge.setVisible(true);
+                    //inserting the vertex and edge into the visible graph
+                    visibleGraph.insertVertex(toIns);
+                    visibleGraph.insertEdge(edge);
+                }
+                if (algo.hasEndingVertex()) {
+                    end.setVisible(true);
+                    visibleGraph.insertVertex(end);
+                    visibleGraph.setEndingVertex(end);
+                }
+            } catch (ElementNotInGraphException eni) {
+                eni.printStackTrace();
             }
-        } catch (ElementNotInGraphException eni) {
-            eni.printStackTrace();
-        }
-
-
-        final GXVertex end =  graph.getEndingVertex();
-        end.setVisible(true);
-        try {
-            visibleGraph.insertVertex(end);
-            visibleGraph.setEndingVertex(end);
-        } catch (ElementNotInGraphException eni) {
-            eni.printStackTrace();
+            //full visible
+        } else {
+            try {
+                updateCurrentDistancesForIncidents(start);
+                for (GXVertex vertex : graph.vertices()) {
+                    vertex.setVisible(true);
+                    visibleGraph.insertVertex(vertex);
+                }
+                for (GXEdge edge : graph.edges()) {
+                    edge.setVisible(true);
+                    visibleGraph.insertEdge(edge);
+                }
+                visibleGraph.setStartingVertex(start);
+                visibleGraph.setEndingVertex(end);
+            } catch (ElementNotInGraphException eni) {
+                eni.printStackTrace();
+            }
         }
     }
 
@@ -457,6 +480,17 @@ public class DisplayModel extends Subject {
      */
     public Collection<GXVertex> getAllVertices() {
         return this.graph.vertices();
+    }
+
+    /**
+     * Updates the algo for the current view
+     * @param algo is the chosen algo from {@link Algo}
+     */
+    public void setAlgo(Algo algo) {
+        this.algo = algo.getUnderlyingAlgo();
+        algoSteps = this.algo.getSequence(graph);
+        reset();
+        notifyObservers();
     }
 
 }

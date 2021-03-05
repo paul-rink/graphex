@@ -4,6 +4,8 @@ import com.brunomnsilva.smartgraph.graphview.SmartGraphEdge;
 import com.brunomnsilva.smartgraph.graphview.SmartGraphVertexNode;
 import graphex2021.Main;
 import graphex2021.model.*;
+import graphex2021.model.algo.Algo;
+import graphex2021.model.algo.Algorithm;
 import graphex2021.view.GXTableView;
 import graphex2021.view.GraphView;
 
@@ -54,6 +56,9 @@ public class Controller {
     private static final String PATH_TO_TEMPLATES = "resources" + File.separator + "graphex2021"
             + File.separator + "GraphData" + File.separator + "Templates";
 
+    private static final Algo defaultAlgo = Algo.DIJKSTRA;
+    private Algo activeAlgo;
+
 
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
@@ -64,6 +69,8 @@ public class Controller {
     private Stage tableStage;
 
     private boolean debugMode;
+    //algo menu has to be set up once at start, then never again
+    private boolean updateAlgoMenu = true;
 
     @FXML
     private Menu templates;
@@ -91,30 +98,61 @@ public class Controller {
     @FXML
     private CheckMenuItem verticesMoveable;
 
+    @FXML
+    private Menu algoMenu;
+
     /**
      * Create a new Controller, where the {@link DisplayModel} is newly created
      * by using the standard {@link graphex2021.model.GXGraph}690
      */
     public Controller() {
         try {
-            this.displayModel = new DisplayModel();
+            this.displayModel = new DisplayModel(defaultAlgo);
+            this.activeAlgo = defaultAlgo;
         } catch (WrongFileFormatException e) {
             Alert error = new FileAlert(e.getMessage());
             error.showAndWait();
             e.printStackTrace();
             return;
         }
-
         this.gxTable = new GXTableView();
     }
 
     public void init() {
+        //only init algo menu once
+        if (updateAlgoMenu) {
+            setUpAlgoMenu();
+            updateAlgoMenu = false;
+        }
         loadTemplates();
         initGraphView();
         initScrollPane();
         initTableView();
         bind();
         displayModel.notifyObservers();
+    }
+
+    private void setUpAlgoMenu() {
+        for (Algo algo : Algo.values()) {
+            CheckMenuItem item = new CheckMenuItem(algo.getDisplayName());
+            item.setOnAction(e -> onAlgoSelect(item, algo));
+            algoMenu.getItems().add(item);
+            //on setup select default algo
+            if (algo == defaultAlgo) {
+                item.setSelected(true);
+            }
+        }
+    }
+
+    private void onAlgoSelect(CheckMenuItem m, Algo algo) {
+        //uncheck all
+        for (MenuItem item : algoMenu.getItems()) {
+            ((CheckMenuItem) item).setSelected(false);
+        }
+        //then check selected one
+        m.setSelected(true);
+        activeAlgo = algo;
+        displayModel.setAlgo(activeAlgo);
     }
 
     /**
@@ -512,7 +550,7 @@ public class Controller {
 
         DisplayModel newModel = null;
         try {
-            newModel = new DisplayModel(file);
+            newModel = new DisplayModel(file, activeAlgo);
         } catch (WrongFileFormatException e) {
             Alert formatError = new FileFormatError(e);
             formatError.showAndWait();
@@ -536,12 +574,29 @@ public class Controller {
         initializeUpdatedView(parent, true);
     }
 
+
     private void loadNewGraphView(GXGraph graph) {
         Group parent = (Group) graphView.getParent();
         //final Pane parent = (Pane) graphView.getParent();
         remove(parent, true);
         try {
-            this.displayModel = new DisplayModel(graph);
+            this.displayModel = new DisplayModel(graph, activeAlgo);
+        } catch (WrongFileFormatException e) {
+            new FileAlert(e.getMessage()).showAndWait();
+        }
+        addToParent(parent);
+        graphView.setBackground(Background.EMPTY);
+        setSizes(Background.EMPTY);
+        reset();
+        initializeUpdatedView(parent, true);
+    }
+
+    private void loadNewGraphView() {
+        Group parent = (Group) graphView.getParent();
+        //final Pane parent = (Pane) graphView.getParent();
+        remove(parent, true);
+        try {
+            this.displayModel = new DisplayModel(activeAlgo);
         } catch (WrongFileFormatException e) {
             new FileAlert(e.getMessage()).showAndWait();
         }
@@ -653,7 +708,7 @@ public class Controller {
      */
     @FXML
     private void onDisplayAlgorithmExplanation() {
-        Dialog<Void> dialog = new InfoDialog(AlgorithmName.DIJKSTRA);
+        Dialog<Void> dialog = new AlgoInfoDialog(activeAlgo);
         dialog.showAndWait();
     }
 
