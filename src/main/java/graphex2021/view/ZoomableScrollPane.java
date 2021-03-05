@@ -80,8 +80,7 @@ public class ZoomableScrollPane extends ScrollPane {
         // calculate pixel offsets from [0, 1] range
         double valX = this.getHvalue() * (innerBounds.getWidth() - viewportBounds.getWidth());
         double valY = this.getVvalue() * (innerBounds.getHeight() - viewportBounds.getHeight());
-
-        System.out.println("Scale " +  target.getScaleX());
+        
         double newscaleValue = target.getScaleX() * zoomFactor;
         updateScale(newscaleValue);
         this.layout(); // refresh ScrollPane scroll positions & target bounds
