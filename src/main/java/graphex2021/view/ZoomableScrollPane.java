@@ -56,7 +56,7 @@ public class ZoomableScrollPane extends ScrollPane {
 
         if (tar.getScene().getWidth() >= tar.getBoundsInParent().getWidth()
                 || tar.getScene().getHeight() - 40 - 28 >= tar.getBoundsInParent().getHeight()
-                || (sceneHeight - 40 - 28 < minHeight && sceneWidth < minWidth)) {
+                ) {
             target.setScaleX(scaleValue);
             target.setScaleY(scaleValue);
             return;
