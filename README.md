@@ -65,12 +65,31 @@ Beispiel:
 
 ```
 
+# Algorithmus hinzufügen
+Es ist möglich weitere Algorithmen dem Programm hinzuzufügen. <br /> 
+Dazu muss der Algorithmus unter der Schnittstelle `Algorithm` implementiert werden, vgl. andere Algorithmen im `package` `graphex2021.model.algo`.
+Damit die Algorithmus-Implementierung vom `model`und in Kontextmenu verfügbar ist, muss sie dem `enum` `Algo` hinzugefügt werden. <br />
+<br />
+**Beispiele** <br />
+Breiten- & Tiefensuche, Eulerkreise (Algorithmus von Hierholzer), MST (Algorithmus von Jarnik, Prim und Dijkstra),... <br />
+
+**Einschränkungen** <br />
+Aktuell unterstüzt das Programm nur die Ausführung von Algorithmen die sequentiell von (irgendeinem) Startpunkt ausgeführt werden.<br />
+Algorithmen wie _Kruskal_ sind nach dem momentanen Entwurf **nicht** ohne Weiteres einfach zu implmentieren.
+
+**Erläuterung** <br />
+Zu Beginn ist immer mindestens ein Startknoten _markiert_.
+Weitere Schritte werden von Nutzer durch Doppelklick auf Kanten und dadurch markieren dieser ausgeführt.
+Es ist aber nur möglich Kanten zu markieren, bei denen schon mindestens ein Knoten markiert ist, d.h. die irgendwie von einem festgelegten Start aus erreichbar ist. <br \>
+Das Verhalten beim Markieren ist durch `markEdge()` in `graphex2021.model.DisplayModel`festgelegt. <br />
+Für Algorithmen die bei denen Kanten / Knoten beliebig im Graphen ausgewählt werden, muss das Verhalten von `markEdge()` angepasst werden, etwa durch Switch-Case oder durch ein neues `DisplayModel` welches vom aktuellen erbt. <br />
+Es gibt auch einen Methodenrumpf für `markVertex()`, dieser ist aktuell nicht implementiert und nicht in Verwendung. Markierungen finden ausschließlich über Kanten statt (wegen der Eindeutigkeit bzgl. Pfade im Graphen).
+
 # Lizenz
 Dieses Projekt ist unter der GNU General Public License (GPL) lizensiert.
 
 # Dependencies
-[JavaFXSmartGraph](https://github.com/brunomnsilva/JavaFXSmartGraph) (MIT License)
-[everit-json](https://github.com/everit-org/json-schema) (Apache 2.0 License, siehe [LICENSE-Apache.txt](https://github.com/paul-rink/graphex/files/6083580/LICENSE-Apache.txt))
-[JSON](https://www.json.org/json-en.html) (MIT License)
-
+[JavaFXSmartGraph](https://github.com/brunomnsilva/JavaFXSmartGraph) (MIT License) <br />
+[everit-json](https://github.com/everit-org/json-schema) (Apache 2.0 License, siehe [LICENSE-Apache.txt](https://github.com/paul-rink/graphex/files/6083580/LICENSE-Apache.txt)) <br />
+[JSON](https://www.json.org/json-en.html) (MIT License) <br />
 [JavaFX](https://github.com/openjdk/jfx) (EULA License)
