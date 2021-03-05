@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>graphex2021</groupId>
     <artifactId>graphex</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 
     <profiles>
         <profile>
