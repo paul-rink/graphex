@@ -612,6 +612,7 @@ public class Controller {
     @FXML
     private void verticesMovable() {
         Group parent = (Group) graphView.getParent();
+        parent.setAutoSizeChildren(true);
         Background oldBackground = graphView.getBackground();
         remove(parent, false);
         GraphView movable;
