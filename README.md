@@ -69,8 +69,7 @@ Beispiel:
 Es ist möglich weitere Algorithmen dem Programm hinzuzufügen. <br /> 
 Dazu muss der Algorithmus unter der Schnittstelle `Algorithm` implementiert werden, vgl. andere Algorithmen im `package` `graphex2021.model.algo`.
 Damit die Algorithmus-Implementierung vom `model`und in Kontextmenu verfügbar ist, muss sie dem `enum` `Algo` hinzugefügt werden. <br />
-<br />
-**Beispiele** <br />
+**Beispiele für weitere Implementierungen** <br />
 Breiten- & Tiefensuche, Eulerkreise (Algorithmus von Hierholzer), MST (Algorithmus von Jarnik, Prim und Dijkstra),... <br />
 
 **Einschränkungen** <br />
