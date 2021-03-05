@@ -6,10 +6,8 @@ import graphex2021.model.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -196,13 +194,52 @@ public class GraphView extends SmartGraphPanel<String, String> implements Observ
 
     private void graphViewSizeListener() {
         ChangeListener<Number> widthListener = ((observable, oldValue, newValue) -> {
-            this.setWidth(newValue.doubleValue());
+            double scale = newValue.doubleValue() / oldValue.doubleValue();
+            if (scale >= 1 && this.getScene().getWidth() > this.getBoundsInParent().getWidth()) {
+                 if (newValue.doubleValue() > this.getMinWidth()) {
+                    this.setWidth(this.getBoundsInLocal().getWidth() * scale);
+                    this.setHeight(this.getBoundsInLocal().getHeight() * scale);
+
+                    this.setScaleX(scale * this.getScaleX());
+                    this.setScaleY(scale * this.getScaleY());
+                }
+
+            } else {
+                if (scale <= 1 && this.getScene().getWidth() < this.getBoundsInParent().getWidth()
+                        && this.getScene().getHeight() < this.getBoundsInParent().getHeight()
+                        && this.getScene().getWidth() > this.getMinWidth()) {
+                    this.setWidth(this.getBoundsInLocal().getWidth() * scale);
+                    this.setHeight(this.getBoundsInLocal().getHeight() * scale);
+                    this.setScaleX(scale * this.getScaleX());
+                    this.setScaleY(scale * this.getScaleY());
+                }
+            }
             this.placeVertices();
-        }
-        );
+        } );
         ChangeListener<Number> heightListener = ((observable, oldValue, newValue) -> {
-            this.setHeight(newValue.doubleValue());
+            double scale = newValue.doubleValue() / oldValue.doubleValue();
+            if (scale >= 1 && this.getScene().getHeight() > this.getBoundsInParent().getHeight()) {
+                 if (newValue.doubleValue() > this.getMinHeight()) {
+                    this.setHeight(this.getBoundsInLocal().getHeight() * scale);
+                    this.setWidth(this.getBoundsInLocal().getWidth() * scale);
+
+                    this.setScaleX(scale * this.getScaleX());
+                    this.setScaleY(scale * this.getScaleY());
+                }
+
+            } else {
+                if (scale <= 1 && this.getScene().getHeight() < this.getBoundsInParent().getHeight()
+                        && this.getScene().getWidth() < this.getBoundsInParent().getWidth()
+                        && this.getScene().getHeight() > this.getMinHeight()) {
+                    this.setWidth(this.getBoundsInLocal().getWidth() * scale);
+                    this.setHeight(this.getBoundsInLocal().getHeight() * scale);
+                    this.setScaleX(scale * this.getScaleX());
+                    this.setScaleY(scale * this.getScaleY());
+                }
+
+            }
             this.placeVertices();
+
         }
         );
         this.getScene().widthProperty().addListener(widthListener);

@@ -60,6 +60,7 @@ public class Controller {
     private Algo activeAlgo;
 
 
+
     /**
      * The {@link DisplayModel}, this controller sets the actions for.
      */
@@ -128,7 +129,7 @@ public class Controller {
         initGraphView();
         initScrollPane();
         initTableView();
-        bind();
+        group.setAutoSizeChildren(false);
         displayModel.notifyObservers();
     }
 
@@ -426,10 +427,6 @@ public class Controller {
         graphView.setPrefSize(prefWidth, prefHeight);
     }
 
-    private void bind() {
-        graphView.prefWidthProperty().bind(graphView.getScene().widthProperty());
-        graphView.prefHeightProperty().bind(graphView.getScene().heightProperty());
-    }
     /**
      * Will set the size of the graphview pane according to its background.
      *
@@ -517,6 +514,7 @@ public class Controller {
             e.printStackTrace();
             return;
         }
+        group.setAutoSizeChildren(true);
         parent.getChildren().add(graphView);
     }
 
@@ -538,8 +536,9 @@ public class Controller {
     }
 
     /**
-     * Loads a new graphview from the specified file
-     *
+     * Loads a new graphview from the specified file. Will completely replace the graph displayed and reset the visible
+     * vertices.
+     * 
      * @param file json that the new view should be loaded from.
      */
     private void loadNewGraphView(File file) {
