@@ -84,6 +84,13 @@ Das Verhalten beim Markieren ist durch `markEdge()` in `graphex2021.model.Displa
 Für Algorithmen die bei denen Kanten / Knoten beliebig im Graphen ausgewählt werden, muss das Verhalten von `markEdge()` angepasst werden, etwa durch Switch-Case oder durch ein neues `DisplayModel` welches vom aktuellen erbt. <br />
 Es gibt auch einen Methodenrumpf für `markVertex()`, dieser ist aktuell nicht implementiert und nicht in Verwendung. Markierungen finden ausschließlich über Kanten statt (wegen der Eindeutigkeit bzgl. Pfade im Graphen).
 
+# Contributing
+In den Issues dieses Projekts sind noch viele kleine übrige Dinge die noch hinzugefügt werden könnten oder verbessert werden könnten.
+Falls also Interesse besteht das Projekt weiter auzszuarbeiten kann dies gerne gemacht werden und muss dafür nur geklont werden.
+Die benötigten Dependencies sollten über Maven verfügbar sein. Lediglich die [JavaFXSmartGraph](https://github.com/brunomnsilva/JavaFXSmartGraph) Library ist nicht über Maven verfügbar.
+Um die Nutzung dieser so einfach wie möglich zu gestalten muss das [Repository](https://github.com/DominikF94/SmartGraphMavenConf) lokal geclont werden und mithilfe von Maven
+in das lokale Maven Repository installiert werden. Dabei handelt es sich einfach um eine angepasste Version  von [JavaFXSmartGraph](https://github.com/brunomnsilva/JavaFXSmartGraph), die einfacher in das lokale Repository installiert werden kann.
+
 # Lizenz
 Dieses Projekt ist unter der GNU General Public License (GPL) lizensiert.
 
