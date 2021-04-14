@@ -19,11 +19,13 @@
         <outputDirectory>Graphex</outputDirectory>
     </fileSet>
     <fileSet>
+        <directory>licenses-dependencies</directory>
+        <outputDirectory>Graphex/licenses</outputDirectory>
+    </fileSet>
+    <fileSet>
         <includes>
-            <include>README.md</include>
-            <include>LICENSE-Apache.txt</include>
+            <include>LICENSE.txt</include>
         </includes>
-        <outputDirectory>Graphex</outputDirectory>
     </fileSet>
 </fileSets>
 </assembly>
